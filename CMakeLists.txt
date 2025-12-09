@@ -10,3 +10,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(project-1
 	src/main.cpp
 )
+
+# SFML + vcpkg
+find_package(SFML 3 CONFIG REQUIRED COMPONENTS
+    System
+    Window
+    Graphics
+    Audio
+    Network
+)
+
+target_link_libraries(project-1 PRIVATE
+    SFML::System
+    SFML::Window
+    SFML::Graphics
+    SFML::Audio
+    SFML::Network
+)
