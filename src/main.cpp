@@ -2,6 +2,6 @@
 
 int main()
 {
-	std::cout << "CMake Test"; << std::endl;
+	std::cout << "CMake Test" << std::endl;
 	return 0;
 }

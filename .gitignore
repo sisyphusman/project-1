@@ -1,0 +1,35 @@
+# ========================
+# OS 공통
+# ========================
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# ========================
+# CMake / 빌드 결과물
+# ========================
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/install_manifest.txt
+/Makefile
+
+# ========================
+# Visual Studio 관련
+# ========================
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.VC.db
+*.VC.opendb
+
+# ========================
+# 기타
+# ========================
+*.log
