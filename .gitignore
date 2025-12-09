@@ -21,6 +21,7 @@ Desktop.ini
 # ========================
 # Visual Studio 관련
 # ========================
+/src/.vs/
 .vs/
 *.sln
 *.vcxproj
