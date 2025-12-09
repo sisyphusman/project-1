@@ -11,7 +11,7 @@ add_executable(project-1
 	src/main.cpp
 )
 
-# SFML + vcpkg
+# vcpkg
 find_package(SFML 3 CONFIG REQUIRED COMPONENTS
     System
     Window
@@ -20,6 +20,7 @@ find_package(SFML 3 CONFIG REQUIRED COMPONENTS
     Network
 )
 
+# SFML3
 target_link_libraries(project-1 PRIVATE
     SFML::System
     SFML::Window
