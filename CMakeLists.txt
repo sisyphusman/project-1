@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 실행 파일 추가
 add_executable(project-1
 	src/main.cpp
+    src/Game.h
+    src/Game.cpp
 )
 
 # vcpkg
