@@ -23,6 +23,7 @@ Desktop.ini
 # ========================
 /src/.vs/
 .vs/
+/out/
 *.sln
 *.vcxproj
 *.vcxproj.user

@@ -1,7 +1,8 @@
 #include "game.h"
+#include "TimeManager.h"
 
 Game::Game()
-	: window(sf::VideoMode({1920u, 1080u}), "project-1")
+	: window_(sf::VideoMode({1920u, 1080u}), "project-1")
 {
 }
 
@@ -9,26 +10,27 @@ Game::~Game()
 {
 }
 
-void Game::run()
+void Game::Run()
 {
 	// 메인 루프
-	while (window.isOpen())
+	while (window_.isOpen())
 	{
-		processEvents();
-		render();
+		ProcessEvents();
+		TimeManager::GetInstance().Update();
+		Render();
 	}
 }
 
-void Game::processEvents()
+void Game::ProcessEvents()
 {
 	// 이벤트 처리
 	// while문에서 변수 선언 하는 이유 1. 범위 최소화 2. 이전 값 참조 실수 방지
-	while (const std::optional<sf::Event> event = window.pollEvent())
+	while (const std::optional<sf::Event> event = window_.pollEvent())
 	{
 		// 창 닫기
 		if (event->is<sf::Event::Closed>())
 		{
-			window.close();
+			window_.close();
 		}
 
 		// 키 입력
@@ -37,17 +39,17 @@ void Game::processEvents()
 			const auto* keyEvent = event->getIf<sf::Event::KeyPressed>();
 			if (keyEvent && keyEvent->code == sf::Keyboard::Key::Escape)
 			{
-				window.close();
+				window_.close();
 			}
 		}
 	}
 }
 
-void Game::render()
+void Game::Render()
 {
-	window.clear();
+	window_.clear();
 	
 	// TODO: 나중에 그릴 것
 
-	window.display();
+	window_.display();
 }

@@ -8,12 +8,12 @@ public:
 	Game();
 	~Game();
 
-	void run();
+	void Run();
 
 private:
-	void processEvents();
-	void render();
+	void ProcessEvents();
+	void Render();
 
-	sf::RenderWindow window;
+	sf::RenderWindow window_;
 };
 
