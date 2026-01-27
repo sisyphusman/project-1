@@ -12,6 +12,7 @@ public:
 
 private:
 	void ProcessEvents();
+	void Update();
 	void Render();
 
 	sf::RenderWindow window_;

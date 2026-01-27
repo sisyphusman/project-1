@@ -12,11 +12,15 @@ Game::~Game()
 
 void Game::Run()
 {
+	auto& time = TimeManager::GetInstance();
+
 	// 메인 루프
 	while (window_.isOpen())
 	{
+		time.Update();
+
 		ProcessEvents();
-		TimeManager::GetInstance().Update();
+		Update();
 		Render();
 	}
 }
@@ -34,15 +38,19 @@ void Game::ProcessEvents()
 		}
 
 		// 키 입력
-		if (event->is<sf::Event::KeyPressed>())
+		// getIf는 타입 확인 후 캐스팅
+		if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>())
 		{
-			const auto* keyEvent = event->getIf<sf::Event::KeyPressed>();
-			if (keyEvent && keyEvent->code == sf::Keyboard::Key::Escape)
+			if (keyEvent->code == sf::Keyboard::Key::Escape)
 			{
 				window_.close();
 			}
 		}
 	}
+}
+
+void Game::Update()
+{
 }
 
 void Game::Render()
