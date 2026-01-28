@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "engine/manager/input_manager.h"
 
 class Game
 {
@@ -17,6 +16,5 @@ private:
 	void Render();
 
 	sf::RenderWindow window_;
-	InputManager input_manager_;
 };
 
