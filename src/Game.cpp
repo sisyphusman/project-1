@@ -1,5 +1,5 @@
 #include "game.h"
-#include "TimeManager.h"
+#include "time_manager.h"
 
 Game::Game()
 	: window_(sf::VideoMode({1920u, 1080u}), "project-1")
