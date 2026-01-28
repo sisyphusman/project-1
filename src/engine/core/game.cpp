@@ -1,8 +1,8 @@
 #include "game.h"
-#include "time_manager.h"
+#include "engine/manager/time_manager.h"
 
 Game::Game()
-	: window_(sf::VideoMode({1920u, 1080u}), "project-1")
+	: window_(sf::VideoMode({ 1920u, 1080u }), "project-1")
 {
 }
 
@@ -56,7 +56,7 @@ void Game::Update()
 void Game::Render()
 {
 	window_.clear();
-	
+
 	// TODO: 나중에 그릴 것
 
 	window_.display();
