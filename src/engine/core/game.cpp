@@ -13,6 +13,19 @@ Game::~Game()
 
 void Game::Init()
 {
+	// 플레이어 설정 (32x32 흰색 사각형)
+	if (!player_font_.openFromFile("C:/Windows/Fonts/arial.ttf"))
+	{
+		return;
+	}
+
+	// 플레이어 설정 (@문자)
+	player_.emplace(player_font_, "@", 32);
+	player_->setFillColor(sf::Color::White);
+
+	// 화면 중앙에 배치
+	player_pos_ = { 640.f - 16.f, 360.f - 16.f };
+	player_->setPosition(player_pos_);
 }
 
 void Game::Run()
@@ -54,18 +67,51 @@ void Game::ProcessEvents()
 
 void Game::Update(float delta_time)
 {
+	// 키보드 입력으로 이동
+	sf::Vector2f movement{ 0.f, 0.f };
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+	{
+		movement.y -= 1.f;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+	{
+		movement.y += 1.f;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+	{
+		movement.x -= 1.f;
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+	{
+		movement.x += 1.f;
+	}
+
+	// 위치 업데이트
+	player_pos_ += movement * player_speed_ * delta_time;
+
+	if (player_)
+	{
+		player_->setPosition(player_pos_);
+	}
 }
 
 void Game::Render()
 {
 	window_.clear();
 
-	// TODO: 나중에 그릴 것
+	window_.draw(*player_);
 
 	window_.display();
 }
 
 void Game::Clear()
 {
-
 }
