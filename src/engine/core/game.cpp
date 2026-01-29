@@ -1,26 +1,29 @@
 #include "engine/core/game.h"
-#include "engine/manager/time_manager.h"
 
 Game::Game()
 	: window_(sf::VideoMode({ 1920u, 1080u }), "project-1")
 {
+	Init();
 }
 
 Game::~Game()
+{
+	Clear();
+}
+
+void Game::Init()
 {
 }
 
 void Game::Run()
 {
-	auto& time = TimeManager::GetInstance();
-
 	// 메인 루프
 	while (window_.isOpen())
 	{
-		time.Update();
+		float delta_time = clock_.restart().asSeconds();
 
 		ProcessEvents();
-		Update();
+		Update(delta_time);
 		Render();
 	}
 }
@@ -49,7 +52,7 @@ void Game::ProcessEvents()
 	}
 }
 
-void Game::Update()
+void Game::Update(float delta_time)
 {
 }
 
@@ -60,4 +63,9 @@ void Game::Render()
 	// TODO: 나중에 그릴 것
 
 	window_.display();
+}
+
+void Game::Clear()
+{
+
 }

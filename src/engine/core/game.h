@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Clock.hpp>
 
 class Game
 {
@@ -11,10 +12,13 @@ public:
 	void Run();
 
 private:
+	void Init();
 	void ProcessEvents();
-	void Update();
+	void Update(float deltaTime);
 	void Render();
+	void Clear();
 
 	sf::RenderWindow window_;
+	sf::Clock clock_;
 };
 

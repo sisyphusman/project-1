@@ -21,7 +21,7 @@ int main()
 // Namespace -> snake_case
 // Macro -> UPPER_SNAKE_CASE
 
-// ----- Comment Convention -----
-// cpp -> how?, header -> what?
+// ----- Comment Guidelines -----
+// source -> how it works, header -> what it does
 
 // 가장 아름다운 세계는 자신의 상상력으로 만들어낸 세계다
