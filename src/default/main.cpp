@@ -23,6 +23,8 @@ int main()
 // File Name                         -> PascalCase
 // Macro                             -> UPPER_SNAKE_CASE
 
+// 블록 단위일때 중괄호는 새로운 줄에서 시작, return에서 중괄호는 블록이 아니므로 제외
+
 // ----- Comment Guidelines -----
 // source -> how it works, header -> what it does
 

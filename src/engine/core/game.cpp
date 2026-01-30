@@ -1,31 +1,37 @@
-#include "engine/core/game.h"
+#include "Engine/Core/Game.h"
+#include "Engine/World/Map.h"
+#include "Engine/Entities/Player.h"
 
 Game::Game()
-	: Window(sf::VideoMode({ 1920u, 1080u }), "project-1")
-	, PlayerSpeed(200.f)
+	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
+	, GameView(sf::FloatRect({ 0.f, 0.f },
+		  {
+			  static_cast<float>(ViewWidthTiles * TileSize),
+			  static_cast<float>(ViewHeightTiles * TileSize),
+		  }))
 {
 	Init();
 }
 
 Game::~Game()
 {
-	Clear();
 }
 
 void Game::Init()
 {
-	if (!PlayerFont.openFromFile("C:/Windows/Fonts/arial.ttf"))
+	if (!GameFont.openFromFile("C:/Windows/Fonts/arial.ttf"))
 	{
 		return;
 	}
 
-	// 플레이어 설정 (@문자)
-	PlayerText.emplace(PlayerFont, "@", 32);
-	PlayerText->setFillColor(sf::Color::White);
+	// 뷰 설정 (해상도 독립적)
+	Window.setView(GameView);
 
-	// 화면 중앙에 배치
-	PlayerPos = { 640.f - 16.f, 360.f - 16.f };
-	PlayerText->setPosition(PlayerPos);
+	// 맵 설정 (@문자)
+	GameMap = std::make_unique<Map>(ViewWidthTiles, ViewHeightTiles);
+
+	// 플레이어 생성 (맵 중앙)
+	GamePlayer = std::make_unique<Player>(ViewWidthTiles / 2, ViewHeightTiles / 2);
 }
 
 void Game::Run()
@@ -33,17 +39,13 @@ void Game::Run()
 	// 메인 루프
 	while (Window.isOpen())
 	{
-		float delta_time = FrameClock.restart().asSeconds();
-
 		ProcessEvents();
-		Update(delta_time);
 		Render();
 	}
 }
 
 void Game::ProcessEvents()
 {
-	// 이벤트 처리
 	// while문에서 변수 선언 하는 이유 1. 범위 최소화 2. 이전 값 참조 실수 방지
 	while (const std::optional<sf::Event> event = Window.pollEvent())
 	{
@@ -53,68 +55,73 @@ void Game::ProcessEvents()
 			Window.close();
 		}
 
-		// 키 입력
-		// getIf는 타입 확인 후 캐스팅
-		if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>())
+		// 턴 기반
+		if (const auto* key = event->getIf<sf::Event::KeyPressed>())
 		{
-			if (keyEvent->code == sf::Keyboard::Key::Escape)
+			int dx = 0;
+			int dy = 0;
+
+			switch (key->code)
 			{
-				Window.close();
+				case sf::Keyboard::Key::W:
+				case sf::Keyboard::Key::Up:
+					dy = -1;
+					break;
+				case sf::Keyboard::Key::S:
+				case sf::Keyboard::Key::Down:
+					dy = 1;
+					break;
+				case sf::Keyboard::Key::A:
+				case sf::Keyboard::Key::Left:
+					dx = -1;
+					break;
+				case sf::Keyboard::Key::D:
+				case sf::Keyboard::Key::Right:
+					dx = 1;
+					break;
+				case sf::Keyboard::Key::Escape:
+					Window.close();
+					break;
+				default:
+					break;
+			}
+
+			if (dx != 0 || dy != 0)
+			{
+				GamePlayer->TryMove(dx, dy, *GameMap);
 			}
 		}
 	}
 }
 
-void Game::Update(float deltaTime)
+void Game::Update()
 {
-	// 키보드 입력으로 이동
-	sf::Vector2f dir{ 0.f, 0.f };
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-	{
-		dir.y -= 1.f;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-	{
-		dir.y += 1.f;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-	{
-		dir.x -= 1.f;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-	{
-		dir.x += 1.f;
-	}
-
-	// 대각선 이동 정규화
-	if (dir.x != 0.f || dir.y != 0.f)
-	{
-		float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);	// 벡터의 길이 계산
-		dir /= len;												// 벡터를 길이로 나눠서 단위 벡터로 변환 (len = 1.414, dir = 0.707)
-	}
-
-	// 위치 업데이트
-	PlayerPos += dir * PlayerSpeed * deltaTime;
-
-	if (PlayerText)
-	{
-		PlayerText->setPosition(PlayerPos);
-	}
 }
 
 void Game::Render()
 {
-	Window.clear();
+	Window.clear(sf::Color::Black);
 
-	Window.draw(*PlayerText);
+	// 맵 랜더링
+	sf::Text tileText(GameFont, "", TileSize);
+	for (int y = 0; y < GameMap->GetHeight(); ++y)
+	{
+		for (int x = 0; x < GameMap->GetWidth(); ++x)
+		{
+			const Tile& tile = GameMap->GetTile(x, y);
+			tileText.setString(std::string(1, tile.Glyph));
+			tileText.setPosition({ static_cast<float>(x * TileSize), static_cast<float>(y * TileSize) });
+			tileText.setFillColor(tile.Walkable ? sf::Color(100, 100, 100) : sf::Color(50, 50, 50));
+			Window.draw(tileText);
+		}
+	}
+
+	// 플레이어 랜더링
+	auto pos = GamePlayer->GetPosition();
+	tileText.setString("@");
+	tileText.setPosition({ static_cast<float>(pos.x * TileSize), static_cast<float>(pos.y * TileSize) });
+	tileText.setFillColor(sf::Color::White);
+	Window.draw(tileText);
 
 	Window.display();
-}
-
-void Game::Clear()
-{
 }
