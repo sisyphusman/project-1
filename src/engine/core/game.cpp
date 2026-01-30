@@ -65,33 +65,40 @@ void Game::ProcessEvents()
 	}
 }
 
-void Game::Update(float delta_time)
+void Game::Update(float deltaTime)
 {
 	// 키보드 입력으로 이동
-	sf::Vector2f movement{ 0.f, 0.f };
+	sf::Vector2f dir{ 0.f, 0.f };
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
 	{
-		movement.y -= 1.f;
+		dir.y -= 1.f;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
 	{
-		movement.y += 1.f;
+		dir.y += 1.f;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
 	{
-		movement.x -= 1.f;
+		dir.x -= 1.f;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
 	{
-		movement.x += 1.f;
+		dir.x += 1.f;
+	}
+
+	// 대각선 이동 정규화
+	if (dir.x != 0.f || dir.y != 0.f)
+	{
+		float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);	// 벡터의 길이 계산
+		dir /= len;												// 벡터를 길이로 나눠서 단위 벡터로 변환
 	}
 
 	// 위치 업데이트
-	PlayerPos += movement * PlayerSpeed * delta_time;
+	PlayerPos += dir * PlayerSpeed * deltaTime;
 
 	if (PlayerText)
 	{

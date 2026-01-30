@@ -14,7 +14,7 @@ public:
 private:
 	void Init();
 	void ProcessEvents();
-	void Update(float DeltaTime);
+	void Update(float deltaTime);
 	void Render();
 	void Clear();
 
