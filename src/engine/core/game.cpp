@@ -94,7 +94,7 @@ void Game::Update(float deltaTime)
 	if (dir.x != 0.f || dir.y != 0.f)
 	{
 		float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);	// 벡터의 길이 계산
-		dir /= len;												// 벡터를 길이로 나눠서 단위 벡터로 변환
+		dir /= len;												// 벡터를 길이로 나눠서 단위 벡터로 변환 (len = 1.414, dir = 0.707)
 	}
 
 	// 위치 업데이트
