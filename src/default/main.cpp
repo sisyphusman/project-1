@@ -1,7 +1,5 @@
 #include "engine/core/game.h"
 
-// main.cpp는 클래스가 아니고 일반 파일이라 소문자 이름 사용
-
 int main()
 {
 	Game game;
@@ -12,14 +10,18 @@ int main()
 
 // ----- Code Convention -----
 
-// Google Style + C++ Core GuideLine + Visual Studio Formatting Style
+// Unreal Style + Unreal Clang Format
 
-// Class, Struct, Enum, Method -> PascalCase
-// Local Var, File Name -> snake_case
-// Member Var -> snake_case_
-// Constant, Enum Value -> kPascalCase
-// Namespace -> snake_case
-// Macro -> UPPER_SNAKE_CASE
+// Class / Struct / Enum / Interface -> PascalCase (with prefix U/A/F/E/I)
+// Function / Method                 -> PascalCase
+// Member Variable                   -> PascalCase
+// Local Variable / Parameter        -> camelCase
+// bool Variable                     -> bPrefix + PascalCase
+// Constant                          -> PascalCase
+// Enum Value                        -> PascalCase
+// Namespace                         -> 거의 사용 안 함
+// File Name                         -> PascalCase
+// Macro                             -> UPPER_SNAKE_CASE
 
 // ----- Comment Guidelines -----
 // source -> how it works, header -> what it does
