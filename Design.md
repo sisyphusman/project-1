@@ -20,6 +20,13 @@ Macro                             -> UPPER_SNAKE_CASE
 
 - source -> how it works, header -> what it does
 
+# Header Lineup
+0. 소스의 헤더
+1. 표준 라이브러리
+2. 외부 라이브러리
+3. 프로젝트 내부 헤더  
+- 그룹 간 공백 한 줄, 같은 그룹 내 알파벳 정렬
+
 # Architecture
 
 ```

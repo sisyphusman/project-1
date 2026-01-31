@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Engine/World/Tile.h"
 #include <vector>
+
 #include <SFML/System/Vector2.hpp>
+
+#include "Engine/World/Tile.h"
 
 class Map
 {

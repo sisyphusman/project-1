@@ -1,7 +1,8 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include <memory>
+
+#include <SFML/Graphics.hpp>
 
 class Map;
 class Player;

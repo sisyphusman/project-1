@@ -1,4 +1,5 @@
 #include "Engine/Entities/Entity.h"
+
 #include "Engine/World/Map.h"
 
 Entity::Entity(int x, int y, char glyph)

@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Engine/World/Map.h"
-#include "Engine/World/DungeonGenerator.h"
 #include <vector>
 #include <memory>
+
 #include <SFML/System/Vector2.hpp>
+
+#include "Engine/World/Map.h"
 
 class DungeonManager
 {

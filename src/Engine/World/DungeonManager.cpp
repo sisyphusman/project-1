@@ -1,4 +1,5 @@
 #include "DungeonManager.h"
+#include "Engine/World/DungeonGenerator.h"
 
 DungeonManager::DungeonManager(int mapWidth, int mapHeight)
 	: MapWidth(mapWidth)
