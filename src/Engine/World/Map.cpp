@@ -3,7 +3,7 @@
 Map::Map(int width, int height)
 	: Width(width)
 	, Height(height)
-	, Tiles(width * height)
+	, Tiles(width * height, Tile::Wall())
 {
 	// 기본 : 전부 바닥, 테두리만 벽
 	for (int y = 0; y < Height; ++y)

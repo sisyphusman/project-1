@@ -1,6 +1,7 @@
 #include "Engine/Core/Game.h"
 #include "Engine/World/Map.h"
 #include "Engine/Entities/Player.h"
+#include "Engine/World/DungeonGenerator.h"
 
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
@@ -27,11 +28,19 @@ void Game::Init()
 	// 뷰 설정 (해상도 독립적)
 	Window.setView(GameView);
 
-	// 맵 설정 (@문자)
+	// 맵 설정
 	GameMap = std::make_unique<Map>(ViewWidthTiles, ViewHeightTiles);
 
+	// 던전 생성
+	DungeonGenerator generator;
+	generator.Generate(*GameMap, 10, 5, 12);
+
 	// 플레이어 생성 (맵 중앙)
-	GamePlayer = std::make_unique<Player>(ViewWidthTiles / 2, ViewHeightTiles / 2);
+	const auto& rooms = generator.GetRooms();
+	if (!rooms.empty())
+	{
+		GamePlayer = std::make_unique<Player>(rooms[0].CenterX(), rooms[0].CenterY());
+	}
 }
 
 void Game::Run()
@@ -111,7 +120,7 @@ void Game::Render()
 			const Tile& tile = GameMap->GetTile(x, y);
 			tileText.setString(std::string(1, tile.Glyph));
 			tileText.setPosition({ static_cast<float>(x * TileSize), static_cast<float>(y * TileSize) });
-			tileText.setFillColor(tile.Walkable ? sf::Color(100, 100, 100) : sf::Color(50, 50, 50));
+			tileText.setFillColor(sf::Color::White);
 			Window.draw(tileText);
 		}
 	}
