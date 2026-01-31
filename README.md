@@ -1,5 +1,6 @@
 # Project-1
-C++과 SFML을 사용해 제작 중인 동양풍 2D 로그라이크 콘솔 게임입니다.
+C++과 SFML을 사용해 제작 중인 고대 한국 배경의 2D 로그라이크 콘솔 게임입니다  
+This is a 2D roguelike console game set in an ancient Korean setting, currently under development using C++ and SFML
 
 ## Requirements
 - Visual Studio 2026
@@ -10,7 +11,9 @@ C++과 SFML을 사용해 제작 중인 동양풍 2D 로그라이크 콘솔 게�
   
 ## Build
 
-이 프로젝트는 vcpkg를 통해 SFML을 설치합니다.
+이 프로젝트는 vcpkg를 통해 SFML을 설치합니다  
+This project installs SFML via vcpkg
+
 ```
 vcpkg install sfml
 git clone <repository_url>
