@@ -28,12 +28,12 @@ void DungeonManager::GenerateLevel(int level)
 		if (level > 0)
 		{
 			upStairs = { rooms[0].CenterX(), rooms[0].CenterY() };
-			map->GetTile(upStairs.x, upStairs.y) = Tile::StairUp();
+			map->SetTile(upStairs.x, upStairs.y, Tile::StairUp());
 		}
 
 		// 마지막 방 중앙에 아래층 계단
 		downStairs = { rooms.back().CenterX(), rooms.back().CenterY() };
-		map->GetTile(downStairs.x, downStairs.y) = Tile::StairDown();
+		map->SetTile(downStairs.x, downStairs.y, Tile::StairDown());
 	}
 
 	// 생성된 맵과 계단 위치를 저장

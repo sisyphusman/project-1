@@ -24,7 +24,7 @@ void DungeonGenerator::Generate(Map& map, int maxRooms, int roomMinSize, int roo
 	{
 		for (int x = 0; x < map.GetWidth(); ++x)
 		{
-			map.GetTile(x, y) = Tile::Wall();
+			map.SetTile(x, y, Tile::Wall());
 		}
 	}
 
@@ -91,7 +91,7 @@ void DungeonGenerator::CreateRoom(Map& map, const Room& room)
 	{
 		for (int x = room.X; x < room.X + room.Width; ++x)
 		{
-			map.GetTile(x, y) = Tile::Floor();
+			map.SetTile(x, y, Tile::Floor());
 		}
 	}
 }
@@ -104,7 +104,7 @@ void DungeonGenerator::CreateHTunnel(Map& map, int x1, int x2, int y)
 	// Wall -> Floor로 변경
 	for (int x = start; x <= end; ++x)
 	{
-		map.GetTile(x, y) = Tile::Floor();
+		map.SetTile(x, y, Tile::Floor());
 	}
 }
 
@@ -115,6 +115,6 @@ void DungeonGenerator::CreateVTunnel(Map& map, int y1, int y2, int x)
 
 	for (int y = start; y <= end; ++y)
 	{
-		map.GetTile(x, y) = Tile::Floor();
+		map.SetTile(x, y, Tile::Floor());
 	}
 }

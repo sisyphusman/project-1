@@ -5,7 +5,7 @@ Map::Map(int width, int height)
 	, Height(height)
 	, Tiles(width * height, Tile::Wall())
 {
-	// 기본 : 전부 바닥, 테두리만 벽
+	// 초기화만 담당
 	for (int y = 0; y < Height; ++y)
 	{
 		for (int x = 0; x < width; ++x)
@@ -21,9 +21,12 @@ bool Map::InBounds(int x, int y) const
 	return x >= 0 && x < Width && y >= 0 && y < Height;
 }
 
-Tile& Map::GetTile(int x, int y)
+void Map::SetTile(int x, int y, const Tile& tile)
 {
-	return Tiles[y * Width + x];
+	if (InBounds(x, y))
+	{
+		Tiles[y * Width + x] = tile;
+	}
 }
 
 const Tile& Map::GetTile(int x, int y) const
