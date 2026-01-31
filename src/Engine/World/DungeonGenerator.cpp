@@ -33,6 +33,7 @@ void DungeonGenerator::Generate(Map& map, int maxRooms, int roomMinSize, int roo
 
 	for (int i = 0; i < maxRooms; ++i)
 	{
+		// w, h의 범위는 [min,max]
 		int w = widthDist(Rng);
 		int h = heightDist(Rng);
 

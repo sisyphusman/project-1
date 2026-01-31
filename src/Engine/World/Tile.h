@@ -3,7 +3,9 @@
 enum class TileType
 {
 	Floor,
-	Wall
+	Wall,
+	StairDown,
+	StairUp
 };
 
 struct Tile
@@ -25,6 +27,20 @@ struct Tile
 	{
 		return {
 			TileType::Wall, '#', false, false
+		};
+	}
+
+	static Tile StairDown()
+	{
+		return {
+			TileType::StairDown, '>', true, true
+		};
+	}
+
+	static Tile StairUp()
+	{
+		return {
+			TileType::StairUp, '<', true, true
 		};
 	}
 };
