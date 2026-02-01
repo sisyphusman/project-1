@@ -4,6 +4,7 @@
 #include "Engine/Entities/Player.h"
 #include "Engine/World/DungeonGenerator.h"
 #include "Engine/World/DungeonManager.h"
+#include "Engine/Systems/FOV.h"
 
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
@@ -30,11 +31,14 @@ void Game::Init()
 	// 뷰 설정 (해상도 독립적)
 	Window.setView(GameView);
 
-	// 맵 설정
+	// 맵 생성
 	Dungeon = std::make_unique<DungeonManager>(ViewWidthTiles, ViewHeightTiles);
 
 	// 플레이어 시작 위치 찾기
 	Map& currentMap = Dungeon->GetCurrentMap();
+
+	// FOV 시스템 초기화
+	PlayerFOV = std::make_unique<FOV>(currentMap.GetWidth(), currentMap.GetHeight());
 
 	// 첫 번째 걸을 수 있는 타일을 찾아 플레이어 배치
 	for (int y = 1; y < currentMap.GetHeight() - 1; ++y)
@@ -44,6 +48,10 @@ void Game::Init()
 			if (currentMap.GetTile(x, y).Walkable)
 			{
 				GamePlayer = std::make_unique<Player>(x, y);
+
+				// 첫 시야 계산
+				auto pos = GamePlayer->GetPosition();
+				PlayerFOV->Compute(currentMap, pos.x, pos.y, FOVRadius);
 				return;
 			}
 		}
@@ -98,11 +106,8 @@ void Game::ProcessEvents()
 				case sf::Keyboard::Key::Escape:
 					Window.close();
 					break;
-				case sf::Keyboard::Key::Period:
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
-					{
-						CheckStairs();
-					}
+				case sf::Keyboard::Key::Space:
+					CheckStairs();
 					break;
 				default:
 					break;
@@ -111,7 +116,12 @@ void Game::ProcessEvents()
 			// 이동 입력이 있으면 플레이어 이동
 			if (dx != 0 || dy != 0)
 			{
-				GamePlayer->TryMove(dx, dy, Dungeon->GetCurrentMap());
+				if (GamePlayer->TryMove(dx, dy, Dungeon->GetCurrentMap()))
+				{
+					// 이동 성공 시 FOV 재계산
+					auto pos = GamePlayer->GetPosition();
+					PlayerFOV->Compute(Dungeon->GetCurrentMap(), pos.x, pos.y, FOVRadius);
+				}
 			}
 		}
 	}
@@ -130,6 +140,10 @@ void Game::CheckStairs()
 		if (Dungeon->GoToNextLevel(newPos))
 		{
 			GamePlayer->SetPosition(newPos.x, newPos.y);
+
+			// 층 이동 후 FOV 재계산
+			PlayerFOV->Reset();
+			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, FOVRadius);
 		}
 	}
 
@@ -139,6 +153,10 @@ void Game::CheckStairs()
 		if (Dungeon->GoToPrevLevel(newPos))
 		{
 			GamePlayer->SetPosition(newPos.x, newPos.y);
+
+			// 층 이동 후 FOV 재계산
+			PlayerFOV->Reset();
+			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, FOVRadius);
 		}
 	}
 }
@@ -152,17 +170,33 @@ void Game::Render()
 
 	Map& currentMap = Dungeon->GetCurrentMap();
 
-	// 맵 랜더링
+	// 타일 텍스트 객체 생성
 	sf::Text tileText(GameFont, "", TileSize);
+
+	// 맵 타일 랜더링
 	for (int y = 0; y < currentMap.GetHeight(); ++y)
 	{
 		for (int x = 0; x < currentMap.GetWidth(); ++x)
 		{
 			const Tile& tile = currentMap.GetTile(x, y);
-			tileText.setString(std::string(1, tile.Glyph));
-			tileText.setPosition({ static_cast<float>(x * TileSize), static_cast<float>(y * TileSize) });
-			tileText.setFillColor(sf::Color::White);
-			Window.draw(tileText);
+
+			// 현재 시야에 보이는 타일
+			if (PlayerFOV->IsVisible(x, y))
+			{
+				tileText.setString(std::string(1, tile.Glyph));
+				tileText.setPosition({ static_cast<float>(x * TileSize), static_cast<float>(y * TileSize) });
+				tileText.setFillColor(sf::Color::White);
+				Window.draw(tileText);
+			}
+			// 탐험했지만 현재 보이지 않는 타일
+			else if (PlayerFOV->IsExplored(x, y))
+			{
+				tileText.setString(std::string(1, tile.Glyph));
+				tileText.setPosition({ static_cast<float>(x * TileSize), static_cast<float>(y * TileSize) });
+				tileText.setFillColor(sf::Color(100, 100, 100)); // 어두운 회색
+				Window.draw(tileText);
+			}
+			// 미탐험 영역은 렌더링하지 않음 (검은색 유지)
 		}
 	}
 

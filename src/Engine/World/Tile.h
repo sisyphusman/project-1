@@ -14,7 +14,7 @@ struct Tile
 	TileType Type = TileType::Floor;
 	char	 Glyph = '.';
 	bool	 Walkable = true;
-	bool	 Transparent = true; // FOV 용도
+	bool	 Transparent = true; // 시야가 통과하는 타일
 
 	// 헬퍼 함수
 	static Tile Floor()
