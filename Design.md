@@ -20,7 +20,7 @@ Macro                             -> UPPER_SNAKE_CASE
 
 - source -> how it works, header -> what it does
 
-# Header Lineup
+# Include Order
 0. 소스의 헤더
 1. 표준 라이브러리
 2. 외부 라이브러리

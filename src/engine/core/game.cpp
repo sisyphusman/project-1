@@ -33,17 +33,6 @@ void Game::Init()
 	// 맵 설정
 	Dungeon = std::make_unique<DungeonManager>(ViewWidthTiles, ViewHeightTiles);
 
-	//// 던전 생성
-	// DungeonGenerator generator;
-	// generator.Generate(*GameMap, 10, 5, 12);
-
-	//// 플레이어 생성
-	// const auto& rooms = generator.GetRooms();
-	// if (!rooms.empty())
-	//{
-	//	GamePlayer = std::make_unique<Player>(rooms[0].CenterX(), rooms[0].CenterY());
-	// }
-
 	// 플레이어 시작 위치 찾기
 	Map& currentMap = Dungeon->GetCurrentMap();
 
