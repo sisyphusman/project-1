@@ -4,7 +4,7 @@
 
 class Map;
 
-// Recursive Shadowcasting 알고리즘
+// Bresenham Raycasting 알고리즘
 class FOV
 {
 public:
@@ -20,14 +20,17 @@ public:
 	void					 SetExploredData(const std::vector<bool>& data);
 
 private:
-	void CastLight(const Map& map, int ox, int oy, int radius,			// 한 octant(방향)에 대해 시야를 확장, row 단위로 진행하며 그림자(벽)를 기준으로 재귀 분할
-		int row, float startSlope, float endSlope,
-		int xx, int xy, int yx, int yy);
-	void SetVisible(int x, int y);										// 해당 좌표는 보이게 설정
-	bool InBounds(int x, int y) const;									// 플레이어가 FOV 배열 범위 밖이면 중단
+	void CastRay(const Map& map, int originX, int originY, int targetX, int targetY, int radius); // Bresenham 광선 투사
+
+	void GetCirclePoints(int centerX, int centerY, int radius, std::vector<std::pair<int, int>>& points); // 원형 시야 경계점 생성
+
+	void SetVisible(int x, int y);	   // 해당 좌표는 보이게 설정
+	bool InBounds(int x, int y) const; // 플레이어가 FOV 배열 범위 밖이면 중단
+
+	float Distance(int x1, int y1, int x2, int y2) const; // 거리 계산 (유클리드)
 
 	int				  Width;
 	int				  Height;
-	std::vector<bool> Visible;
-	std::vector<bool> Explored;
+	std::vector<bool> Visible; // 현재 턴에서 보이는 타일
+	std::vector<bool> Explored; // 한 번이라도 본 타일
 };
