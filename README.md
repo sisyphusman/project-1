@@ -1,6 +1,6 @@
 # Project-1
 C++과 SFML을 사용해 제작 중인 고대 한국 배경의 2D 로그라이크 콘솔 게임입니다  
-This is a 2D roguelike console game set in an ancient Korean setting, currently under development using C++ and SFML
+This is a 2D roguelike console game set in an ancient korean world, currently under development using C++ and SFML
 
 ## Requirements
 - Visual Studio 2026

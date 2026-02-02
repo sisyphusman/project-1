@@ -27,6 +27,10 @@ Macro                             -> UPPER_SNAKE_CASE
 3. 프로젝트 내부 헤더  
 - 그룹 간 공백 한 줄, 같은 그룹 내 알파벳 정렬
 
+# File/Folder Name
+- Github Project Title -> lowercase-kebab-case
+- Window Files -> PascalCase
+
 # Architecture
 
 ```
