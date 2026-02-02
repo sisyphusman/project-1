@@ -42,6 +42,14 @@ void FOV::Compute(const Map& map, int originX, int originY, int radius)
 	}
 }
 
+void FOV::SetExploredData(const std::vector<bool>& data)
+{
+	if (data.size() == Explored.size())
+	{
+		Explored = data;
+	}
+}
+
 void FOV::CastLight(const Map& map, int ox, int oy, int radius, int row, float startSlope, float endSlope, int xx, int xy, int yx, int yy)
 {
 	if (startSlope < endSlope)

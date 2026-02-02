@@ -133,29 +133,53 @@ void Game::CheckStairs()
 	const Tile& tile = Dungeon->GetCurrentMap().GetTile(pos.x, pos.y);
 
 	sf::Vector2i newPos;
+	int			 currentLevel = Dungeon->GetCurrentLevel();
 
 	// 아래층 계단 위에 있으면 다음 레벨로 이동
 	if (tile.Type == TileType::StairDown)
 	{
+		// 현재 층의 탐험 데이터 저장
+		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
+
 		if (Dungeon->GoToNextLevel(newPos))
 		{
 			GamePlayer->SetPosition(newPos.x, newPos.y);
 
-			// 층 이동 후 FOV 재계산
-			PlayerFOV->Reset();
+			// 새 층의 탐험 데이터 복원
+			std::vector<bool> savedData;
+			if (Dungeon->LoadExploredData(Dungeon->GetCurrentLevel(), savedData))
+			{
+				PlayerFOV->SetExploredData(savedData);
+			}
+			else
+			{
+				PlayerFOV->Reset();
+			}
+
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, FOVRadius);
 		}
 	}
-
 	// 위층 계단 위에 있으면 이전 레벨로 이동
 	else if (tile.Type == TileType::StairUp)
 	{
+		// 현재 층의 탐험 데이터 저장
+		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
+
 		if (Dungeon->GoToPrevLevel(newPos))
 		{
 			GamePlayer->SetPosition(newPos.x, newPos.y);
 
-			// 층 이동 후 FOV 재계산
-			PlayerFOV->Reset();
+			// 이전 층의 탐험 데이터 복원
+			std::vector<bool> savedData;
+			if (Dungeon->LoadExploredData(Dungeon->GetCurrentLevel(), savedData))
+			{
+				PlayerFOV->SetExploredData(savedData);
+			}
+			else
+			{
+				PlayerFOV->Reset();
+			}
+
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, FOVRadius);
 		}
 	}

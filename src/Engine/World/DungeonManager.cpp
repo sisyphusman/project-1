@@ -81,3 +81,35 @@ Map& DungeonManager::GetCurrentMap()
 {
 	return *Levels[CurrentLevel];
 }
+
+void DungeonManager::SaveExploredData(int level, const std::vector<bool>& data)
+{
+	if (level < 0)
+	{
+		return;
+	}
+
+	// 필요 시 벡터 크기 확장
+	if (level >= static_cast<int>(LevelExploredData.size()))
+	{
+		LevelExploredData.resize(level + 1);
+	}
+
+	LevelExploredData[level] = data;
+}
+
+bool DungeonManager::LoadExploredData(int level, std::vector<bool>& outData) const
+{
+	if (level < 0 || level >= static_cast<int>(LevelExploredData.size()))
+	{
+		return false;
+	}
+
+	if (LevelExploredData[level].empty())
+	{
+		return false;
+	}
+
+	outData = LevelExploredData[level];
+	return true;
+}

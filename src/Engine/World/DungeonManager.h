@@ -19,6 +19,10 @@ public:
 	Map& GetCurrentMap(); // 현재 레벨의 맵 반환
 	int	 GetCurrentLevel() const { return CurrentLevel; }
 
+	// 탐험 데이터 저장/복원
+	void SaveExploredData(int level, const std::vector<bool>& data);
+	bool LoadExploredData(int level, std::vector<bool>& outData) const;
+
 private:
 	void GenerateLevel(int level); // 새로운 던전 레벨 생성
 
@@ -28,4 +32,5 @@ private:
 
 	std::vector<std::unique_ptr<Map>>				   Levels;
 	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> StairsPositions; // <UpStairs, DownStairs>
+	std::vector<std::vector<bool>>					   LevelExploredData; // 층별 탐험 데이터
 };

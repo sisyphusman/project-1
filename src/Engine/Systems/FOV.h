@@ -15,6 +15,10 @@ public:
 	bool IsExplored(int x, int y) const;								// 해당 좌표가 과거에 한 번이라도 보였는지 확인
 	void Reset();
 
+	// 탐험 데이터 저장/복원
+	const std::vector<bool>& GetExploredData() const { return Explored; }
+	void					 SetExploredData(const std::vector<bool>& data);
+
 private:
 	void CastLight(const Map& map, int ox, int oy, int radius,			// 한 octant(방향)에 대해 시야를 확장, row 단위로 진행하며 그림자(벽)를 기준으로 재귀 분할
 		int row, float startSlope, float endSlope,
