@@ -15,7 +15,7 @@ void Camera::ToggleZoomOut()
 
 void Camera::Update(float deltaTime)
 {
-	// 부드러운 카메라 추적
+	// 부드러운 카메라 추적, 보간 계수 t	
 	const float t = 1.0f - std::exp(-SmoothSpeed * deltaTime);
 	m_x += (m_targetX - m_x) * t;
 	m_y += (m_targetY - m_y) * t;
