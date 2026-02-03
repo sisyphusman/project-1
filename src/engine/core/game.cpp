@@ -5,6 +5,7 @@
 #include "Engine/World/DungeonGenerator.h"
 #include "Engine/World/DungeonManager.h"
 #include "Engine/Systems/FOV.h"
+#include "Engine/UI/Camera.h"
 
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
@@ -40,6 +41,11 @@ void Game::Init()
 	// FOV 시스템 초기화
 	PlayerFOV = std::make_unique<FOV>(currentMap.GetWidth(), currentMap.GetHeight());
 
+	// 카메라 초기화
+	GameCamera = std::make_unique<Camera>();
+	GameCamera->SetNormalZoom(1.0f);
+	GameCamera->SetZoomedOutZoom(0.25f);
+
 	// 첫 번째 걸을 수 있는 타일을 찾아 플레이어 배치
 	for (int y = 1; y < currentMap.GetHeight() - 1; ++y)
 	{
@@ -48,6 +54,9 @@ void Game::Init()
 			if (currentMap.GetTile(x, y).Walkable)
 			{
 				GamePlayer = std::make_unique<Player>(x, y);
+
+				// 카메라 초기 위치 설정
+				GameCamera->SetTarget(static_cast<float>(x * TileSize), static_cast<float>(y * TileSize));
 
 				// 첫 시야 계산
 				auto pos = GamePlayer->GetPosition();
@@ -60,10 +69,14 @@ void Game::Init()
 
 void Game::Run()
 {
+	GameClock.restart();
+
 	// 메인 루프
 	while (Window.isOpen())
 	{
+		float deltaTime = GameClock.restart().asSeconds();
 		ProcessEvents();
+		Update(deltaTime);
 		Render();
 	}
 }
@@ -109,6 +122,9 @@ void Game::ProcessEvents()
 				case sf::Keyboard::Key::Space:
 					CheckStairs();
 					break;
+				case sf::Keyboard::Key::Tab:
+					GameCamera->ToggleZoomOut();
+					break;
 				default:
 					break;
 			}
@@ -121,6 +137,9 @@ void Game::ProcessEvents()
 					// 이동 성공 시 FOV 재계산
 					auto pos = GamePlayer->GetPosition();
 					PlayerFOV->Compute(Dungeon->GetCurrentMap(), pos.x, pos.y, FOVRadius);
+
+					// 카메라 타겟 업데이트
+					GameCamera->SetTarget(static_cast<float>(pos.x * TileSize), static_cast<float>(pos.y * TileSize));
 				}
 			}
 		}
@@ -183,9 +202,27 @@ void Game::CheckStairs()
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, FOVRadius);
 		}
 	}
+
+	// 카메라 타겟 업데이트
+	GameCamera->SetTarget(static_cast<float>(newPos.x * TileSize), static_cast<float>(newPos.y * TileSize));
 }
-void Game::Update()
+
+void Game::Update(float deltaTime)
 {
+	GameCamera->Update(deltaTime); // 카메라 계산
+	UpdateCamera();				   // 계산 후 View에 적용
+}
+
+void Game::UpdateCamera()
+{
+	// 카메라 위치 줌을 View에 적용
+	float zoom = GameCamera->GetZoom();
+	float viewWidth = ViewWidthTiles * TileSize / zoom;
+	float viewHeight = ViewHeightTiles * TileSize / zoom;
+
+	GameView.setSize({ viewWidth, viewHeight });
+	GameView.setCenter({ GameCamera->GetX(), GameCamera->GetY() });
+	Window.setView(GameView);
 }
 
 void Game::Render()

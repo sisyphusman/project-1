@@ -40,7 +40,7 @@ void FOV::Compute(const Map& map, int originX, int originY, int radius)
 
 void FOV::GetCirclePoints(int centerX, int centerY, int radius, std::vector<std::pair<int, int>>& points)
 {
-	// 모든 분면(octant)의 점을 수집하여 완전한 원 형성
+	// 원의 1/8 테두리만 구한 다음 부호와 x,y 반전을 이용해서 전체 원의 테두리를 완성
 
 	int x = radius;
 	int y = 0;
