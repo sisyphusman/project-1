@@ -26,9 +26,9 @@ private:
 	float m_targetX = 0.0f;
 	float m_targetY = 0.0f;
 
-	float m_normalZoom = 1.0f;	   // 기본
-	float m_zoomedOutZoom = 0.25f; // 줌 아웃
-	float m_currentZoom = 1.0f;	   // 보간 결과
+	float m_normalZoom = 1.0f;	  // 기본
+	float m_zoomedOutZoom = 0.5f; // 줌 아웃
+	float m_currentZoom = 1.0f;	  // 보간 결과
 
 	bool m_isZoomedOut = false;
 
