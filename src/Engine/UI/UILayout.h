@@ -21,6 +21,16 @@ struct UILayout
 	static constexpr int GameAreaHeight = static_cast<int>(BaseHeight * GameAreaRatio); // 756
 	static constexpr int LogAreaHeight = BaseHeight - GameAreaHeight;					// 324
 
+	// 하단 UI 3분할 (초상화 / 로그 / 스탯)
+	static constexpr float PortraitRatio = 0.25f;
+	static constexpr float LogRatio = 0.50f;
+	static constexpr float StatusRatio = 0.25f;
+	
+	static constexpr int   PortraitWidth = static_cast<int>(BaseWidth * PortraitRatio);
+	static constexpr float LogWidth = static_cast<int>(BaseWidth * LogRatio);
+	static constexpr float StatusWidth = static_cast<int>(BaseWidth * StatusRatio);
+
+
 	// 타일 설정
 	static constexpr int TileSize = 24;
 	static constexpr int ViewWidthTiles = BaseWidth / TileSize;		  // 80
