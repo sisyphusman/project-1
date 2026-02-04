@@ -7,6 +7,7 @@
 #include "Engine/Systems/FOV.h"
 #include "Engine/UI/Camera.h"
 #include "Engine/UI/MessageLog.h"
+#include "Engine/Core/CoreMacros.h"
 
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
@@ -26,10 +27,8 @@ Game::~Game()
 
 void Game::Init()
 {
-	if (!GameFont.openFromFile("assets/fonts/Pretendard-Regular.ttf"))
-	{
-		return;
-	}
+	// 실패하면 abort()
+	GAME_CHECK(GameFont.openFromFile("assets/fonts/Pretendard-Regular.ttf"));
 
 	// 뷰 설정 (해상도 독립적)
 	Window.setView(GameView);
