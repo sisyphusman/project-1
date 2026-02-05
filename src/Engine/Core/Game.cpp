@@ -7,7 +7,7 @@
 #include "Engine/Systems/FOV.h"
 #include "Engine/UI/Camera.h"
 #include "Engine/UI/MessageLog.h"
-#include "Engine/Core/CoreMacros.h"
+#include "Engine/Core/Macros.h"
 
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)

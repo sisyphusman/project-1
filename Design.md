@@ -35,16 +35,16 @@ Macro                             -> UPPER_SNAKE_CASE
 
 ```
 src/
-├── core/
-├── actors/
-├── items/
-├── world/
-├── systems/
-├── ui/
-├── audio/
-├── data/
-├── events/
-└── main.cpp
+├── Core/
+├── Actors/
+├── Items/
+├── World/
+├── Systems/
+├── UI/
+├── Audio/
+├── Data/
+├── Events/
+└── Main.cpp
 
 assets/
 tools/

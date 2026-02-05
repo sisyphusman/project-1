@@ -23,7 +23,7 @@
 	#define GAME_CHECK_SLOW(expr) ((void)0)
 #endif
 
-// 경고, 계속 진행, 매크로를 함수처럼 안전하게 쓰기 위해 람다 사용
+// 경고, 계속 진행, 매크로를 안전한 함수처럼 쓰기 위해 람다 사용
 #define GAME_ENSURE(expr)																			  \
 	([&]() -> bool																					  \
     {																								  \
