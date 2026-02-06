@@ -21,15 +21,16 @@ struct UILayout
 	static constexpr int GameAreaHeight = static_cast<int>(BaseHeight * GameAreaRatio); // 756
 	static constexpr int LogAreaHeight = BaseHeight - GameAreaHeight;					// 324
 
-	// 하단 UI 3분할 (초상화 / 로그 / 스탯)
-	static constexpr float PortraitRatio = 0.25f;
-	static constexpr float LogRatio = 0.50f;
-	static constexpr float StatusRatio = 0.25f;
+	// 하단 UI 3분할 (초상화 / 인포 / 로그 / 맵)
+	static constexpr float PortraitRatio = 0.10f;
+	static constexpr float InfoRatio = 0.20f;
+	static constexpr float LogRatio = 0.40f;
+	static constexpr float MinimapRatio = 0.30f;
 	
-	static constexpr int   PortraitWidth = static_cast<int>(BaseWidth * PortraitRatio);
-	static constexpr float LogWidth = static_cast<int>(BaseWidth * LogRatio);
-	static constexpr float StatusWidth = static_cast<int>(BaseWidth * StatusRatio);
-
+	static constexpr int PortraitWidth = static_cast<int>(BaseWidth * PortraitRatio);
+	static constexpr int InfoWidth = static_cast<int>(BaseWidth * InfoRatio);
+	static constexpr int LogWidth = static_cast<int>(BaseWidth * LogRatio);
+	static constexpr int MinimapWidth = static_cast<int>(BaseWidth * MinimapRatio);
 
 	// 타일 설정
 	static constexpr int TileSize = 24;
@@ -44,7 +45,6 @@ struct UILayout
 	static constexpr int LogPaddingTop = 10;
 	static constexpr int LogPaddingLeft = BaseWidth / 3;
 	static constexpr int LogLineHeight = LogFontSize + 4;
-	static constexpr int MaxVisibleLogLines = (LogAreaHeight - LogPaddingTop * 2) / LogLineHeight;
 };
 
 // 로그 메시지 색상 (RGBA)
