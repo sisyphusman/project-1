@@ -1,6 +1,7 @@
 #include "Engine/UI/Panel/MessageLogPanel.h"
 
 #include "Engine/UI/UILayout.h"
+#include "Engine/Core/Style.h"
 
 MessageLogPanel::MessageLogPanel(float x, float y, float width, float height)
 	: UIPanel(x, y, width, height)
@@ -17,7 +18,7 @@ void MessageLogPanel::Update(float deltaTime)
 void MessageLogPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
 	// 패널 배경과 테두리 색
-	DrawBackground(window, sf::Color(20, 20, 20), sf::Color(60, 60, 60));
+	DrawBackground(window, Colors::Panel::LogBg, Colors::Panel::LogBorder);
 
 	auto entries = Log.GetRecentMessages(MaxVisibleLines);
 

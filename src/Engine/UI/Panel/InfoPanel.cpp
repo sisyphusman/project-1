@@ -16,7 +16,7 @@ void InfoPanel::Update(float deltaTime)
 
 void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
-	DrawBackground(window, Colors::Black, Colors::Panel::InfoBorder);
+	DrawBackground(window, Colors::Panel::InfoBg, Colors::Panel::InfoBorder);
 
 	const Style& s = DefaultStyle;
 
@@ -29,7 +29,7 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 		return;
 	}
 
-	const CharacterStats& stats = *StatsPtr; 
+	const CharacterStats& stats = *StatsPtr;
 
 	float barWidth = Bounds.size.x - s.Padding * 2.f;
 	float xPos = Bounds.position.x + s.Padding;
@@ -48,7 +48,7 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	statText.setFillColor(Colors::Text);
 	statText.setPosition({ xPos, yPos });
 	window.draw(statText);
-	yPos += s.LineSpacing + 4.f;
+	yPos += s.LineSpacing + s.InfoStatExtraSpacing;
 
 	// 스탯
 	statText.setCharacterSize(s.SmallFontSize);
@@ -66,7 +66,7 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	statText.setString(std::format("INT:{}", stats.INT));
 	statText.setPosition({ xPos, yPos });
 	window.draw(statText);
-	yPos += s.LineSpacing + 4.f;
+	yPos += s.LineSpacing + s.InfoStatExtraSpacing;
 
 	// 상태효과
 	for (const auto& effect : StatusEffects)
@@ -95,7 +95,7 @@ void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font,
 	bg.setPosition({ x, y });
 	bg.setFillColor(bgColor);
 	bg.setOutlineColor(Colors::Bar::Outline);
-	bg.setOutlineThickness(1.f);
+	bg.setOutlineThickness(s.BarOutlineThickness);
 	window.draw(bg);
 
 	// 프로그래스
@@ -112,7 +112,7 @@ void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font,
 	valueText.setFillColor(Colors::White);
 
 	sf::FloatRect textBounds = valueText.getLocalBounds();
-	valueText.setPosition({ x + (width - textBounds.size.x) / 2.f, y + (height - textBounds.size.y) / 2.f - 2.f });
+	valueText.setPosition({ x + (width - textBounds.size.x) / 2.f, y + (height - textBounds.size.y) / 2.f + s.BarTextOffsetY });
 	window.draw(valueText);
 }
 

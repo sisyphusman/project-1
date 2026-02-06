@@ -33,8 +33,6 @@ public:
 	void ClearStatusEffects();
 
 private:
-	static constexpr Style DefaultStyle{};
-
 	const CharacterStats* StatsPtr = nullptr; // 데이터 소스
 
 	std::vector<StatusEffect> StatusEffects; // 상태 효과

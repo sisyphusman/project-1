@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "Engine/Core/Style.h"
+
 // 로그 데이터
 struct Message
 {
@@ -17,7 +19,7 @@ class MessageLog
 public:
 	MessageLog() = default;
 
-	void AddMessage(std::string_view message, uint32_t color = 0xFFFFFFFF);
+	void AddMessage(std::string_view message, uint32_t color = LogColor::White);
 	void Clear();
 
 	// 저장/로드용

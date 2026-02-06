@@ -35,24 +35,26 @@ void MinimapPanel::Update(float deltaTime)
 
 void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
-	DrawBackground(window, sf::Color(15, 15, 20), sf::Color(40, 40, 50));
+	DrawBackground(window, Colors::Panel::MinimapBg, Colors::Panel::MinimapBorder);
 
 	if (!MapRef || !FOVRef)
 	{
 		return;
 	}
 
+	const Style& s = DefaultStyle;
+
 	// 층 표시
-	sf::Text levelText(font, std::format("B{}F", CurrentLevel), 14);
-	levelText.setFillColor(sf::Color(200, 200, 200));
-	levelText.setPosition({ Bounds.position.x + 8.f, Bounds.position.y + 8.f });
+	sf::Text levelText(font, std::format("B{}F", CurrentLevel), s.MinimapLevelFontSize);
+	levelText.setFillColor(Colors::Text);
+	levelText.setPosition({ Bounds.position.x + s.Padding, Bounds.position.y + s.Padding });
 	window.draw(levelText);
 
 	// 미니맵 영역 계산
-	float mapAreaX = Bounds.position.x + 8.f;
-	float mapAreaY = Bounds.position.y + 30.f;
-	float mapAreaWidth = Bounds.size.x - 16.f;
-	float mapAreaHeight = Bounds.size.y - 40.f;
+	float mapAreaX = Bounds.position.x + s.Padding;
+	float mapAreaY = Bounds.position.y + s.MinimapHeaderOffsetY;
+	float mapAreaWidth = Bounds.size.x - s.Padding * 2.f;
+	float mapAreaHeight = Bounds.size.y - (s.MinimapHeaderOffsetY + s.MinimapBottomPadding);
 
 	int mapWidth = MapRef->GetWidth();
 	int mapHeight = MapRef->GetHeight();
@@ -66,7 +68,7 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 
 	// 타일 간격 추가
 	sf::RectangleShape tile;
-	tile.setSize({ TileSize - 1.f, TileSize - 1.f });
+	tile.setSize({ TileSize - s.MinimapTileGap, TileSize - s.MinimapTileGap });
 
 	for (int y = 0; y < mapHeight; ++y)
 	{
@@ -85,12 +87,12 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 				// 시야 + 길
 				if (mapTile.Walkable)
 				{
-					tile.setFillColor(sf::Color(80, 80, 100));
+					tile.setFillColor(Colors::Minimap::VisibleFloor);
 				}
 				// 시야 + 벽
 				else
 				{
-					tile.setFillColor(sf::Color(40, 40, 50));
+					tile.setFillColor(Colors::Minimap::VisibleWall);
 				}
 			}
 			else
@@ -98,12 +100,12 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 				// 비가시 + 길
 				if (mapTile.Walkable)
 				{
-					tile.setFillColor(sf::Color(40, 40, 50));
+					tile.setFillColor(Colors::Minimap::ExploredFloor);
 				}
 				// 비가시 + 벽
 				else
 				{
-					tile.setFillColor(sf::Color(25, 25, 30));
+					tile.setFillColor(Colors::Minimap::ExploredWall);
 				}
 			}
 
@@ -113,8 +115,8 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 
 	// 플레이어 표시
 	sf::RectangleShape playerMarker;
-	playerMarker.setSize({ TileSize + 1.f, TileSize + 1.f });
-	playerMarker.setPosition({ offsetX + PlayerX * TileSize - 1.f, offsetY + PlayerY * TileSize - 1.f });
-	playerMarker.setFillColor(sf::Color(255, 255, 100));
+	playerMarker.setSize({ TileSize + s.MinimapPlayerMarkerMargin, TileSize + s.MinimapPlayerMarkerMargin });
+	playerMarker.setPosition({ offsetX + PlayerX * TileSize - s.MinimapPlayerMarkerMargin, offsetY + PlayerY * TileSize - s.MinimapPlayerMarkerMargin });
+	playerMarker.setFillColor(Colors::Minimap::Player);
 	window.draw(playerMarker);
 }

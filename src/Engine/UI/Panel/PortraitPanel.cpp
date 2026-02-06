@@ -1,5 +1,6 @@
 #include "Engine/UI/Panel/PortraitPanel.h"
 #include "Engine/Core/Macros.h"
+#include "Engine/Core/Style.h"
 
 PortraitPanel::PortraitPanel(float x, float y, float width, float height)
 	: UIPanel(x, y, width, height)
@@ -12,8 +13,10 @@ void PortraitPanel::Update(float deltaTime)
 
 void PortraitPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
+	const Style& s = DefaultStyle;
+
 	// 배경
-	DrawBackground(window, sf::Color(30, 30, 50), sf::Color(60, 60, 90));
+	DrawBackground(window, Colors::Panel::PortraitBg, Colors::Panel::PortraitBorder);
 
 	if (PortraitSprite.has_value() && PortraitTexture.has_value())
 	{
@@ -37,8 +40,8 @@ void PortraitPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	else
 	{
 		// 플레이스 홀더 : 캐릭터 아이콘
-		sf::Text placeholder(font, "[@]", 48);
-		placeholder.setFillColor(sf::Color(100, 100, 120));
+		sf::Text placeholder(font, "[@]", s.PortraitPlaceholderFontSize);
+		placeholder.setFillColor(Colors::Panel::PortraitText);
 
 		sf::FloatRect textBounds = placeholder.getLocalBounds();
 		placeholder.setPosition({ 

@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <Engine/Core/Style.h>
+
 // UI 패널 기본 클래스
 class UIPanel
 {
@@ -23,6 +25,7 @@ public:
 	sf::FloatRect GetBounds() const { return Bounds; }
 
 protected:
+	static constexpr Style DefaultStyle{}; // Style의 레이아웃 사용
 	sf::FloatRect Bounds; // 패널 영역
 
 	// 배경 그리기 헬퍼 함수

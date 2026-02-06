@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/UI/Panel/UIPanel.h"
+#include "Engine/Core/Style.h"
 
 class Map;
 class FOV;
