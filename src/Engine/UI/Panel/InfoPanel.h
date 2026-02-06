@@ -2,6 +2,7 @@
 
 #include "Engine/UI/Panel/UIPanel.h"
 #include "Engine/Entities/CharacterStats.h"
+#include "Engine/Core/Style.h"
 
 #include <vector>
 #include <string>
@@ -15,10 +16,10 @@ struct StatusEffect
 };
 
 // 캐릭터 스탯 패널
-class StatusPanel : public UIPanel
+class InfoPanel : public UIPanel
 {
 public:
-	StatusPanel(float x, float y, float width, float height);
+	InfoPanel(float x, float y, float width, float height);
 
 	void Update(float deltaTime) override;
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
@@ -32,13 +33,14 @@ public:
 	void ClearStatusEffects();
 
 private:
-	const CharacterStats* StatsPtr = nullptr; // 포인터로 참조 (복사 방지)
-	CharacterStats CachedStats;				  // 포인터 없을 때 사용
+	static constexpr Style DefaultStyle{};
 
-	// 상태 효과
-	std::vector<StatusEffect> StatusEffects;
+	const CharacterStats* StatsPtr = nullptr; // 포인터로 참조 (복사 방지)
+	CharacterStats		  CachedStats;		  // 포인터 없을 때 사용
+
+	std::vector<StatusEffect> StatusEffects; // 상태 효과
 
 	// 프로그래스바 랜더링
 	void DrawProgressBar(sf::RenderWindow& window, const sf::Font& font, float x, float y, float width, float height,
-		int current, int max, sf::Color barColor, sf::Color bgColor, const std::string& label);
+		int current, int max, sf::Color barColor, sf::Color bgColor);
 };
