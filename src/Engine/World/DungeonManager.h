@@ -16,8 +16,9 @@ public:
 	bool GoToNextLevel(sf::Vector2i& outPlayerPos);
 	bool GoToPrevLevel(sf::Vector2i& outPlayerPos);
 
-	Map& GetCurrentMap(); // 현재 레벨의 맵 반환
-	int	 GetCurrentLevel() const { return CurrentLevel; }
+	Map&	   GetCurrentMap(); // 현재 레벨의 맵 반환
+	int		   GetCurrentLevel() const { return CurrentLevel; }
+	const int& GetCurrentLevelRef() const { return CurrentLevel; }
 
 	// 탐험 데이터 저장/복원
 	void SaveExploredData(int level, const std::vector<bool>& data);
@@ -31,6 +32,6 @@ private:
 	int CurrentLevel = 0;
 
 	std::vector<std::unique_ptr<Map>>				   Levels;
-	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> StairsPositions; // <UpStairs, DownStairs>
+	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> StairsPositions;	  // <UpStairs, DownStairs>
 	std::vector<std::vector<bool>>					   LevelExploredData; // 층별 탐험 데이터
 };

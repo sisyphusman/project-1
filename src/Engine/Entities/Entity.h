@@ -12,8 +12,9 @@ public:
 	// 타일 기반 이동
 	bool TryMove(int dx, int dy, const Map& map);
 
-	void		 SetPosition(int x, int y);
-	sf::Vector2i GetPosition() const { return Position; }
+	void				SetPosition(int x, int y);
+	sf::Vector2i		GetPosition() const { return Position; }
+	const sf::Vector2i& GetPositionRef() const { return Position; }
 
 	char GetGlyph() const { return Glyph; }
 

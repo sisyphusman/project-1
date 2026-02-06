@@ -4,7 +4,7 @@
 
 // static constexpr: 가독성을 위해서 중괄호가 아닌 등호 초기화 사용
 
-// 게임 레이아웃 (픽셀 기준)
+// 게임 레이아웃
 struct UILayout
 {
 	UILayout() = delete;
