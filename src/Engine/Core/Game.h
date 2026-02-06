@@ -6,6 +6,16 @@
 
 #include "Engine/UI/UILayout.h"
 #include "Engine/Entities/CharacterStats.h"
+#include "Engine/World/Map.h"
+#include "Engine/Entities/Player.h"
+#include "Engine/World/DungeonManager.h"
+#include "Engine/Systems/FOV.h"
+#include "Engine/Systems/Camera.h"
+#include "Engine/UI/Panel/PortraitPanel.h"
+#include "Engine/UI/Panel/InfoPanel.h"
+#include "Engine/UI/Panel/MessageLogPanel.h"
+#include "Engine/UI/Panel/MinimapPanel.h"
+#include "Engine/Core/Macros.h"
 
 class Map;
 class Player;

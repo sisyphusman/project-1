@@ -1,16 +1,5 @@
 #include "Engine/Core/Game.h"
 
-#include "Engine/World/Map.h"
-#include "Engine/Entities/Player.h"
-#include "Engine/World/DungeonManager.h"
-#include "Engine/Systems/FOV.h"
-#include "Engine/Systems/Camera.h"
-#include "Engine/UI/Panel/PortraitPanel.h"
-#include "Engine/UI/Panel/InfoPanel.h"
-#include "Engine/UI/Panel/MessageLogPanel.h"
-#include "Engine/UI/Panel/MinimapPanel.h"
-#include "Engine/Core/Macros.h"
-
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
 	, GameView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::BaseWidth), static_cast<float>(UILayout::GameAreaHeight) }))
@@ -209,6 +198,7 @@ void Game::CheckStairs()
 			}
 
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::FOVRadius);
+			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("아래층으로 내려갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::TileSize), static_cast<float>(newPos.y * UILayout::TileSize));
 		}
@@ -232,6 +222,7 @@ void Game::CheckStairs()
 			}
 
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::FOVRadius);
+			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("위층으로 올라갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::TileSize), static_cast<float>(newPos.y * UILayout::TileSize));
 		}
