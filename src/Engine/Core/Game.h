@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Engine/UI/UILayout.h"
+#include "Engine/Entities/CharacterStats.h"
 
 class Map;
 class Player;
@@ -53,4 +54,6 @@ private:
 	std::unique_ptr<InfoPanel>		 Info;
 	std::unique_ptr<MessageLogPanel> Log;
 	std::unique_ptr<MinimapPanel>	 Minimap;
+
+	CharacterStats MyCharStats;
 };

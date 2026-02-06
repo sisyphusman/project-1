@@ -24,8 +24,8 @@ public:
 	void Update(float deltaTime) override;
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
 
-	// 스탯 전체를 한 번에 설정
-	void SetStats(const CharacterStats& stats);
+	// 데이터 소스 연결 (pull)
+	void SetSource(const CharacterStats* stats);
 
 	// 상태효과 관리
 	void AddStatusEffect(const std::string& name, sf::Color color, int duration = -1);
@@ -35,8 +35,7 @@ public:
 private:
 	static constexpr Style DefaultStyle{};
 
-	const CharacterStats* StatsPtr = nullptr; // 포인터로 참조 (복사 방지)
-	CharacterStats		  CachedStats;		  // 포인터 없을 때 사용
+	const CharacterStats* StatsPtr = nullptr; // 데이터 소스
 
 	std::vector<StatusEffect> StatusEffects; // 상태 효과
 

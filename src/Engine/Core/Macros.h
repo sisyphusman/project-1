@@ -17,7 +17,7 @@
 	while (0)
 
 // 디버그에서만 체크, 릴리즈 모드이면 생략
-#ifdef _DEBUG
+#ifndef NDEBUG
 	#define GAME_CHECK_SLOW(expr) GAME_CHECK(expr)
 #else
 	#define GAME_CHECK_SLOW(expr) ((void)0)

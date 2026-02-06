@@ -18,8 +18,18 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
 	DrawBackground(window, Colors::Black, Colors::Panel::InfoBorder);
 
-	const CharacterStats& stats = StatsPtr ? *StatsPtr : CachedStats;
-	const Style&		  s = DefaultStyle;
+	const Style& s = DefaultStyle;
+
+	if (StatsPtr == nullptr)
+	{
+		sf::Text emptyText(font, "No stats source", s.SmallFontSize);
+		emptyText.setFillColor(Colors::Text);
+		emptyText.setPosition({ Bounds.position.x + s.Padding, Bounds.position.y + s.Padding });
+		window.draw(emptyText);
+		return;
+	}
+
+	const CharacterStats& stats = *StatsPtr; 
 
 	float barWidth = Bounds.size.x - s.Padding * 2.f;
 	float xPos = Bounds.position.x + s.Padding;
@@ -69,10 +79,9 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	}
 }
 
-void InfoPanel::SetStats(const CharacterStats& stats)
+void InfoPanel::SetSource(const CharacterStats* stats)
 {
-	CachedStats = stats;
-	StatsPtr = nullptr;
+	StatsPtr = stats;
 }
 
 void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font,

@@ -92,14 +92,13 @@ void Game::InitUI()
 	// 인포 패널
 	Info = std::make_unique<InfoPanel>(xOffset, 0.f, static_cast<float>(UILayout::InfoWidth), bottomHeight);
 
-	CharacterStats testStats;
-	testStats.HP = { 85, 100 };
-	testStats.MP = { 15, 20 };
-	testStats.Level = 3;
-	testStats.STR = 12;
-	testStats.DEX = 10;
-	testStats.INT = 8;
-	Info->SetStats(testStats);
+	MyCharStats.HP = { 85, 100 };
+	MyCharStats.MP = { 15, 20 };
+	MyCharStats.Level = 3;
+	MyCharStats.STR = 12;
+	MyCharStats.DEX = 10;
+	MyCharStats.INT = 8;
+	Info->SetSource(&MyCharStats);
 	xOffset += UILayout::InfoWidth;
 
 	// 메시지 로그 패널
