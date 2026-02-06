@@ -11,7 +11,11 @@ class Player;
 class DungeonManager;
 class FOV;
 class Camera;
-class MessageLog;
+
+class PortraitPanel;
+class InfoPanel;
+class MessageLogPanel;
+class MinimapPanel;
 
 class Game
 {
@@ -23,23 +27,30 @@ public:
 
 private:
 	void Init();
-	void ProcessEvents();						// 입력 이벤트 처리
+	void InitUI();
+	void ProcessEvents();
 	void Update(float deltaTime);
-	void Render();								// 화면 렌더링
-	void CheckStairs();							// 계단 이동
+	void Render();
+	void CheckStairs();
 	void UpdateCamera();
 
-	void RenderMessageLog();					// UI 렌더링
+	void RenderGameWorld();
+	void RenderBottomUI();
 
-	sf::RenderWindow Window;					// 메인 윈도우
-	sf::Font		 GameFont;					// 텍스트 리소스
-	sf::View		 GameView;					// 화면 영역
-	sf::View		 UIView;					// UI 영역
-	sf::Clock		 GameClock;					// 델타 타임 계산
+	sf::RenderWindow Window;
+	sf::Font		 GameFont;
+	sf::View		 GameView;
+	sf::View		 BottomUIView;
+	sf::Clock		 GameClock;
 
 	std::unique_ptr<DungeonManager> Dungeon;
 	std::unique_ptr<Player>			GamePlayer;
 	std::unique_ptr<FOV>			PlayerFOV;
 	std::unique_ptr<Camera>			GameCamera;
-	std::unique_ptr<MessageLog>     Log;
+
+	// UI 패널
+	std::unique_ptr<PortraitPanel>	 Portrait;
+	std::unique_ptr<InfoPanel>		 Info;
+	std::unique_ptr<MessageLogPanel> Log;
+	std::unique_ptr<MinimapPanel>	 Minimap;
 };
