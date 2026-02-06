@@ -46,26 +46,3 @@ struct UILayout
 	static constexpr int LogPaddingLeft = 15;
 	static constexpr int LogLineHeight = LogFontSize + 6;
 };
-
-struct LogColor
-{
-	LogColor() = delete;
-
-	// 기본
-	static constexpr uint32_t White = 0xFFFFFFFF;
-	static constexpr uint32_t Grey = 0xAAAAAAFF;
-	static constexpr uint32_t DarkGrey = 0x666666FF;
-
-	// 시스템 메시지
-	static constexpr uint32_t Info = 0xCCCCCCFF;	// 밝은 회색
-	static constexpr uint32_t Warning = 0xFFFF00FF; // 노란색
-	static constexpr uint32_t Error = 0xFF4444FF;	// 밝은 빨간색
-	static constexpr uint32_t Success = 0x44FF44FF; // 밝은 초록색
-
-	// 게임 이벤트
-	static constexpr uint32_t Move = 0x888888FF;   // 회색
-	static constexpr uint32_t Stairs = 0xFFFF00FF; // 노란색
-	static constexpr uint32_t Combat = 0xFF6666FF; // 연한 붉은색
-	static constexpr uint32_t Item = 0x66CCFFFF;   // 하늘색
-	static constexpr uint32_t Heal = 0x66FF66FF;   // 연한 초록색
-};
