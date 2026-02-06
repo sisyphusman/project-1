@@ -7,7 +7,7 @@ class UIPanel
 {
 public:
 	UIPanel(float x, float y, float width, float height)
-		: Bounds({ x, y }, {width, height})
+		: Bounds({ x, y }, { width, height })
 	{
 	}
 
@@ -23,7 +23,7 @@ public:
 	sf::FloatRect GetBounds() const { return Bounds; }
 
 protected:
-	sf::FloatRect Bounds;
+	sf::FloatRect Bounds; // 패널 영역
 
 	// 배경 그리기 헬퍼 함수
 	void DrawBackground(sf::RenderWindow& window, sf::Color fillColor, sf::Color outlineColor, float outlineThickness = 2.f)

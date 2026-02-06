@@ -1,38 +1,34 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <cstdint>
-#include <chrono>
-#include <span>
+#include <vector>
 
-struct LogEntry
+// 로그 데이터
+struct Message
 {
-	std::string							  text;
-	uint32_t							  color{ 0xFFFFFFFF };
-	std::chrono::steady_clock::time_point timestamp{ std::chrono::steady_clock::now() };
+	std::string Text;
+	uint32_t	Color;
 };
 
-// 스크롤 가능한 메시지 로그
 class MessageLog
 {
 public:
-	static constexpr size_t MaxMessages = 1000;
-	static constexpr int	ScrollStep = 1;
+	MessageLog() = default;
 
 	void AddMessage(std::string_view message, uint32_t color = 0xFFFFFFFF);
 	void Clear();
 
-	void ScrollUp(int lines = ScrollStep);
-	void ScrollDown(int lines = ScrollStep);
-	void ScrollToBottom();
-	void ScrollToTop();
+	// 저장/로드용
+	const std::vector<Message>& GetMessages() const { return Messages; }
+	int							GetMessageCount() const { return static_cast<int>(Messages.size()); }
 
-	[[nodiscard]] std::span<const LogEntry> GetVisibleEntries(int maxLines) const; // 로그 기록들의 일부를 읽기 전용으로 반환
-	[[nodiscard]] size_t					GetTotalCount() const noexcept { return m_entries.size(); }
-	[[nodiscard]] int						GetScrollOffset() const noexcept { return m_scrollOffset; }
-	[[nodiscard]] bool						IsAtBottom() const noexcept { return m_scrollOffset == 0; }
+	// 최근 N개 가져오기
+	std::vector<Message> GetRecentMessages(int count) const;
 
 private:
-	std::vector<LogEntry> m_entries;
-	int					  m_scrollOffset{ 0 }; // 최신 메시지 기준 스크롤 오프셋
+	std::vector<Message> Messages;
+
+	static constexpr int MaxStoredMessages = 1000; // 저장할 수 있는 메시지 개수
 };
