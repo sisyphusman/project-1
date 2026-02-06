@@ -72,15 +72,14 @@ void Game::InitUI()
 	float xOffset = 0.f;
 
 	// 초상화 패널
-	Portrait = std::make_unique<PortraitPanel>(
-		xOffset, 0.f,
-		static_cast<float>(UILayout::PortraitWidth), bottomHeight);
+	Portrait = std::make_unique<PortraitPanel>(xOffset, 0.f, static_cast<float>(UILayout::PortraitWidth), bottomHeight);
 	Portrait->LoadPortrait("assets/Portrait.png");
 	xOffset += UILayout::PortraitWidth;
 
 	// 인포 패널
 	Info = std::make_unique<InfoPanel>(xOffset, 0.f, static_cast<float>(UILayout::InfoWidth), bottomHeight);
 
+	// 내 캐릭 임시 설정
 	MyCharStats.HP = { 85, 100 };
 	MyCharStats.MP = { 15, 20 };
 	MyCharStats.Level = 3;
@@ -179,6 +178,7 @@ void Game::CheckStairs()
 	sf::Vector2i newPos;
 	int			 currentLevel = Dungeon->GetCurrentLevel();
 
+	// 다음 층 이동
 	if (tile.Type == TileType::StairDown)
 	{
 		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
@@ -203,6 +203,7 @@ void Game::CheckStairs()
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::TileSize), static_cast<float>(newPos.y * UILayout::TileSize));
 		}
 	}
+	// 이전 층 이동
 	else if (tile.Type == TileType::StairUp)
 	{
 		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());

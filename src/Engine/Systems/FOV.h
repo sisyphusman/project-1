@@ -31,6 +31,6 @@ private:
 
 	int				  Width;
 	int				  Height;
-	std::vector<bool> Visible; // 현재 턴에서 보이는 타일
+	std::vector<bool> Visible;	// 현재 턴에서 보이는 타일
 	std::vector<bool> Explored; // 한 번이라도 본 타일
 };
