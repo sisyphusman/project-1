@@ -13,41 +13,40 @@ struct UILayout
 	static constexpr int BaseWidth = 1920;
 	static constexpr int BaseHeight = 1080;
 
-	// 상하 분할 (게임 영역 / 로그 영역)
+	// 상하 분할 (게임 영역 / 하단 UI)
 	static constexpr float GameAreaRatio = 0.7f;
-	static constexpr float LogAreaRatio = 0.3f;
+	static constexpr float BottomUIRatio = 0.3f;
 
 	// 영역 높이 계산
-	static constexpr int GameAreaHeight = static_cast<int>(BaseHeight * GameAreaRatio); // 756
-	static constexpr int LogAreaHeight = BaseHeight - GameAreaHeight;					// 324
+	static constexpr int GameAreaHeight = static_cast<int>(BaseHeight * GameAreaRatio);
+	static constexpr int BottomUIHeight = BaseHeight - GameAreaHeight;
 
-	// 하단 UI 3분할 (초상화 / 인포 / 로그 / 맵)
+	// 하단 UI 4분할 (초상화 / 인포 / 로그 / 맵)
 	static constexpr float PortraitRatio = 0.10f;
 	static constexpr float InfoRatio = 0.20f;
 	static constexpr float LogRatio = 0.40f;
 	static constexpr float MinimapRatio = 0.30f;
-	
+
 	static constexpr int PortraitWidth = static_cast<int>(BaseWidth * PortraitRatio);
 	static constexpr int InfoWidth = static_cast<int>(BaseWidth * InfoRatio);
 	static constexpr int LogWidth = static_cast<int>(BaseWidth * LogRatio);
-	static constexpr int MinimapWidth = static_cast<int>(BaseWidth * MinimapRatio);
+	static constexpr int MinimapWidth = BaseWidth - PortraitWidth - InfoWidth - LogWidth;
 
 	// 타일 설정
 	static constexpr int TileSize = 24;
-	static constexpr int ViewWidthTiles = BaseWidth / TileSize;		  // 80
-	static constexpr int ViewHeightTiles = GameAreaHeight / TileSize; // 31
+	static constexpr int ViewWidthTiles = BaseWidth / TileSize;
+	static constexpr int ViewHeightTiles = GameAreaHeight / TileSize;
 
 	// 시야 반경
 	static constexpr int FOVRadius = 8;
 
 	// 로그 영역 설정
-	static constexpr int LogFontSize = 20;
+	static constexpr int LogFontSize = 18;
 	static constexpr int LogPaddingTop = 10;
-	static constexpr int LogPaddingLeft = BaseWidth / 3;
-	static constexpr int LogLineHeight = LogFontSize + 4;
+	static constexpr int LogPaddingLeft = 15;
+	static constexpr int LogLineHeight = LogFontSize + 6;
 };
 
-// 로그 메시지 색상 (RGBA)
 struct LogColor
 {
 	LogColor() = delete;
@@ -64,7 +63,7 @@ struct LogColor
 	static constexpr uint32_t Success = 0x44FF44FF; // 밝은 초록색
 
 	// 게임 이벤트
-	static constexpr uint32_t Move = 0xAAAAAAFF;   // 회색
+	static constexpr uint32_t Move = 0x888888FF;   // 회색
 	static constexpr uint32_t Stairs = 0xFFFF00FF; // 노란색
 	static constexpr uint32_t Combat = 0xFF6666FF; // 연한 붉은색
 	static constexpr uint32_t Item = 0x66CCFFFF;   // 하늘색
