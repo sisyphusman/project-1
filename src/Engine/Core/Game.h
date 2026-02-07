@@ -4,7 +4,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Engine/UI/UILayout.h"
 #include "Engine/Entities/CharacterStats.h"
 #include "Engine/World/Map.h"
 #include "Engine/Entities/Player.h"

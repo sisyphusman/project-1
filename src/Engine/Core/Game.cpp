@@ -2,14 +2,14 @@
 
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
-	, GameView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::BaseWidth), static_cast<float>(UILayout::GameAreaHeight) }))
-	, BottomUIView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::BaseWidth), static_cast<float>(UILayout::BottomUIHeight) }))
+	, GameView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::Fixed::BaseWidth), static_cast<float>(UILayout::Derived::GameAreaHeight()) }))
+	, BottomUIView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::Fixed::BaseWidth), static_cast<float>(UILayout::Derived::BottomUIHeight()) }))
 {
 	// 게임 플레이 화면
-	GameView.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, UILayout::GameAreaRatio }));
+	GameView.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, UILayout::Tunable::GameAreaRatio }));
 
 	// 하단 UI
-	BottomUIView.setViewport(sf::FloatRect({ 0.f, UILayout::GameAreaRatio }, { 1.f, UILayout::BottomUIRatio }));
+	BottomUIView.setViewport(sf::FloatRect({ 0.f, UILayout::Tunable::GameAreaRatio }, { 1.f, UILayout::Derived::BottomUIRatio() }));
 
 	Init();
 }
@@ -27,7 +27,7 @@ void Game::Init()
 	Window.setView(GameView);
 
 	// 맵 생성
-	Dungeon = std::make_unique<DungeonManager>(UILayout::ViewWidthTiles, UILayout::ViewHeightTiles);
+	Dungeon = std::make_unique<DungeonManager>(UILayout::Derived::ViewWidthTiles(), UILayout::Derived::ViewHeightTiles());
 
 	// 플레이어 시작 위치 찾기
 	Map& currentMap = Dungeon->GetCurrentMap();
@@ -50,11 +50,11 @@ void Game::Init()
 			{
 				GamePlayer = std::make_unique<Player>(x, y);
 
-				GameCamera->SetTarget(static_cast<float>(x * UILayout::TileSize), static_cast<float>(y * UILayout::TileSize));
+				GameCamera->SetTarget(static_cast<float>(x * UILayout::Fixed::TileSize), static_cast<float>(y * UILayout::Fixed::TileSize));
 
 				// 시야 계산
 				auto pos = GamePlayer->GetPosition();
-				PlayerFOV->Compute(currentMap, pos.x, pos.y, UILayout::FOVRadius);
+				PlayerFOV->Compute(currentMap, pos.x, pos.y, UILayout::Tunable::FOVRadius);
 
 				// 미니맵 초기화
 				Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
@@ -66,16 +66,16 @@ void Game::Init()
 
 void Game::InitUI()
 {
-	float bottomHeight = static_cast<float>(UILayout::BottomUIHeight);
+	float bottomHeight = static_cast<float>(UILayout::Derived::BottomUIHeight());
 	float xOffset = 0.f;
 
 	// 초상화 패널
-	Portrait = std::make_unique<PortraitPanel>(xOffset, 0.f, static_cast<float>(UILayout::PortraitWidth), bottomHeight);
+	Portrait = std::make_unique<PortraitPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::PortraitWidth()), bottomHeight);
 	Portrait->LoadPortrait("assets/Portrait.png");
-	xOffset += UILayout::PortraitWidth;
+	xOffset += UILayout::Derived::PortraitWidth();
 
 	// 인포 패널
-	Info = std::make_unique<InfoPanel>(xOffset, 0.f, static_cast<float>(UILayout::InfoWidth), bottomHeight);
+	Info = std::make_unique<InfoPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::InfoWidth()), bottomHeight);
 
 	// 내 캐릭 임시 설정
 	MyCharStats.HP = { 85, 100 };
@@ -85,15 +85,15 @@ void Game::InitUI()
 	MyCharStats.DEX = 10;
 	MyCharStats.INT = 8;
 	Info->SetSource(&MyCharStats);
-	xOffset += UILayout::InfoWidth;
+	xOffset += UILayout::Derived::InfoWidth();
 
 	// 메시지 로그 패널
-	Log = std::make_unique<MessageLogPanel>(xOffset, 0.f, static_cast<float>(UILayout::LogWidth), bottomHeight);
+	Log = std::make_unique<MessageLogPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::LogWidth()), bottomHeight);
 	Log->GetLog().AddMessage("던전에 입장하셨습니다", LogColor::White);
-	xOffset += UILayout::LogWidth;
+	xOffset += UILayout::Derived::LogWidth();
 
 	// 미니맵 패널
-	Minimap = std::make_unique<MinimapPanel>(xOffset, 0.f, static_cast<float>(UILayout::MinimapWidth), bottomHeight);
+	Minimap = std::make_unique<MinimapPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::MinimapWidth()), bottomHeight);
 }
 
 void Game::Run()
@@ -159,8 +159,8 @@ void Game::ProcessEvents()
 				if (GamePlayer->TryMove(dx, dy, Dungeon->GetCurrentMap()))
 				{
 					auto pos = GamePlayer->GetPosition();
-					PlayerFOV->Compute(Dungeon->GetCurrentMap(), pos.x, pos.y, UILayout::FOVRadius);
-					GameCamera->SetTarget(static_cast<float>(pos.x * UILayout::TileSize), static_cast<float>(pos.y * UILayout::TileSize));
+					PlayerFOV->Compute(Dungeon->GetCurrentMap(), pos.x, pos.y, UILayout::Tunable::FOVRadius);
+					GameCamera->SetTarget(static_cast<float>(pos.x * UILayout::Fixed::TileSize), static_cast<float>(pos.y * UILayout::Fixed::TileSize));
 					Log->GetLog().AddMessage("이동했습니다", LogColor::Move);
 				}
 			}
@@ -195,10 +195,10 @@ void Game::CheckStairs()
 				PlayerFOV->Reset();
 			}
 
-			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::FOVRadius);
+			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("아래층으로 내려갑니다", LogColor::Stairs);
-			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::TileSize), static_cast<float>(newPos.y * UILayout::TileSize));
+			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 		}
 	}
 	// 이전 층 이동
@@ -220,10 +220,10 @@ void Game::CheckStairs()
 				PlayerFOV->Reset();
 			}
 
-			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::FOVRadius);
+			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("위층으로 올라갑니다", LogColor::Stairs);
-			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::TileSize), static_cast<float>(newPos.y * UILayout::TileSize));
+			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 		}
 	}
 }
@@ -242,8 +242,8 @@ void Game::Update(float deltaTime)
 void Game::UpdateCamera()
 {
 	float zoom = GameCamera->GetZoom();
-	float viewWidth = UILayout::ViewWidthTiles * UILayout::TileSize / zoom;
-	float viewHeight = UILayout::ViewHeightTiles * UILayout::TileSize / zoom;
+	float viewWidth = UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize / zoom;
+	float viewHeight = UILayout::Derived::ViewHeightTiles() * UILayout::Fixed::TileSize / zoom;
 
 	GameView.setSize({ viewWidth, viewHeight });
 	GameView.setCenter({ GameCamera->GetX(), GameCamera->GetY() });
@@ -266,7 +266,7 @@ void Game::RenderGameWorld()
 
 	Map& currentMap = Dungeon->GetCurrentMap();
 
-	sf::Text tileText(GameFont, "", UILayout::TileSize);
+	sf::Text tileText(GameFont, "", UILayout::Fixed::TileSize);
 
 	for (int y = 0; y < currentMap.GetHeight(); ++y)
 	{
@@ -277,14 +277,14 @@ void Game::RenderGameWorld()
 			if (PlayerFOV->IsVisible(x, y))
 			{
 				tileText.setString(std::string(1, tile.Glyph));
-				tileText.setPosition({ static_cast<float>(x * UILayout::TileSize), static_cast<float>(y * UILayout::TileSize) });
+				tileText.setPosition({ static_cast<float>(x * UILayout::Fixed::TileSize), static_cast<float>(y * UILayout::Fixed::TileSize) });
 				tileText.setFillColor(Colors::World::Visible);
 				Window.draw(tileText);
 			}
 			else if (PlayerFOV->IsExplored(x, y))
 			{
 				tileText.setString(std::string(1, tile.Glyph));
-				tileText.setPosition({ static_cast<float>(x * UILayout::TileSize), static_cast<float>(y * UILayout::TileSize) });
+				tileText.setPosition({ static_cast<float>(x * UILayout::Fixed::TileSize), static_cast<float>(y * UILayout::Fixed::TileSize) });
 				tileText.setFillColor(Colors::World::Explored);
 				Window.draw(tileText);
 			}
@@ -294,7 +294,7 @@ void Game::RenderGameWorld()
 	// 플레이어 렌더링
 	auto pos = GamePlayer->GetPosition();
 	tileText.setString("@");
-	tileText.setPosition({ static_cast<float>(pos.x * UILayout::TileSize), static_cast<float>(pos.y * UILayout::TileSize) });
+	tileText.setPosition({ static_cast<float>(pos.x * UILayout::Fixed::TileSize), static_cast<float>(pos.y * UILayout::Fixed::TileSize) });
 	tileText.setFillColor(Colors::White);
 	Window.draw(tileText);
 }

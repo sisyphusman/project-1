@@ -25,7 +25,6 @@ public:
 	sf::FloatRect GetBounds() const { return Bounds; }
 
 protected:
-	static constexpr Style DefaultStyle{}; // Style의 레이아웃 사용
 	sf::FloatRect Bounds; // 패널 영역
 
 	// 배경 그리기 헬퍼 함수

@@ -18,64 +18,62 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
 	DrawBackground(window, Colors::Panel::InfoBg, Colors::Panel::InfoBorder);
 
-	const Style& s = DefaultStyle;
-
 	if (StatsPtr == nullptr)
 	{
-		sf::Text emptyText(font, "No stats source", s.SmallFontSize);
+		sf::Text emptyText(font, "No stats source", UILayout::Tunable::SmallFontSize);
 		emptyText.setFillColor(Colors::Text);
-		emptyText.setPosition({ Bounds.position.x + s.Padding, Bounds.position.y + s.Padding });
+		emptyText.setPosition({ Bounds.position.x + UILayout::Tunable::Padding, Bounds.position.y + UILayout::Tunable::Padding });
 		window.draw(emptyText);
 		return;
 	}
 
 	const CharacterStats& stats = *StatsPtr;
 
-	float barWidth = Bounds.size.x - s.Padding * 2.f;
-	float xPos = Bounds.position.x + s.Padding;
-	float yPos = Bounds.position.y + s.Padding;
+	float barWidth = Bounds.size.x - UILayout::Tunable::Padding * 2.f;
+	float xPos = Bounds.position.x + UILayout::Tunable::Padding;
+	float yPos = Bounds.position.y + UILayout::Tunable::Padding;
 
 	// HP 바
-	DrawProgressBar(window, font, xPos, yPos, barWidth, s.BarHeight, stats.HP.Current, stats.HP.Max, Colors::Bar::HP, Colors::Bar::HPBg);
-	yPos += s.BarHeight + s.BarSpacing;
+	DrawProgressBar(window, font, xPos, yPos, barWidth, UILayout::Tunable::BarHeight, stats.HP.Current, stats.HP.Max, Colors::Bar::HP, Colors::Bar::HPBg);
+	yPos += UILayout::Tunable::BarHeight + UILayout::Tunable::BarSpacing;
 
 	// MP 바
-	DrawProgressBar(window, font, xPos, yPos, barWidth, s.BarHeight, stats.MP.Current, stats.MP.Max, Colors::Bar::MP, Colors::Bar::MPBg);
-	yPos += s.BarHeight + s.SectionSpacing;
+	DrawProgressBar(window, font, xPos, yPos, barWidth, UILayout::Tunable::BarHeight, stats.MP.Current, stats.MP.Max, Colors::Bar::MP, Colors::Bar::MPBg);
+	yPos += UILayout::Tunable::BarHeight + UILayout::Tunable::SectionSpacing;
 
 	// 레벨
-	sf::Text statText(font, std::format("Lv.{}", stats.Level), s.FontSize);
+	sf::Text statText(font, std::format("Lv.{}", stats.Level), UILayout::Tunable::FontSize);
 	statText.setFillColor(Colors::Text);
 	statText.setPosition({ xPos, yPos });
 	window.draw(statText);
-	yPos += s.LineSpacing + s.InfoStatExtraSpacing;
+	yPos += UILayout::Tunable::LineSpacing + UILayout::Tunable::InfoStatExtraSpacing;
 
 	// 스탯
-	statText.setCharacterSize(s.SmallFontSize);
+	statText.setCharacterSize(UILayout::Tunable::SmallFontSize);
 
 	statText.setString(std::format("STR:{}", stats.STR));
 	statText.setPosition({ xPos, yPos });
 	window.draw(statText);
-	yPos += s.LineSpacing;
+	yPos += UILayout::Tunable::LineSpacing;
 
 	statText.setString(std::format("DEX:{}", stats.DEX));
 	statText.setPosition({ xPos, yPos });
 	window.draw(statText);
-	yPos += s.LineSpacing;
+	yPos += UILayout::Tunable::LineSpacing;
 
 	statText.setString(std::format("INT:{}", stats.INT));
 	statText.setPosition({ xPos, yPos });
 	window.draw(statText);
-	yPos += s.LineSpacing + s.InfoStatExtraSpacing;
+	yPos += UILayout::Tunable::LineSpacing + UILayout::Tunable::InfoStatExtraSpacing;
 
 	// 상태효과
 	for (const auto& effect : StatusEffects)
 	{
-		sf::Text effectText(font, effect.Name, s.SmallFontSize);
+		sf::Text effectText(font, effect.Name, UILayout::Tunable::SmallFontSize);
 		effectText.setFillColor(effect.Color);
 		effectText.setPosition({ xPos, yPos });
 		window.draw(effectText);
-		yPos += s.LineSpacing;
+		yPos += UILayout::Tunable::LineSpacing;
 	}
 }
 
@@ -87,15 +85,13 @@ void InfoPanel::SetSource(const CharacterStats* stats)
 void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font, float x, float y, float width, float height, int current, int max,
 	sf::Color barColor, sf::Color bgColor)
 {
-	const Style& s = DefaultStyle;
-
 	// 배경
 	sf::RectangleShape bg;
 	bg.setSize({ width, height });
 	bg.setPosition({ x, y });
 	bg.setFillColor(bgColor);
 	bg.setOutlineColor(Colors::Bar::Outline);
-	bg.setOutlineThickness(s.BarOutlineThickness);
+	bg.setOutlineThickness(UILayout::Tunable::BarOutlineThickness);
 	window.draw(bg);
 
 	// 프로그래스
@@ -108,11 +104,11 @@ void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font, 
 
 	// 텍스트
 	std::string valueStr = std::format("{}/{}", current, max);
-	sf::Text	valueText(font, valueStr, s.SmallFontSize);
+	sf::Text	valueText(font, valueStr, UILayout::Tunable::SmallFontSize);
 	valueText.setFillColor(Colors::White);
 
 	sf::FloatRect textBounds = valueText.getLocalBounds();
-	valueText.setPosition({ x + (width - textBounds.size.x) / 2.f, y + (height - textBounds.size.y) / 2.f + s.BarTextOffsetY });
+	valueText.setPosition({ x + (width - textBounds.size.x) / 2.f, y + (height - textBounds.size.y) / 2.f + UILayout::Tunable::BarTextOffsetY });
 	window.draw(valueText);
 }
 

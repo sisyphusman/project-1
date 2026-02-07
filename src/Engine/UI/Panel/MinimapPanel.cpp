@@ -42,19 +42,17 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 		return;
 	}
 
-	const Style& s = DefaultStyle;
-
 	// 층 표시
-	sf::Text levelText(font, std::format("B{}F", CurrentLevel), s.MinimapLevelFontSize);
+	sf::Text levelText(font, std::format("B{}F", CurrentLevel), UILayout::Tunable::MinimapLevelFontSize);
 	levelText.setFillColor(Colors::Text);
-	levelText.setPosition({ Bounds.position.x + s.Padding, Bounds.position.y + s.Padding });
+	levelText.setPosition({ Bounds.position.x + UILayout::Tunable::Padding, Bounds.position.y + UILayout::Tunable::Padding });
 	window.draw(levelText);
 
 	// 미니맵 영역 계산
-	float mapAreaX = Bounds.position.x + s.Padding;
-	float mapAreaY = Bounds.position.y + s.MinimapHeaderOffsetY;
-	float mapAreaWidth = Bounds.size.x - s.Padding * 2.f;
-	float mapAreaHeight = Bounds.size.y - (s.MinimapHeaderOffsetY + s.MinimapBottomPadding);
+	float mapAreaX = Bounds.position.x + UILayout::Tunable::Padding;
+	float mapAreaY = Bounds.position.y + UILayout::Tunable::MinimapHeaderOffsetY;
+	float mapAreaWidth = Bounds.size.x - UILayout::Tunable::Padding * 2.f;
+	float mapAreaHeight = Bounds.size.y - (UILayout::Tunable::MinimapHeaderOffsetY + UILayout::Tunable::MinimapBottomPadding);
 
 	int mapWidth = MapRef->GetWidth();
 	int mapHeight = MapRef->GetHeight();
@@ -68,7 +66,7 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 
 	// 타일 간격 추가
 	sf::RectangleShape tile;
-	tile.setSize({ TileSize - s.MinimapTileGap, TileSize - s.MinimapTileGap });
+	tile.setSize({ TileSize - UILayout::Tunable::MinimapTileGap, TileSize - UILayout::Tunable::MinimapTileGap });
 
 	for (int y = 0; y < mapHeight; ++y)
 	{
@@ -115,8 +113,8 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 
 	// 플레이어 표시
 	sf::RectangleShape playerMarker;
-	playerMarker.setSize({ TileSize + s.MinimapPlayerMarkerMargin, TileSize + s.MinimapPlayerMarkerMargin });
-	playerMarker.setPosition({ offsetX + PlayerX * TileSize - s.MinimapPlayerMarkerMargin, offsetY + PlayerY * TileSize - s.MinimapPlayerMarkerMargin });
+	playerMarker.setSize({ TileSize + UILayout::Tunable::MinimapPlayerMarkerMargin, TileSize + UILayout::Tunable::MinimapPlayerMarkerMargin });
+	playerMarker.setPosition({ offsetX + PlayerX * TileSize - UILayout::Tunable::MinimapPlayerMarkerMargin, offsetY + PlayerY * TileSize - UILayout::Tunable::MinimapPlayerMarkerMargin });
 	playerMarker.setFillColor(Colors::Minimap::Player);
 	window.draw(playerMarker);
 }
