@@ -4,9 +4,6 @@
 
 #include <SFML/Graphics/Color.hpp>
 
-// namespace: 상수 집합 (색상 등)
-// struct: 설정 가능한 값 (레이아웃 등)
-
 // ============================================================
 // 로그 메시지 색상
 // ============================================================
@@ -85,30 +82,141 @@ namespace Colors
 
 	// 텍스트
 	inline const sf::Color Text = sf::Color(200, 200, 200);
-} 
+}
 
 // ============================================================
-// UI 레이아웃 (인스턴스화 필요)
+// UI 레이아웃
 // ============================================================
-struct Style
+
+namespace UILayout
 {
-	int FontSize = 14;
-	int SmallFontSize = 12;
-	int PortraitPlaceholderFontSize = 48;
-	int MinimapLevelFontSize = 14;
+	namespace Fixed
+	{
+		inline constexpr int BaseWidth = 1920;
+		inline constexpr int BaseHeight = 1080;
+		inline constexpr int TileSize = 24;
+	}
 
-	float Padding = 8.f;
-	float BarHeight = 20.f;
-	float BarSpacing = 6.f;
-	float LineSpacing = 16.f;
-	float SectionSpacing = 12.f;
+	namespace Tunable
+	{
+		// 상하 분할 (게임 영역 / 하단 UI)
+		inline float GameAreaRatio = 0.7f;
 
-	float InfoStatExtraSpacing = 4.f;
-	float BarOutlineThickness = 1.f;
-	float BarTextOffsetY = -2.f;
+		// 하단 UI 4분할 (초상화 / 인포 / 로그 / 맵)
+		inline float PortraitRatio = 0.10f;
+		inline float InfoRatio = 0.20f;
+		inline float LogRatio = 0.40f;
+		inline float MinimapRatio = 0.30f;
 
-	float MinimapHeaderOffsetY = 30.f;
-	float MinimapBottomPadding = 10.f;
-	float MinimapTileGap = 1.f;
-	float MinimapPlayerMarkerMargin = 1.f;
-};
+		// 시야 반경
+		inline int FOVRadius = 8;
+
+		// 로그 영역 설정
+		inline int LogFontSize = 18;
+		inline int LogPaddingTop = 10;
+		inline int LogPaddingLeft = 15;
+
+		// 패널 공통 텍스트/여백
+		inline int	 FontSize = 14;
+		inline int	 SmallFontSize = 12;
+		inline float Padding = 8.f;
+		inline float LineSpacing = 16.f;
+		inline float SectionSpacing = 12.f;
+
+		// 초상화 패널
+		inline int PortraitPlaceholderFontSize = 48;
+
+		// 인포 패널
+		inline float BarHeight = 20.f;
+		inline float BarSpacing = 6.f;
+		inline float InfoStatExtraSpacing = 4.f;
+		inline float BarOutlineThickness = 1.f;
+		inline float BarTextOffsetY = -2.f;
+
+		// 미니맵 패널
+		inline int	 MinimapLevelFontSize = 14;
+		inline float MinimapHeaderOffsetY = 30.f;
+		inline float MinimapBottomPadding = 10.f;
+		inline float MinimapTileGap = 1.f;
+		inline float MinimapPlayerMarkerMargin = 1.f;
+	}
+
+	namespace Derived
+	{
+		// 하단 UI 비율
+		inline float BottomUIRatio()
+		{
+			return 1.f - Tunable::GameAreaRatio;
+		}
+
+		// 영역 높이 계산
+		inline int GameAreaHeight()
+		{
+			return static_cast<int>(Fixed::BaseHeight * Tunable::GameAreaRatio);
+		}
+
+		// 하단 UI 길이
+		inline int BottomUIHeight()
+		{
+			return Fixed::BaseHeight - GameAreaHeight();
+		}
+
+		inline int PortraitWidth()
+		{
+			return static_cast<int>(Fixed::BaseWidth * Tunable::PortraitRatio);
+		}
+
+		inline int InfoWidth()
+		{
+			return static_cast<int>(Fixed::BaseWidth * Tunable::InfoRatio);
+		}
+
+		inline int LogWidth()
+		{
+			return static_cast<int>(Fixed::BaseWidth * Tunable::LogRatio);
+		}
+
+		inline int MinimapWidth()
+		{
+			return Fixed::BaseWidth - PortraitWidth() - InfoWidth() - LogWidth();
+		}
+
+		// 월드 타일 기준 뷰 크기
+		inline int ViewWidthTiles()
+		{
+			return Fixed::BaseWidth / Fixed::TileSize;
+		}
+
+		inline int ViewHeightTiles()
+		{
+			return GameAreaHeight() / Fixed::TileSize;
+		}
+
+		// 로그 줄 높이
+		inline int LogLineHeight()
+		{
+			return Tunable::LogFontSize + 6;
+		}
+	}
+
+	// 옵션/설정 로드 후 유효성 검사
+	inline bool IsValid()
+	{
+		if (!(Tunable::GameAreaRatio > 0.f && Tunable::GameAreaRatio < 1.f))
+		{
+			return false;
+		}
+
+		if (Derived::BottomUIRatio() <= 0.f)
+		{
+			return false;
+		}
+
+		if (Derived::PortraitWidth() + Derived::InfoWidth() + Derived::LogWidth() + Derived::MinimapWidth() != Fixed::BaseWidth)
+		{
+			return false;
+		}
+
+		return true;
+	}
+}
