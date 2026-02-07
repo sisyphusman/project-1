@@ -1,9 +1,7 @@
 #include "Engine/World/Map.h"
 
 Map::Map(int width, int height)
-	: Width(width)
-	, Height(height)
-	, Tiles(width * height, Tile::Wall())
+	: Width(width), Height(height), Tiles(width * height, Tile::Wall())
 {
 	// 초기화만 담당
 	for (int y = 0; y < Height; ++y)

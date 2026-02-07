@@ -37,8 +37,6 @@ void Game::Init()
 
 	// 카메라 초기화
 	GameCamera = std::make_unique<Camera>();
-	GameCamera->SetNormalZoom(1.0f);
-	GameCamera->SetZoomedOutZoom(0.5f);
 
 	// UI 초기화 (패널 생성)
 	InitUI();

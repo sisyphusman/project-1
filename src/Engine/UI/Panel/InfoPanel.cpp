@@ -84,8 +84,8 @@ void InfoPanel::SetSource(const CharacterStats* stats)
 	StatsPtr = stats;
 }
 
-void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font,
-	float x, float y, float width, float height, int current, int max, sf::Color barColor, sf::Color bgColor)
+void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font, float x, float y, float width, float height, int current, int max,
+	sf::Color barColor, sf::Color bgColor)
 {
 	const Style& s = DefaultStyle;
 

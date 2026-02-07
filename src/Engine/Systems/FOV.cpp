@@ -2,8 +2,8 @@
 
 #include "Engine/World/Map.h"
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 
 FOV::FOV(int width, int height)
 	: Width(width)
@@ -19,7 +19,7 @@ void FOV::Compute(const Map& map, int originX, int originY, int radius)
 	std::fill(Visible.begin(), Visible.end(), false);
 
 	// 원점 경계 체크
-	if (!InBounds(originX, originY))
+	if (!InBounds(originX, originY) || radius < 0)
 	{
 		return;
 	}
@@ -27,57 +27,31 @@ void FOV::Compute(const Map& map, int originX, int originY, int radius)
 	// 원점은 항상 보이게 설정
 	SetVisible(originX, originY);
 
-	// 시야 원의 경계점들 계산
-	std::vector<std::pair<int, int>> circlePoints;
-	GetCirclePoints(originX, originY, radius, circlePoints);
-
-	// 각 경계점으로 광선 발사
-	for (const auto& [targetX, targetY] : circlePoints)
+	if (radius == 0)
 	{
-		CastRay(map, originX, originY, targetX, targetY, radius);
+		return;
+	}
+
+	const int radiusSquared = radius * radius;
+	const int minX = std::max(0, originX - radius);
+	const int maxX = std::min(Width - 1, originX + radius);
+	const int minY = std::max(0, originY - radius);
+	const int maxY = std::min(Height - 1, originY + radius);
+
+	// 반경 내부의 모든 타일을 대상으로 광선 발사
+	for (int y = minY; y <= maxY; ++y)
+	{
+		for (int x = minX; x <= maxX; ++x)
+		{
+			if (DistanceSquared(originX, originY, x, y) <= radiusSquared)
+			{
+				CastRay(map, originX, originY, x, y, radiusSquared);
+			}
+		}
 	}
 }
 
-void FOV::GetCirclePoints(int centerX, int centerY, int radius, std::vector<std::pair<int, int>>& points)
-{
-	// 원의 1/8 테두리만 구한 다음 부호와 x,y 반전을 이용해서 전체 원의 테두리를 완성
-
-	int x = radius;
-	int y = 0;
-	int radiusError = 1 - x; // 원 내부/외부 판단 기준
-
-	while (x >= y)
-	{
-		// 8분면 대칭점 추가
-		points.emplace_back(centerX + x, centerY + y);
-		points.emplace_back(centerX + y, centerY + x);
-		points.emplace_back(centerX - y, centerY + x);
-		points.emplace_back(centerX - x, centerY + y);
-		points.emplace_back(centerX - x, centerY - y);
-		points.emplace_back(centerX - y, centerY - x);
-		points.emplace_back(centerX + y, centerY - x);
-		points.emplace_back(centerX + x, centerY - y);
-
-		++y;
-
-		// 원 안쪽이면 x 유지, 오차 보정
-		if (radiusError < 0)
-		{
-			radiusError += 2 * y + 1;
-		}
-		// 원 바깥쪽이면 x 감소 후, 오차 보정
-		else
-		{
-			--x;
-			radiusError += 2 * (y - x + 1);
-		}
-	}
-
-	std::sort(points.begin(), points.end());
-	points.erase(std::unique(points.begin(), points.end()), points.end()); // 연속된 중복 제거
-}
-
-void FOV::CastRay(const Map& map, int originX, int originY, int targetX, int targetY, int radius)
+void FOV::CastRay(const Map& map, int originX, int originY, int targetX, int targetY, int radiusSquared)
 {
 	// 원점에서 목표까지 직선 경로의 모든 타일 검사 후 처리
 
@@ -100,8 +74,7 @@ void FOV::CastRay(const Map& map, int originX, int originY, int targetX, int tar
 		}
 
 		// 반경 체크 (유클리드 거리)
-		float dist = Distance(originX, originY, currentX, currentY);
-		if (dist > static_cast<float>(radius))
+		if (DistanceSquared(originX, originY, currentX, currentY) > radiusSquared)
 		{
 			break;
 		}
@@ -162,11 +135,11 @@ bool FOV::InBounds(int x, int y) const
 	return x >= 0 && x < Width && y >= 0 && y < Height;
 }
 
-float FOV::Distance(int x1, int y1, int x2, int y2) const
+int FOV::DistanceSquared(int x1, int y1, int x2, int y2) const
 {
-	float dx = static_cast<float>(x2 - x1);
-	float dy = static_cast<float>(y2 - y1);
-	return std::sqrt(dx * dx + dy * dy);
+	const int dx = x2 - x1;
+	const int dy = y2 - y1;
+	return dx * dx + dy * dy;
 }
 
 bool FOV::IsVisible(int x, int y) const
