@@ -41,6 +41,9 @@ void Game::Init()
 	// UI 초기화 (패널 생성)
 	InitUI();
 
+	// 컴뱃 시스템 초기화
+	Combat.Reset();
+
 	// 첫 번째 걸을 수 있는 타일을 찾아 플레이어 배치
 	for (int y = 1; y < currentMap.GetHeight() - 1; ++y)
 	{
@@ -58,6 +61,11 @@ void Game::Init()
 
 				// 미니맵 초기화
 				Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
+
+				if (Combat.SpawnTestMonster(currentMap, pos))
+				{
+					Log->GetLog().AddMessage("귀신이 나타났습니다", LogColor::White);
+				}
 				return;
 			}
 		}
@@ -156,12 +164,33 @@ void Game::ProcessEvents()
 
 			if (dx != 0 || dy != 0)
 			{
-				if (GamePlayer->TryMove(dx, dy, Dungeon->GetCurrentMap()))
+				sf::Vector2i				   currentPos = GamePlayer->GetPosition();
+				sf::Vector2i				   nextPos = currentPos;
+				bool						   bPlayerMoved = false;
+				std::vector<std::string>	   combatMessages;
+				std::vector<CombatDamageEvent> damageEvents;
+
+				if (Combat.HandlePlayerTurn(Dungeon->GetCurrentMap(), currentPos, dx, dy, MyCharStats, bPlayerMoved, nextPos, combatMessages, damageEvents))
 				{
+					if (bPlayerMoved)
+					{
+						GamePlayer->SetPosition(nextPos.x, nextPos.y);
+					}
+
+					for (const std::string& message : combatMessages)
+					{
+						Log->GetLog().AddMessage(message, message == "이동했습니다" ? LogColor::Move : LogColor::Combat);
+					}
+
+					for (const CombatDamageEvent& damageEvent : damageEvents)
+					{
+						DamagePopups.AddAtTile(damageEvent.TilePosition.x, damageEvent.TilePosition.y, damageEvent.Damage,
+							damageEvent.bFromPlayer ? Colors::Red : Colors::White);
+					}
+
 					auto pos = GamePlayer->GetPosition();
 					PlayerFOV->Compute(Dungeon->GetCurrentMap(), pos.x, pos.y, UILayout::Tunable::FOVRadius);
 					GameCamera->SetTarget(static_cast<float>(pos.x * UILayout::Fixed::TileSize), static_cast<float>(pos.y * UILayout::Fixed::TileSize));
-					Log->GetLog().AddMessage("이동했습니다", LogColor::Move);
 				}
 			}
 		}
@@ -194,11 +223,18 @@ void Game::CheckStairs()
 			{
 				PlayerFOV->Reset();
 			}
+			
 
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("아래층으로 내려갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
+
+			Combat.Reset();
+			if (Combat.SpawnTestMonster(Dungeon->GetCurrentMap(), newPos))
+			{
+				Log->GetLog().AddMessage("귀신이 나타났습니다", LogColor::White);
+			}
 		}
 	}
 	// 이전 층 이동
@@ -224,6 +260,12 @@ void Game::CheckStairs()
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("위층으로 올라갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
+
+			Combat.Reset();
+			if (Combat.SpawnTestMonster(Dungeon->GetCurrentMap(), newPos))
+			{
+				Log->GetLog().AddMessage("귀신이 나타났습니다", LogColor::White);
+			}
 		}
 	}
 }
@@ -237,6 +279,7 @@ void Game::Update(float deltaTime)
 	Info->Update(deltaTime);
 	Log->Update(deltaTime);
 	Minimap->Update(deltaTime);
+	DamagePopups.Update(deltaTime);
 }
 
 void Game::UpdateCamera()
@@ -289,6 +332,27 @@ void Game::RenderGameWorld()
 				Window.draw(tileText);
 			}
 		}
+	}
+
+	for (const CombatMonster& monster : Combat.GetMonsters())
+	{
+		if (!monster.bIsAlive)
+		{
+			continue;
+		}
+
+		if (!PlayerFOV->IsVisible(monster.Position.x, monster.Position.y))
+		{
+			continue;
+		}
+
+		tileText.setString(std::string(1, monster.Glyph));
+		tileText.setPosition({ static_cast<float>(monster.Position.x * UILayout::Fixed::TileSize),
+			static_cast<float>(monster.Position.y) * UILayout::Fixed::TileSize });
+		tileText.setFillColor(Colors::Red);
+		Window.draw(tileText);
+
+		DamagePopups.Render(Window, GameFont);
 	}
 
 	// 플레이어 렌더링
