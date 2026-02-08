@@ -1,6 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 #include <SFML/Graphics.hpp>
 
@@ -15,6 +18,8 @@
 #include "Engine/UI/Panel/MessageLogPanel.h"
 #include "Engine/UI/Panel/MinimapPanel.h"
 #include "Engine/Core/Macros.h"
+#include "Engine/Systems/CombatSystem.h"
+#include "Engine/Systems/DamagePopupSystem.h"
 
 class Map;
 class Player;
@@ -57,6 +62,9 @@ private:
 	std::unique_ptr<Player>			GamePlayer;
 	std::unique_ptr<FOV>			PlayerFOV;
 	std::unique_ptr<Camera>			GameCamera;
+
+	CombatSystem	  Combat;
+	DamagePopupSystem DamagePopups;
 
 	// UI 패널
 	std::unique_ptr<PortraitPanel>	 Portrait;
