@@ -33,6 +33,7 @@ namespace Colors
 	// 기본 색상
 	inline const sf::Color White = sf::Color::White;
 	inline const sf::Color Black = sf::Color::Black;
+	inline const sf::Color Red = sf::Color::Red;
 	inline const sf::Color Grey = sf::Color(170, 170, 170);
 	inline const sf::Color DarkGrey = sf::Color(102, 102, 102);
 	inline const sf::Color LightGrey = sf::Color(200, 200, 200);
