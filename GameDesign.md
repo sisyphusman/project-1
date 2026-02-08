@@ -3,15 +3,16 @@
 
 ```
 src/
-├── Core/
-├── Actors/
+├── Core/            # 게임 루프, 앱 진입, 공통 유틸
+├── Entities/        # Player, Monster, NPC, Object
+│   ├── Actors/
+│   └── Objects/
+├── World/           # Map, Dungeon, Tile
+├── Systems/         # Combat, FOV, Turn
+├── UI/              # Panels, HUD, Theme
 ├── Items/
-├── World/
-├── Systems/
-├── UI/
-├── Audio/
-├── Data/
 ├── Events/
+├── Data/
 └── Main.cpp
 
 assets/
