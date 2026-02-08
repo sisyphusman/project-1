@@ -15,7 +15,7 @@ struct ResourceStat
 	}
 
 	void SetFull() { Current = Max; }
-	void Modify(int amount) { Current = std::clamp(Current + amount, 0, Max); }
+	void Modify(int amount) { Current = std::clamp(Current + amount, 0, Max); } // Max 값 초과하지 않게 제한함
 };
 
 // 캐릭터 스탯
