@@ -19,7 +19,7 @@ bool TurnSystem::ExecutePlayerTurn(CombatSystem& combat, const Map& map, const s
 	outResult = {};
 	outResult.PlayerNextPosition = playerPos;
 
-	if (!combat.HandlePlayerTurn(map, playerPos, dx, dy, playerStats, outResult.bPlayerMoved, outResult.PlayerNextPosition, outResult.Messages,
+	if (!combat.HandlePlayerAction(map, playerPos, dx, dy, playerStats, outResult.bPlayerMoved, outResult.PlayerNextPosition, outResult.Messages,
 			outResult.DamageEvents))
 	{
 		return false;
@@ -27,14 +27,14 @@ bool TurnSystem::ExecutePlayerTurn(CombatSystem& combat, const Map& map, const s
 
 	// 플레이어 입력이 확정되면 에너미 턴으로 넘긴 뒤 다시 플레이어 턴으로 리턴
 	bIsPlayerTurn = false;
-	combat.ProcessMonsterTurn(outResult.PlayerNextPosition, playerStats, outResult.Messages, outResult.DamageEvents);
+	combat.ProcessEnemyTurn(outResult.PlayerNextPosition, playerStats, outResult.Messages, outResult.DamageEvents);
 	bIsPlayerTurn = true;
 	return true;
 }
 
 void TurnSystem::CollectNewVisibleEnemyMessages(const CombatSystem& combat, const FOV& fov, std::vector<std::string>& outMessages)
 {
-	for (const CombatMonster& enemy : combat.GetMonsters())
+	for (const CombatEnemy& enemy : combat.GetEnemies())
 	{
 		if (!enemy.bIsAlive)
 		{

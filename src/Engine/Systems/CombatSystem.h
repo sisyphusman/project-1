@@ -9,8 +9,10 @@
 
 class Map;
 
-struct CombatMonster
+struct CombatEnemy
 {
+	int			   Id = 0;
+	std::string	   Name = "귀신";
 	sf::Vector2i   Position;
 	char		   Glyph = 'g';
 	CharacterStats Stats;
@@ -28,18 +30,23 @@ class CombatSystem
 {
 public:
 	void Reset();
-	bool SpawnTestMonster(const Map& map, const sf::Vector2i& playerPos);
+	bool SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos); // 무작위로 몬스터 배치
 
-	bool HandlePlayerTurn(const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, bool& bOutPlayerMoved,
+	// 플레이어(이동/공격) 처리
+	bool HandlePlayerAction(const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, bool& bOutPlayerMoved,
 		sf::Vector2i& outPlayerPos, std::vector<std::string>& outMessages, std::vector<CombatDamageEvent>& outDamageEvents);
 
-	const std::vector<CombatMonster>& GetMonsters() const { return Monsters; }
-
-private:
-	int	 FindMonsterAt(int x, int y) const;
-	int	 CalculatePhysicalDamage(const CharacterStats& attacker, const CharacterStats& defender) const;
-	void ProcessMonsterTurn(const sf::Vector2i& playerPos, CharacterStats& playerStats, std::vector<std::string>& outMessages,
+	// 에너미 행동 처리
+	void ProcessEnemyTurn(const sf::Vector2i& playerPos, CharacterStats& playerStats, std::vector<std::string>& outMessages,
 		std::vector<CombatDamageEvent>& outDamageEvents);
 
-	std::vector<CombatMonster> Monsters;
+	const std::vector<CombatEnemy>& GetEnemies() const { return Enemies; }
+
+private:
+	int	 FindEnemyAt(int x, int y) const;
+	int	 CalculatePhysicalDamage(const CharacterStats& attacker, const CharacterStats& defender) const; // 공격력 + 힘 보정 - 방어력, 최소 1 보장
+	void RemoveDeadEnemies();
+
+	int						 NextEnemyId = 1;
+	std::vector<CombatEnemy> Enemies;
 };

@@ -20,6 +20,7 @@
 #include "Engine/Core/Macros.h"
 #include "Engine/Systems/CombatSystem.h"
 #include "Engine/Systems/DamagePopupSystem.h"
+#include "Engine/Systems/TurnSystem.h"
 
 class Map;
 class Player;
@@ -64,6 +65,7 @@ private:
 	std::unique_ptr<Camera>			GameCamera;
 
 	CombatSystem	  Combat;
+	TurnSystem		  Turn;
 	DamagePopupSystem DamagePopups;
 
 	// UI 패널
