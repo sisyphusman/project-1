@@ -11,28 +11,28 @@ public:
 	void ToggleZoomOut();
 	void Update(float deltaTime, sf::View& inOutView, float baseViewWidth, float baseViewHeight); // 지수 보간 + 뷰 반영
 
-	[[nodiscard]] float GetX() const noexcept { return m_x; }
-	[[nodiscard]] float GetY() const noexcept { return m_y; }
-	[[nodiscard]] float GetZoom() const noexcept { return m_currentZoom; }
-	[[nodiscard]] bool	IsZoomedOut() const noexcept { return m_isZoomedOut; }
+	[[nodiscard]] float GetX() const noexcept { return CurrentX; }
+	[[nodiscard]] float GetY() const noexcept { return CurrentY; }
+	[[nodiscard]] float GetZoom() const noexcept { return CurrentZoom; }
+	[[nodiscard]] bool	IsZoomedOut() const noexcept { return bIsZoomedOut; }
 
-	void SetNormalZoom(float zoom) { m_normalZoom = zoom; }
-	void SetZoomedOutZoom(float zoom) { m_zoomedOutZoom = zoom; }
+	void SetNormalZoom(float zoom) { NormalZoom = zoom; }
+	void SetZoomedOutZoom(float zoom) { ZoomedOutZoom = zoom; }
 
 private:
 	// 현재 카메라 중심 좌표
-	float m_x = 0.0f;
-	float m_y = 0.0f;
+	float CurrentX = 0.0f;
+	float CurrentY = 0.0f;
 
 	// 목표 좌표
-	float m_targetX = 0.0f;
-	float m_targetY = 0.0f;
+	float TargetX = 0.0f;
+	float TargetY = 0.0f;
 
-	float m_normalZoom = 1.0f;	  // 기본
-	float m_zoomedOutZoom = 0.5f; // 줌 아웃
-	float m_currentZoom = 1.0f;	  // 보간 결과
+	float NormalZoom = 1.0f;	// 기본
+	float ZoomedOutZoom = 0.5f; // 줌 아웃
+	float CurrentZoom = 1.0f;	// 보간 결과
 
-	bool m_isZoomedOut = false;
+	bool bIsZoomedOut = false;
 
 	// 지수 보간 계수, 값이 크면 빠름
 	static constexpr float SmoothSpeed = 8.0f;
