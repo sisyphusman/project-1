@@ -48,7 +48,6 @@ private:
 	void Update(float deltaTime);
 	void Render();
 	void CheckStairs();
-	void UpdateCamera();
 
 	void RenderGameWorld();
 	void RenderBottomUI();
@@ -59,11 +58,13 @@ private:
 	sf::View		 BottomUIView;
 	sf::Clock		 GameClock;
 
+	// 지연 생성 필요, 스마트 포인터 사용
 	std::unique_ptr<DungeonManager> Dungeon;
 	std::unique_ptr<Player>			GamePlayer;
 	std::unique_ptr<FOV>			PlayerFOV;
 	std::unique_ptr<Camera>			GameCamera;
 
+	// 소유권 공유가 필요없음, 값 타입(스택 멤버)으로 유지
 	CombatSystem	  Combat;
 	TurnSystem		  Turn;
 	DamagePopupSystem DamagePopups;

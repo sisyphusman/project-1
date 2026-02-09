@@ -32,6 +32,6 @@ public:
 	void CollectNewVisibleEnemyMessages(const CombatSystem& combat, const FOV& fov, std::vector<std::string>& outMessages);
 
 private:
-	bool					bIsPlayerTurn = true;
-	std::unordered_set<int> SeenEnemyIds;
+	bool					bIsPlayerTurn = true; // 턴 상태 플래그
+	std::unordered_set<int> SeenEnemyIds;		  // 한번 본 에너미 리스트
 };

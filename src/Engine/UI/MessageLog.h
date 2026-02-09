@@ -30,7 +30,6 @@ public:
 	std::vector<Message> GetRecentMessages(int count) const;
 
 private:
-	std::vector<Message> Messages;
-
+	std::vector<Message> Messages;				   // 메시지 도착 순서대로 보관되는 로그 버퍼
 	static constexpr int MaxStoredMessages = 1000; // 저장할 수 있는 메시지 개수
 };

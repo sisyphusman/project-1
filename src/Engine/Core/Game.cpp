@@ -297,25 +297,14 @@ void Game::CheckStairs()
 
 void Game::Update(float deltaTime)
 {
-	GameCamera->Update(deltaTime);
-	UpdateCamera();
+	GameCamera->Update(deltaTime, GameView, static_cast<float>(UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize), 
+		static_cast<float>(UILayout::Derived::ViewHeightTiles() * UILayout::Fixed::TileSize));
 
 	Portrait->Update(deltaTime);
 	Info->Update(deltaTime);
 	Log->Update(deltaTime);
 	Minimap->Update(deltaTime);
 	DamagePopups.Update(deltaTime);
-}
-
-void Game::UpdateCamera()
-{
-	float zoom = GameCamera->GetZoom();
-	float viewWidth = UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize / zoom;
-	float viewHeight = UILayout::Derived::ViewHeightTiles() * UILayout::Fixed::TileSize / zoom;
-
-	GameView.setSize({ viewWidth, viewHeight });
-	GameView.setCenter({ GameCamera->GetX(), GameCamera->GetY() });
-	Window.setView(GameView);
 }
 
 void Game::Render()

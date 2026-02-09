@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics/View.hpp>
+
 class Camera
 {
 public:
@@ -7,7 +9,7 @@ public:
 
 	void SetTarget(float x, float y);
 	void ToggleZoomOut();
-	void Update(float deltaTime); // 지수 보간(exponential smoothing) 사용
+	void Update(float deltaTime, sf::View& inOutView, float baseViewWidth, float baseViewHeight); // 지수 보간 + 뷰 반영
 
 	[[nodiscard]] float GetX() const noexcept { return m_x; }
 	[[nodiscard]] float GetY() const noexcept { return m_y; }

@@ -27,8 +27,11 @@ public:
 private:
 	void GenerateLevel(int level); // 새로운 던전 레벨 생성
 
+	// 모든 층에서 공통으로 사용하는 맵 크기
 	int MapWidth;
 	int MapHeight;
+
+	// 현재 층 인덱스
 	int CurrentLevel = 0;
 
 	std::vector<std::unique_ptr<Map>>				   Levels;

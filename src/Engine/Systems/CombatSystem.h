@@ -47,6 +47,6 @@ private:
 	int	 CalculatePhysicalDamage(const CharacterStats& attacker, const CharacterStats& defender) const; // 공격력 + 힘 보정 - 방어력, 최소 1 보장
 	void RemoveDeadEnemies();
 
-	int						 NextEnemyId = 1;
-	std::vector<CombatEnemy> Enemies;
+	int						 NextEnemyId = 1; // 에너미 식별자
+	std::vector<CombatEnemy> Enemies;		  // 현재 층에 활성화된 에너미 리스트
 };

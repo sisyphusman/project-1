@@ -25,7 +25,7 @@ private:
 	const sf::Vector2i* PlayerPosRef = nullptr;
 	const int*			LevelRef = nullptr;
 
-	// 렌더링용 캐시
+	// 매 프레임 계산된 결과를 임시 보관
 	int PlayerX = 0;
 	int PlayerY = 0;
 	int CurrentLevel = 1;
