@@ -376,9 +376,9 @@ void Game::RenderGameWorld()
 			static_cast<float>(enemy.Position.y) * UILayout::Fixed::TileSize });
 		tileText.setFillColor(Colors::Red);
 		Window.draw(tileText);
-
-		DamagePopups.Render(Window, GameFont);
 	}
+	
+	DamagePopups.Render(Window, GameFont);
 
 	// 플레이어 렌더링
 	auto pos = GamePlayer->GetPosition();
