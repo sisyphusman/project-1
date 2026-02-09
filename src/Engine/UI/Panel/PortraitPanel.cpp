@@ -43,10 +43,8 @@ void PortraitPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 		placeholder.setFillColor(Colors::Panel::PortraitText);
 
 		sf::FloatRect textBounds = placeholder.getLocalBounds();
-		placeholder.setPosition({ 
-			Bounds.position.x + (Bounds.size.x - textBounds.size.x) / 2.f, 
-			Bounds.position.y + (Bounds.size.y - textBounds.size.y) / 2.f 
-			});
+		placeholder.setPosition({ Bounds.position.x + (Bounds.size.x - textBounds.size.x) / 2.f,
+			Bounds.position.y + (Bounds.size.y - textBounds.size.y) / 2.f });
 		window.draw(placeholder);
 	}
 }
