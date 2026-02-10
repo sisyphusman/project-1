@@ -168,6 +168,7 @@ void Game::ProcessEvents()
 					break;
 			}
 
+			// 이동 및 전투 처리
 			if (dx != 0 || dy != 0)
 			{
 				sf::Vector2i currentPos = GamePlayer->GetPosition();

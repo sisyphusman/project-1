@@ -146,7 +146,7 @@ void CombatSystem::ProcessEnemyTurn(const sf::Vector2i& playerPos, CharacterStat
 			int damage = CalculatePhysicalDamage(enemy.Stats, playerStats);
 			playerStats.HP.Modify(-damage);
 			outDamageEvents.push_back({ playerPos, damage, false });
-			outMessages.push_back("고블린이 플레이어에게 " + std::to_string(damage) + "의 물리 피해");
+			outMessages.push_back(enemy.Name + "이 플레이어에게 " + std::to_string(damage) + "의 물리 피해");
 
 			if (playerStats.HP.Current <= 0)
 			{
