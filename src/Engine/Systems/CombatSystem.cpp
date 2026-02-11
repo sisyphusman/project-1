@@ -1,4 +1,5 @@
 #include "CombatSystem.h"
+#include "CombatSystem.h"
 
 #include <algorithm>
 #include <random>
@@ -48,16 +49,39 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 	std::uniform_int_distribution<size_t> dist(0, candidates.size() - 1);
 	sf::Vector2i						  spawnPos = candidates[dist(rng)];
 
+	const EnemyTemplate* selectedTemplate = nullptr;
+	if (EnemyDataCatalog != nullptr)
+	{
+		selectedTemplate = EnemyDataCatalog->PickRandomTemplate(rng);
+	}
+
 	CombatEnemy enemy;
 	enemy.Id = NextEnemyId++;
-	enemy.Name = "귀신";
 	enemy.Position = spawnPos;
-	enemy.Glyph = 'g';
-	enemy.Stats.Level = 1;
-	enemy.Stats.HP = { 24, 24 };
-	enemy.Stats.STR = 9;
-	enemy.Stats.Defense = 2;
-	enemy.Stats.Attack = 7;
+
+	if (selectedTemplate != nullptr)
+	{
+		// JSON 템플릿 기반
+		enemy.TemplateId = selectedTemplate->Id;
+		enemy.Name = selectedTemplate->Name;
+		enemy.Glyph = selectedTemplate->Glyph;
+		enemy.Stats = selectedTemplate->BaseStats;
+		enemy.ImageInfo = selectedTemplate->ImageInfo;
+	}
+	else
+	{
+		// 카탈로그 로딩 실패 시 기본값
+		enemy.TemplateId = "fallback_ghost";
+		enemy.Name = "귀신";
+		enemy.Glyph = 'g';
+		enemy.Stats.Level = 1;
+		enemy.Stats.HP = { 24, 24 };
+		enemy.Stats.STR = 9;
+		enemy.Stats.Defense = 2;
+		enemy.Stats.Attack = 7;
+		enemy.ImageInfo.SpritePath = "assets/Ghost.png";
+	}
+
 	Enemies.push_back(enemy);
 	return true;
 }

@@ -41,6 +41,14 @@ void Game::Init()
 	// UI 초기화 (패널 생성)
 	InitUI();
 
+	// 에너미 JSON 로드
+	std::string enemyDataError;
+	if (!EnemyDataCatalog.LoadFromJsonFile("assets/data/enemies.json", enemyDataError))
+	{
+		Log->GetLog().AddMessage(enemyDataError, LogColor::Warning);
+	}
+	Combat.SetEnemyCatalog(&EnemyDataCatalog);
+
 	// 컴뱃 시스템 초기화
 	Combat.Reset();
 	Turn.Reset();

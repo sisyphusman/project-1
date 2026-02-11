@@ -21,6 +21,7 @@
 #include "Engine/Systems/CombatSystem.h"
 #include "Engine/Systems/DamagePopupSystem.h"
 #include "Engine/Systems/TurnSystem.h"
+#include "Engine/Data/EnemyCatalog.h"
 
 class Map;
 class Player;
@@ -76,4 +77,5 @@ private:
 	std::unique_ptr<MinimapPanel>	 Minimap;
 
 	CharacterStats MyCharStats;
+	EnemyCatalog   EnemyDataCatalog;
 };
