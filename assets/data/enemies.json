@@ -1,0 +1,22 @@
+{
+    "schemaVersion": 1,
+    "enemies": 
+    [
+        {
+            "id": "ghost",
+            "name": "귀신",
+            "glyph": "g",
+            "stats": 
+            {
+                "level": 1,
+                "hp": 24,
+                "attack": 7,
+                "defense":2
+            },
+            "images":
+            {
+                "sprite": "assets/Ghost.png"
+            }
+        }
+    ]
+}
