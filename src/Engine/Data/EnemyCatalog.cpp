@@ -15,7 +15,7 @@ namespace
 	{
 		if (!object.contains(fieldName) || !object[fieldName].is_string())
 		{
-			outError = std::string("필수 문자열 필드가 없거나 타입이 되었습니다: ") + fieldName;
+			outError = std::string("필수 문자열 필드가 없거나 타입이 올바르지 않습니다: ") + fieldName;
 			return false;
 		}
 		outValue = object[fieldName].get<std::string>();
@@ -25,15 +25,15 @@ namespace
 	// 필수 정수 필드 읽기
 	bool GetRequiredInt(const Json& object, const char* fieldName, int& outValue, std::string& outError)
 	{
-		if (!object.contains(fieldName) || !object[fieldName].is_string())
+		if (!object.contains(fieldName) || !object[fieldName].is_number_integer())
 		{
-			outError = std::string("필수 문자열 필드가 없거나 타입이 되었습니다: ") + fieldName;
+			outError = std::string("필수 정수 필드가 없거나 타입이 올바르지 않습니다: ") + fieldName;
 			return false;
 		}
 		outValue = object[fieldName].get<int>();
 		return true;
 	}
-}
+} // namespace
 
 bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& outError)
 {
@@ -64,7 +64,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 		return false;
 	}
 
-	if (!root.contains("schemaVersion") && !root["schemaVersion"].is_number_integer())
+	if (!root.contains("schemaVersion") || !root["schemaVersion"].is_number_integer())
 	{
 		outError = "schemaVersion은 정수여야 합니다";
 		return false;
@@ -117,6 +117,14 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 		int			hp = 0;
 		int			attack = 0;
 		int			defense = 0;
+
+		// 핵심 전투 스탯 체크
+		if (!GetRequiredInt(statsObject, "level", level, outError) || !GetRequiredInt(statsObject, "hp", hp, outError)
+			|| !GetRequiredInt(statsObject, "attack", attack, outError) || !GetRequiredInt(statsObject, "defense", defense, outError))
+		{
+			Templates.clear();
+			return false;
+		}
 
 		templateData.BaseStats.Level = level;
 		templateData.BaseStats.HP = { hp, hp };

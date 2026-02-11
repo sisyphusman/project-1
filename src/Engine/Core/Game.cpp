@@ -47,6 +47,8 @@ void Game::Init()
 	{
 		Log->GetLog().AddMessage(enemyDataError, LogColor::Warning);
 	}
+
+	// CombatSystem에 카타로그 데이터 주소 공유
 	Combat.SetEnemyCatalog(&EnemyDataCatalog);
 
 	// 컴뱃 시스템 초기화
@@ -75,9 +77,9 @@ void Game::Init()
 				{
 					std::vector<std::string> discoveredMessages;
 					Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
-					for (const std::string& messages : discoveredMessages)
+					for (const std::string& message : discoveredMessages)
 					{
-						Log->GetLog().AddMessage(messages, LogColor::Combat);
+						Log->GetLog().AddMessage(message, LogColor::Combat);
 					}
 				}
 				return;
@@ -204,11 +206,11 @@ void Game::ProcessEvents()
 					auto pos = GamePlayer->GetPosition();
 					PlayerFOV->Compute(Dungeon->GetCurrentMap(), pos.x, pos.y, UILayout::Tunable::FOVRadius);
 
-					std::vector<std::string> discoverdMessages;
-					Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoverdMessages);
-					for (const std::string& messages : discoverdMessages)
+					std::vector<std::string> discoveredMessages;
+					Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
+					for (const std::string& message : discoveredMessages)
 					{
-						Log->GetLog().AddMessage(messages, LogColor::Combat);
+						Log->GetLog().AddMessage(message, LogColor::Combat);
 					}
 
 					GameCamera->SetTarget(static_cast<float>(pos.x * UILayout::Fixed::TileSize), static_cast<float>(pos.y * UILayout::Fixed::TileSize));

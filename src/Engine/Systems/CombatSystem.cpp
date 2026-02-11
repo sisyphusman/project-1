@@ -1,5 +1,4 @@
-#include "CombatSystem.h"
-#include "CombatSystem.h"
+#include "Engine/Systems/CombatSystem.h"
 
 #include <algorithm>
 #include <random>
@@ -52,6 +51,7 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 	const EnemyTemplate* selectedTemplate = nullptr;
 	if (EnemyDataCatalog != nullptr)
 	{
+		// 랜덤한 에너미 카탈로그를 로드
 		selectedTemplate = EnemyDataCatalog->PickRandomTemplate(rng);
 	}
 
