@@ -39,10 +39,14 @@ find_package(SFML 3 CONFIG REQUIRED COMPONENTS
     System Window Graphics Audio Network
 )
 
+find_package(nlohmann_json CONFIG REQUIRED)
+
 target_link_libraries(project-1 PRIVATE
     SFML::System
     SFML::Window
     SFML::Graphics
     SFML::Audio
     SFML::Network
+
+    nlohmann_json::nlohmann_json
 )
