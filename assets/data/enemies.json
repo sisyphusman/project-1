@@ -3,8 +3,8 @@
     "enemies": 
     [
         {
-            "id": "ghost",
-            "name": "귀신",
+            "id": "gumiho",
+            "name": "구미호",
             "glyph": "g",
             "stats": 
             {
@@ -15,7 +15,23 @@
             },
             "images":
             {
-                "sprite": "assets/Ghost.png"
+                "sprite": "assets/Gumiho.png"
+            }
+        },
+        {
+            "id": "kirin",
+            "name": "기린",
+            "glyph": "k",
+            "stats": 
+            {
+                "level": 1,
+                "hp": 24,
+                "attack": 7,
+                "defense":2
+            },
+            "images":
+            {
+                "sprite": "assets/kirin.png"
             }
         }
     ]
