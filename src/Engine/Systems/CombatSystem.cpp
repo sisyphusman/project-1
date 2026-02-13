@@ -78,7 +78,7 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 		enemy.Name = selectedTemplate->Name;
 		enemy.Glyph = selectedTemplate->Glyph;
 		enemy.Stats = selectedTemplate->BaseStats;
-		enemy.ImageInfo = selectedTemplate->ImageInfo;
+		enemy.SpritePath = selectedTemplate->SpritePath;
 	}
 	else
 	{
@@ -91,7 +91,7 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 		enemy.Stats.STR = 9;
 		enemy.Stats.Defense = 2;
 		enemy.Stats.Attack = 7;
-		enemy.ImageInfo.SpritePath = "assets/Ghost.png";
+		enemy.SpritePath = "assets/Ghost.png";
 	}
 
 	Enemies.push_back(enemy);

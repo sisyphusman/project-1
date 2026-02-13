@@ -33,7 +33,7 @@ struct PathNode
 	bool operator>(const PathNode& other) const { return F() > other.F(); }
 };
 
-// BSP(Binary Space Partitioning) 기반 랜덤 던전 생성기
+// 무작위 방 배치 + A* 연결
 class DungeonGenerator
 {
 public:

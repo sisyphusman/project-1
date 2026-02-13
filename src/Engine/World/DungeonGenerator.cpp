@@ -9,8 +9,10 @@ DungeonGenerator::DungeonGenerator(unsigned int seed)
 {
 	if (seed == 0)
 	{
-		// std::random_device는 복사가 금지, 임시 객체로 바로 호출하면 에러
+		// 시드용 정수값을 만들 수 있는 객체 생성
 		std::random_device rd;
+
+		// 정수값으로 난수 엔진 초기화
 		Rng.seed(rd());
 	}
 	else

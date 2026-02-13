@@ -53,22 +53,20 @@ private:
 	void RenderGameWorld();
 	void RenderBottomUI();
 
+	// 지연 생성 필요 -> 스마트 포인터 사용
+
+	// SFML
 	sf::RenderWindow Window;
 	sf::Font		 GameFont;
 	sf::View		 GameView;
 	sf::View		 BottomUIView;
 	sf::Clock		 GameClock;
 
-	// 지연 생성 필요, 스마트 포인터 사용
+	// 월드
 	std::unique_ptr<DungeonManager> Dungeon;
 	std::unique_ptr<Player>			GamePlayer;
 	std::unique_ptr<FOV>			PlayerFOV;
 	std::unique_ptr<Camera>			GameCamera;
-
-	// 소유권 공유가 필요없음, 값 타입(스택 멤버)으로 유지
-	CombatSystem	  Combat;
-	TurnSystem		  Turn;
-	DamagePopupSystem DamagePopups;
 
 	// UI 패널
 	std::unique_ptr<PortraitPanel>	 Portrait;
@@ -76,6 +74,13 @@ private:
 	std::unique_ptr<MessageLogPanel> Log;
 	std::unique_ptr<MinimapPanel>	 Minimap;
 
+	// 시스템
+	CombatSystem	  Combat;
+	TurnSystem		  Turn;
+	DamagePopupSystem DamagePopups;
+
 	CharacterStats MyCharStats;
+
+	// 카탈로그
 	EnemyCatalog   EnemyDataCatalog;
 };

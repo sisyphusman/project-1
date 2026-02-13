@@ -1,14 +1,13 @@
 #include "Engine/Core/Game.h"
 
+// 뷰의 크기를 설정
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
 	, GameView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::Fixed::BaseWidth), static_cast<float>(UILayout::Derived::GameAreaHeight()) }))
 	, BottomUIView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::Fixed::BaseWidth), static_cast<float>(UILayout::Derived::BottomUIHeight()) }))
 {
-	// 게임 플레이 화면
+	// 윈도우에서 차지할 비율 설정
 	GameView.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, UILayout::Tunable::GameAreaRatio }));
-
-	// 하단 UI
 	BottomUIView.setViewport(sf::FloatRect({ 0.f, UILayout::Tunable::GameAreaRatio }, { 1.f, UILayout::Derived::BottomUIRatio() }));
 
 	Init();
@@ -26,7 +25,7 @@ void Game::Init()
 	// 뷰 설정 (해상도 독립적)
 	Window.setView(GameView);
 
-	// 맵 생성
+	// 던전 생성
 	Dungeon = std::make_unique<DungeonManager>(UILayout::Derived::ViewWidthTiles(), UILayout::Derived::ViewHeightTiles());
 
 	// 플레이어가 시작할 맵 로드

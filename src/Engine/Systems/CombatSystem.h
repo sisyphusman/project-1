@@ -15,9 +15,9 @@ struct CombatEnemy
 	int			   Id = 0;
 	std::string	   TemplateId;
 	std::string	   Name = "귀신";
+	std::string	   SpritePath;
 	sf::Vector2i   Position;
 	char		   Glyph = 'g';
-	EnemyImageInfo ImageInfo;
 	CharacterStats Stats;
 	bool		   bIsAlive = true;
 };

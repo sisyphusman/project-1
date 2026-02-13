@@ -16,7 +16,7 @@ struct Tile
 	bool	 Walkable = true;
 	bool	 Transparent = true; // 시야가 통과하는 타일
 
-	// 헬퍼 함수
+	// 헬퍼 함수, static은 객체 없이 호출 가능
 	static Tile Floor()
 	{
 		return {

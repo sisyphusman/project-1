@@ -7,18 +7,13 @@
 
 #include "Engine/Entities/CharacterStats.h"
 
-struct EnemyImageInfo
-{
-	std::string SpritePath;
-};
-
 struct EnemyTemplate
 {
 	std::string	   Id;
 	std::string	   Name;
+	std::string	   SpritePath;
 	char		   Glyph = 'e';
 	CharacterStats BaseStats;
-	EnemyImageInfo ImageInfo;
 };
 
 // 적 데이터 템플릿 모음

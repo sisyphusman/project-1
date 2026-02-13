@@ -139,7 +139,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 		}
 
 		const Json& imagesObject = enemyObject["images"];
-		if (!GetRequiredString(imagesObject, "sprite", templateData.ImageInfo.SpritePath, outError))
+		if (!GetRequiredString(imagesObject, "sprite", templateData.SpritePath, outError))
 		{
 			Templates.clear();
 			return false;
