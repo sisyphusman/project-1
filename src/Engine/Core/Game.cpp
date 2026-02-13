@@ -29,7 +29,7 @@ void Game::Init()
 	// 맵 생성
 	Dungeon = std::make_unique<DungeonManager>(UILayout::Derived::ViewWidthTiles(), UILayout::Derived::ViewHeightTiles());
 
-	// 플레이어 시작 위치 찾기
+	// 플레이어가 시작할 맵 로드
 	Map& currentMap = Dungeon->GetCurrentMap();
 
 	// FOV 시스템 초기화
@@ -48,7 +48,7 @@ void Game::Init()
 		Log->GetLog().AddMessage(enemyDataError, LogColor::Warning);
 	}
 
-	// CombatSystem에 카타로그 데이터 주소 공유
+	// CombatSystem에 카탈로그 데이터 주소 공유
 	Combat.SetEnemyCatalog(&EnemyDataCatalog);
 
 	// 컴뱃 시스템 초기화
@@ -232,6 +232,7 @@ void Game::CheckStairs()
 	if (tile.Type == TileType::StairDown)
 	{
 		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
+		Dungeon->SaveCombatState(currentLevel, Combat);
 
 		if (Dungeon->GoToNextLevel(newPos))
 		{
@@ -247,22 +248,26 @@ void Game::CheckStairs()
 				PlayerFOV->Reset();
 			}
 
+			// 층의 데이터가 저장되어 있다면 로드
+			if (!Dungeon->LoadCombatState(Dungeon->GetCurrentLevel(), Combat))
+			{
+				// 첫 방문이면 신규 에너미 생성
+				Combat.Reset();
+				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
+			}
+
+			Turn.Reset();
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("아래층으로 내려갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 
-			Combat.Reset();
-			Turn.Reset();
-
-			if (Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos))
+			// 현재 시야에 포착된 에너미 메시지 수집 후 출력
+			std::vector<std::string> discoveredMessages;
+			Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
+			for (const std::string& message : discoveredMessages)
 			{
-				std::vector<std::string> discoveredMessages;
-				Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
-				for (const std::string& message : discoveredMessages)
-				{
-					Log->GetLog().AddMessage(message, LogColor::Combat);
-				}
+				Log->GetLog().AddMessage(message, LogColor::Combat);
 			}
 		}
 	}
@@ -270,6 +275,7 @@ void Game::CheckStairs()
 	else if (tile.Type == TileType::StairUp)
 	{
 		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
+		Dungeon->SaveCombatState(currentLevel, Combat);
 
 		if (Dungeon->GoToPrevLevel(newPos))
 		{
@@ -285,22 +291,26 @@ void Game::CheckStairs()
 				PlayerFOV->Reset();
 			}
 
+			// 층의 데이터가 저장되어 있다면 로드
+			if (!Dungeon->LoadCombatState(Dungeon->GetCurrentLevel(), Combat))
+			{
+				// 첫 방문이면 신규 에너미 생성
+				Combat.Reset();
+				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
+			}
+
+			Turn.Reset();
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
 			Log->GetLog().AddMessage("위층으로 올라갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 
-			Combat.Reset();
-			Turn.Reset();
-
-			if (Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos))
+			// 현재 시야에 포착된 에너미 메시지 수집 후 출력
+			std::vector<std::string> discoveredMessages;
+			Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
+			for (const std::string& message : discoveredMessages)
 			{
-				std::vector<std::string> discoveredMessages;
-				Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
-				for (const std::string& message : discoveredMessages)
-				{
-					Log->GetLog().AddMessage(message, LogColor::Combat);
-				}
+				Log->GetLog().AddMessage(message, LogColor::Combat);
 			}
 		}
 	}
@@ -308,12 +318,8 @@ void Game::CheckStairs()
 
 void Game::Update(float deltaTime)
 {
-	GameCamera->Update(deltaTime, GameView, static_cast<float>(UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize), 
+	GameCamera->Update(deltaTime, GameView, static_cast<float>(UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize),
 		static_cast<float>(UILayout::Derived::ViewHeightTiles() * UILayout::Fixed::TileSize));
-
-	Portrait->Update(deltaTime);
-	Info->Update(deltaTime);
-	Log->Update(deltaTime);
 	Minimap->Update(deltaTime);
 	DamagePopups.Update(deltaTime);
 }
@@ -377,7 +383,7 @@ void Game::RenderGameWorld()
 		tileText.setFillColor(Colors::Red);
 		Window.draw(tileText);
 	}
-	
+
 	DamagePopups.Render(Window, GameFont);
 
 	// 플레이어 렌더링

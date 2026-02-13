@@ -11,6 +11,18 @@ void CombatSystem::Reset()
 	NextEnemyId = 1;
 }
 
+void CombatSystem::SaveState(std::vector<CombatEnemy>& outEnemies, int& outNextEnemyId) const
+{
+	outEnemies = Enemies;
+	outNextEnemyId = NextEnemyId;
+}
+
+void CombatSystem::LoadState(const std::vector<CombatEnemy>& enemies, int nextEnemyId)
+{
+	Enemies = enemies;
+	NextEnemyId = std::max(1, nextEnemyId);
+}
+
 bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 {
 	std::vector<sf::Vector2i> candidates;

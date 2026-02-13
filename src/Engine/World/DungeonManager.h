@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+#include <Engine/Systems/CombatSystem.h>
 #include <SFML/System/Vector2.hpp>
 
 #include "Engine/World/Map.h"
@@ -10,11 +11,15 @@
 class DungeonManager
 {
 public:
-	DungeonManager(int mapWidth, int mapHeight); // 맵 크기를 저정하고 첫 번째 레벨 생성
+	DungeonManager(int mapWidth, int mapHeight); // 맵 크기를 저장하고 첫 번째 레벨 생성
 
 	// 다음/이전 레벨로 이동 (성공 시 플레이어 시작 위치 반환)
 	bool GoToNextLevel(sf::Vector2i& outPlayerPos);
 	bool GoToPrevLevel(sf::Vector2i& outPlayerPos);
+
+	// 층별 전투 상태 저장/복원 (에너미 위치/체력 유지)
+	void SaveCombatState(int level, const CombatSystem& combat);
+	bool LoadCombatState(int level, CombatSystem& combat) const;
 
 	Map&	   GetCurrentMap(); // 현재 레벨의 맵 반환
 	int		   GetCurrentLevel() const { return CurrentLevel; }
@@ -25,6 +30,14 @@ public:
 	bool LoadExploredData(int level, std::vector<bool>& outData) const;
 
 private:
+	// 던전 각 층의 상태를 저장
+	struct LevelCombatState
+	{
+		std::vector<CombatEnemy> Enemies;
+		int						 NextEnemyId = 1;
+		bool					 bHasData = false;
+	};
+
 	void GenerateLevel(int level); // 새로운 던전 레벨 생성
 
 	// 모든 층에서 공통으로 사용하는 맵 크기
@@ -37,4 +50,5 @@ private:
 	std::vector<std::unique_ptr<Map>>				   Levels;
 	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> StairsPositions;	  // <UpStairs, DownStairs>
 	std::vector<std::vector<bool>>					   LevelExploredData; // 층별 탐험 데이터
+	std::vector<LevelCombatState>					   LevelCombatData;   // 층별 에너미 상태 데이터
 };

@@ -77,6 +77,40 @@ bool DungeonManager::GoToPrevLevel(sf::Vector2i& outPlayerPos)
 	return true;
 }
 
+void DungeonManager::SaveCombatState(int level, const CombatSystem& combat)
+{
+	if (level < 0)
+	{
+		return;
+	}
+
+	// 필요 시 벡터 크기 확장
+	if (level >= static_cast<int>(LevelCombatData.size()))
+	{
+		LevelCombatData.resize(level + 1);
+	}
+
+	combat.SaveState(LevelCombatData[level].Enemies, LevelCombatData[level].NextEnemyId);
+	LevelCombatData[level].bHasData = true;
+}
+
+bool DungeonManager::LoadCombatState(int level, CombatSystem& combat) const
+{
+	if (level < 0 || level >= static_cast<int>(LevelCombatData.size()))
+	{
+		return false;
+	}
+
+	const LevelCombatState& combatState = LevelCombatData[level];
+	if (!combatState.bHasData)
+	{
+		return false;
+	}
+
+	combat.LoadState(combatState.Enemies, combatState.NextEnemyId);
+	return true;
+}
+
 Map& DungeonManager::GetCurrentMap()
 {
 	return *Levels[CurrentLevel];

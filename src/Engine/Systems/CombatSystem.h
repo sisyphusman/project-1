@@ -33,6 +33,8 @@ class CombatSystem
 {
 public:
 	void Reset();
+	void SaveState(std::vector<CombatEnemy>& outEnemies, int& outNextEnemyId) const; // const는 이 객체의 멤버 변수 값은 그대로임을 보장
+	void LoadState(const std::vector<CombatEnemy>& enemies, int nextEnemyId);		 // 매개 변수 enemies만 그대로임을 보장
 	void SetEnemyCatalog(const EnemyCatalog* catalog) { EnemyDataCatalog = catalog; }
 	bool SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos); // 무작위로 몬스터 배치
 
