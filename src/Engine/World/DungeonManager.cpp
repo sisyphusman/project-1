@@ -23,6 +23,7 @@ void DungeonManager::GenerateLevel(int level)
 	sf::Vector2i upStairs(-1, -1);
 	sf::Vector2i downStairs(-1, -1);
 
+	// 계단 2개를 배치하려면 최소한 2개의 방이 필요
 	if (rooms.size() >= 2)
 	{
 		// 첫 번째 방 중앙에 위층 계단
@@ -54,10 +55,10 @@ bool DungeonManager::GoToNextLevel(sf::Vector2i& outPlayerPos)
 
 	CurrentLevel = nextLevel;
 
-	// 위층 계단 위치에서 시작
+	// 다음 층의 계단 위치에서 시작
 	outPlayerPos = StairsPositions[CurrentLevel].first;
 
-	// 항상 true (아래로는 무한히 이동 가능)
+	// 다음 층 이동은 항상 가능
 	return true;
 }
 
@@ -71,7 +72,7 @@ bool DungeonManager::GoToPrevLevel(sf::Vector2i& outPlayerPos)
 
 	CurrentLevel--;
 
-	// 아래층 계단 위치에서 시작
+	// 이전 층의 계단 위치에서 시작
 	outPlayerPos = StairsPositions[CurrentLevel].second;
 
 	return true;

@@ -48,8 +48,8 @@ private:
 	void					  CreatePathBetweenRooms(Map& map, const Room& from, const Room& to);	// A* 기반 통로 생성
 	std::vector<sf::Vector2i> FindPath(const Map& map, int startX, int startY, int endX, int endY); // A* 경로 찾기
 
-	// 타일이 통로로 사용 가능한지 (방 내부가 아닌 곳)
-	bool IsValidForCorridor(int x, int y, int endX, int endY) const;
+	// 통로로 사용 가능한지 체크 (시작/도착 방 예외)
+	bool IsValidForCorridor(int x, int y, int startX, int startY, int endX, int endY) const;
 
 	int Heuristic(int x1, int y1, int x2, int y2) const;
 

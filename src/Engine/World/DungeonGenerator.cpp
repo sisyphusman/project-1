@@ -184,7 +184,7 @@ std::vector<sf::Vector2i> DungeonGenerator::FindPath(const Map& map, int startX,
 
 			// 비용 계산 (기존 방 내부는 높은 비용 부여)
 			int moveCost = 1;
-			if (IsValidForCorridor(nx, ny, endX, endY) == false)
+			if (IsValidForCorridor(nx, ny, startX, startY, endX, endY) == false)
 			{
 				moveCost = 100;
 			}
@@ -221,12 +221,12 @@ std::vector<sf::Vector2i> DungeonGenerator::FindPath(const Map& map, int startX,
 	return fallbackPath;
 }
 
-bool DungeonGenerator::IsValidForCorridor(int x, int y, int endX, int endY) const
+bool DungeonGenerator::IsValidForCorridor(int x, int y, int startX, int startY, int endX, int endY) const
 {
 	for (const auto& room : Rooms)
 	{
 		// 시작/끝 방문 제외
-		if (room.Contains(endX, endY))
+		if (room.Contains(startX, startY) || room.Contains(endX, endY))
 		{
 			continue;
 		}
