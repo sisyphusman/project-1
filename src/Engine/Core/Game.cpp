@@ -173,6 +173,22 @@ void Game::ProcessEvents()
 				case sf::Keyboard::Key::Tab:
 					GameCamera->ToggleZoomOut();
 					break;
+				case sf::Keyboard::Key::Q:
+					dx = -1;
+					dy = -1;
+					break;
+				case sf::Keyboard::Key::E:
+					dx = 1;
+					dy = -1;
+					break;
+				case sf::Keyboard::Key::Z:
+					dx = -1;
+					dy = 1;
+					break;
+				case sf::Keyboard::Key::C:
+					dx = 1;
+					dy = 1;
+					break;
 				default:
 					break;
 			}
