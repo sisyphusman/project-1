@@ -132,7 +132,6 @@ bool CombatSystem::HandlePlayerAction(const Map& map, const sf::Vector2i& player
 
 		outPlayerPos = { targetX, targetY };
 		bOutPlayerMoved = true;
-		outMessages.push_back("이동했습니다");
 	}
 
 	RemoveDeadEnemies();

@@ -193,7 +193,7 @@ void Game::ProcessEvents()
 
 					for (const std::string& message : turnResult.Messages)
 					{
-						Log->GetLog().AddMessage(message, message == "이동했습니다" ? LogColor::Move : LogColor::Combat);
+						Log->GetLog().AddMessage(message, LogColor::Combat);
 					}
 
 					for (const CombatDamageEvent& damageEvent : turnResult.DamageEvents)
