@@ -8,10 +8,6 @@ PortraitPanel::PortraitPanel(float x, float y, float width, float height)
 {
 }
 
-void PortraitPanel::Update(float deltaTime)
-{
-}
-
 void PortraitPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
 	// 배경

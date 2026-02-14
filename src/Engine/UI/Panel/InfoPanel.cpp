@@ -10,10 +10,6 @@ InfoPanel::InfoPanel(float x, float y, float width, float height)
 {
 }
 
-void InfoPanel::Update(float deltaTime)
-{
-}
-
 void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
 	DrawBackground(window, Colors::Panel::InfoBg, Colors::Panel::InfoBorder);

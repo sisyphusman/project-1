@@ -12,11 +12,11 @@ class MinimapPanel : public UIPanel
 public:
 	MinimapPanel(float x, float y, float width, float height);
 
-	// 데이터 소스 연결
-	void SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level);
-
 	void Update(float deltaTime) override;
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
+
+	// 데이터 소스 연결
+	void SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level);
 
 private:
 	// 원본 데이터 참조

@@ -13,6 +13,7 @@ public:
 	{
 	}
 
+	// virtual 소멸자, 파생 클래스 소멸자가 먼저 호출되도록 보장
 	virtual ~UIPanel() = default;
 
 	// 매 프레임 업데이트 (애니메이션 등)

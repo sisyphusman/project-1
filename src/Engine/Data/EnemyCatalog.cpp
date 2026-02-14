@@ -33,7 +33,7 @@ namespace
 		outValue = object[fieldName].get<int>();
 		return true;
 	}
-} // namespace
+}
 
 bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& outError)
 {

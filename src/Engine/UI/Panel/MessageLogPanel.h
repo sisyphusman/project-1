@@ -11,7 +11,6 @@ class MessageLogPanel : public UIPanel
 public:
 	MessageLogPanel(float x, float y, float width, float height);
 
-	void Update(float deltaTime) override; // 스크롤 기능
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
 
 	// MessageLog 접근

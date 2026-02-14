@@ -21,7 +21,6 @@ class InfoPanel : public UIPanel
 public:
 	InfoPanel(float x, float y, float width, float height);
 
-	void Update(float deltaTime) override;
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
 
 	// 데이터 소스 연결 (pull)

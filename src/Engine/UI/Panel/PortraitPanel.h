@@ -10,7 +10,6 @@ class PortraitPanel : public UIPanel
 public:
 	PortraitPanel(float x, float y, float width, float height);
 
-	void Update(float deltaTime) override;
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
 
 	// 초상화 이미지 설정

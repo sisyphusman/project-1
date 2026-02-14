@@ -10,14 +10,6 @@ MinimapPanel::MinimapPanel(float x, float y, float width, float height)
 {
 }
 
-void MinimapPanel::SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level)
-{
-	MapRef = map;
-	FOVRef = fov;
-	PlayerPosRef = playerPos;
-	LevelRef = level;
-}
-
 void MinimapPanel::Update(float deltaTime)
 {
 	// 내부에서 직접 업데이트
@@ -117,4 +109,12 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	playerMarker.setPosition({ offsetX + PlayerX * TileSize - UILayout::Tunable::MinimapPlayerMarkerMargin, offsetY + PlayerY * TileSize - UILayout::Tunable::MinimapPlayerMarkerMargin });
 	playerMarker.setFillColor(Colors::Minimap::Player);
 	window.draw(playerMarker);
+}
+
+void MinimapPanel::SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level)
+{
+	MapRef = map;
+	FOVRef = fov;
+	PlayerPosRef = playerPos;
+	LevelRef = level;
 }

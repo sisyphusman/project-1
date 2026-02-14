@@ -10,10 +10,6 @@ MessageLogPanel::MessageLogPanel(float x, float y, float width, float height)
 	MaxVisibleLines = static_cast<int>(height - padding * 2) / lineHeight;
 }
 
-void MessageLogPanel::Update(float deltaTime)
-{
-}
-
 void MessageLogPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
 	// 패널 배경과 테두리 색
