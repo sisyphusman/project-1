@@ -54,7 +54,7 @@ private:
 	void RemoveDeadEnemies();
 
 	int						 NextEnemyId = 1; // 에너미 식별자
-	std::vector<CombatEnemy> Enemies;		  // 현재 층에 활성화된 에너미 리스트
+	std::vector<CombatEnemy> Enemies;		  // 현재 층 에너미 리스트
 
 	const EnemyCatalog* EnemyDataCatalog = nullptr;
 };

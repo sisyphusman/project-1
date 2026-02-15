@@ -112,11 +112,6 @@ bool DungeonManager::LoadCombatState(int level, CombatSystem& combat) const
 	return true;
 }
 
-Map& DungeonManager::GetCurrentMap()
-{
-	return *Levels[CurrentLevel];
-}
-
 void DungeonManager::SaveExploredData(int level, const std::vector<bool>& data)
 {
 	if (level < 0)

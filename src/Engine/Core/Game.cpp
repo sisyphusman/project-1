@@ -69,9 +69,7 @@ void Game::Init()
 				auto pos = GamePlayer->GetPosition();
 				PlayerFOV->Compute(currentMap, pos.x, pos.y, UILayout::Tunable::FOVRadius);
 
-				// 미니맵 초기화
-				Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
-
+				// 에너미 스폰
 				if (Combat.SpawnTestEnemy(currentMap, pos))
 				{
 					std::vector<std::string> discoveredMessages;
@@ -81,6 +79,11 @@ void Game::Init()
 						Log->GetLog().AddMessage(message, LogColor::Combat);
 					}
 				}
+
+				// 미니맵 초기화
+				Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
+					&Combat.GetEnemies());
+
 				return;
 			}
 		}
@@ -273,7 +276,8 @@ void Game::CheckStairs()
 
 			Turn.Reset();
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
-			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
+			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
+				&Combat.GetEnemies());
 			Log->GetLog().AddMessage("아래층으로 내려갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 
@@ -316,7 +320,8 @@ void Game::CheckStairs()
 
 			Turn.Reset();
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
-			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef());
+			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
+				&Combat.GetEnemies());
 			Log->GetLog().AddMessage("위층으로 올라갑니다", LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 

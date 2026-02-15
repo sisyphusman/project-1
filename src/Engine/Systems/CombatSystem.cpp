@@ -25,6 +25,7 @@ void CombatSystem::LoadState(const std::vector<CombatEnemy>& enemies, int nextEn
 
 bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 {
+	// 후보 지역을 모아서 랜덤으로 픽
 	std::vector<sf::Vector2i> candidates;
 	candidates.reserve(static_cast<size_t>(map.GetWidth() * map.GetHeight()));
 

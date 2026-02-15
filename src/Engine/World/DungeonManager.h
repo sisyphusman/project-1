@@ -21,9 +21,9 @@ public:
 	void SaveCombatState(int level, const CombatSystem& combat);
 	bool LoadCombatState(int level, CombatSystem& combat) const;
 
-	Map&	   GetCurrentMap(); // 현재 레벨의 맵 반환
-	int		   GetCurrentLevel() const { return CurrentLevel; }
-	const int& GetCurrentLevelRef() const { return CurrentLevel; }
+	Map&					  GetCurrentMap() { return *Levels[CurrentLevel]; } // 현재 레벨의 맵 반환
+	int						  GetCurrentLevel() const { return CurrentLevel; }
+	const int&				  GetCurrentLevelRef() const { return CurrentLevel; }
 
 	// 탐험 데이터 저장/복원
 	void SaveExploredData(int level, const std::vector<bool>& data);
@@ -50,5 +50,5 @@ private:
 	std::vector<std::unique_ptr<Map>>				   Levels;
 	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> StairsPositions;	  // <UpStairs, DownStairs>
 	std::vector<std::vector<bool>>					   LevelExploredData; // 층별 탐험 데이터
-	std::vector<LevelCombatState>					   LevelCombatData;   // 층별 에너미 상태 데이터
+	std::vector<LevelCombatState>					   LevelCombatData;	  // 층별 에너미 상태 데이터
 };

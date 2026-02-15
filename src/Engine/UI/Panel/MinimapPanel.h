@@ -5,6 +5,7 @@
 
 class Map;
 class FOV;
+struct CombatEnemy;
 
 // 미니맵 패널
 class MinimapPanel : public UIPanel
@@ -16,14 +17,15 @@ public:
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
 
 	// 데이터 소스 연결
-	void SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level);
+	void SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level, const std::vector<CombatEnemy>* enemies);
 
 private:
 	// 원본 데이터 참조
-	const Map*			MapRef = nullptr;
-	const FOV*			FOVRef = nullptr;
-	const sf::Vector2i* PlayerPosRef = nullptr;
-	const int*			LevelRef = nullptr;
+	const Map*						MapRef = nullptr;
+	const FOV*						FOVRef = nullptr;
+	const sf::Vector2i*				PlayerPosRef = nullptr;
+	const int*						LevelRef = nullptr;
+	const std::vector<CombatEnemy>* Enemies = nullptr;
 
 	// 매 프레임 계산된 결과를 임시 보관
 	int PlayerX = 0;

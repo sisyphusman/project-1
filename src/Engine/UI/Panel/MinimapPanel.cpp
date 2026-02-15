@@ -2,6 +2,7 @@
 
 #include "Engine/World/Map.h"
 #include "Engine/Systems/FOV.h"
+#include "Engine/Systems/CombatSystem.h"
 
 #include <format>
 
@@ -103,6 +104,30 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 		}
 	}
 
+	// 적 표시 (시야 안에 있고 살아있는 대상만 표시)
+	if (Enemies)
+	{
+		sf::RectangleShape enemyMarker;
+		enemyMarker.setSize({ TileSize, TileSize });
+		enemyMarker.setFillColor(Colors::Minimap::Enemy);
+
+		for (const CombatEnemy& enemy : *Enemies)
+		{
+			if (!enemy.bIsAlive)
+			{
+				continue;
+			}
+
+			if (!FOVRef->IsVisible(enemy.Position.x, enemy.Position.y))
+			{
+				continue;
+			}
+
+			enemyMarker.setPosition({ offsetX + enemy.Position.x * TileSize, offsetY + enemy.Position.y * TileSize });
+			window.draw(enemyMarker);
+		}
+	}
+
 	// 플레이어 표시
 	sf::RectangleShape playerMarker;
 	playerMarker.setSize({ TileSize + UILayout::Tunable::MinimapPlayerMarkerMargin, TileSize + UILayout::Tunable::MinimapPlayerMarkerMargin });
@@ -111,10 +136,11 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	window.draw(playerMarker);
 }
 
-void MinimapPanel::SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level)
+void MinimapPanel::SetSources(const Map* map, const FOV* fov, const sf::Vector2i* playerPos, const int* level, const std::vector<CombatEnemy>* enemies)
 {
 	MapRef = map;
 	FOVRef = fov;
 	PlayerPosRef = playerPos;
 	LevelRef = level;
+	Enemies = enemies;
 }
