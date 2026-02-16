@@ -1,6 +1,6 @@
 # Code Convention
 
-- Unreal Style + Unreal Clang Format
+- Unreal Style(But No Prefix) + Unreal Clang Format
 
 ```
 Class / Struct / Enum / Interface -> PascalCase (with prefix U/A/F/E/I)
@@ -16,8 +16,9 @@ Macro                             -> UPPER_SNAKE_CASE
 ```
 
 - 블록 단위일때 중괄호는 새로운 줄에서 시작, return에서 중괄호는 블록이 아니므로 제외
-- 괄호는 한 칸 띄우고 사용한다 ()
-
+- 소괄호는 한 칸 띄우고 사용한다 ()
+- 섹션을 만들때 /을 60개 사용한다
+  
 # Git Convention
 
 - 타입: 항상 소문자

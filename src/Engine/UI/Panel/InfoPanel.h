@@ -36,7 +36,7 @@ private:
 
 	std::vector<StatusEffect> StatusEffects; // 상태 효과
 
-	// 프로그래스바 랜더링
+	// 프로그래스바 렌더링
 	void DrawProgressBar(sf::RenderWindow& window, const sf::Font& font, float x, float y, float width, float height,
 		int current, int max, sf::Color barColor, sf::Color bgColor);
 };
