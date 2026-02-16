@@ -43,15 +43,24 @@ public:
 	void Run();
 
 private:
+	enum class GameFlowState
+	{
+		MainMenu,
+		InGame
+	};
+
 	void Init();
 	void InitUI();
-	void ProcessEvents();
-	void Update(float deltaTime);
-	void Render();
-	void CheckStairs();
 
+	void ProcessEvents();
+	void StartNewRun();
+	void CheckStairs();
+	void Update(float deltaTime);
+
+	void Render();
 	void RenderGameWorld();
 	void RenderBottomUI();
+	void RenderMainMenu();
 
 	// 지연 생성 필요 -> 스마트 포인터 사용
 
@@ -82,5 +91,8 @@ private:
 	CharacterStats MyCharStats;
 
 	// 카탈로그
-	EnemyCatalog   EnemyDataCatalog;
+	EnemyCatalog EnemyDataCatalog;
+
+	// 게임 시작 시 메인메뉴만 렌더링
+	GameFlowState FlowState = GameFlowState::MainMenu;
 };

@@ -17,6 +17,9 @@ Game::~Game()
 {
 }
 
+////////////////////////////////////////////////////////////
+// 첫 초기화
+////////////////////////////////////////////////////////////
 void Game::Init()
 {
 	// 실패하면 abort()
@@ -24,18 +27,6 @@ void Game::Init()
 
 	// 뷰 설정 (해상도 독립적)
 	Window.setView(GameView);
-
-	// 던전 생성
-	Dungeon = std::make_unique<DungeonManager>(UILayout::Derived::ViewWidthTiles(), UILayout::Derived::ViewHeightTiles());
-
-	// 플레이어가 시작할 맵 로드
-	Map& currentMap = Dungeon->GetCurrentMap();
-
-	// FOV 시스템 초기화
-	PlayerFOV = std::make_unique<FOV>(currentMap.GetWidth(), currentMap.GetHeight());
-
-	// 카메라 초기화
-	GameCamera = std::make_unique<Camera>();
 
 	// UI 초기화 (패널 생성)
 	InitUI();
@@ -50,44 +41,8 @@ void Game::Init()
 	// CombatSystem에 카탈로그 데이터 주소 공유
 	Combat.SetEnemyCatalog(&EnemyDataCatalog);
 
-	// 컴뱃 시스템 초기화
-	Combat.Reset();
-	Turn.Reset();
-
-	// 첫 번째 걸을 수 있는 타일을 찾아 플레이어 배치
-	for (int y = 1; y < currentMap.GetHeight() - 1; ++y)
-	{
-		for (int x = 1; x < currentMap.GetWidth() - 1; ++x)
-		{
-			if (currentMap.GetTile(x, y).Walkable)
-			{
-				GamePlayer = std::make_unique<Player>(x, y);
-
-				GameCamera->SetTarget(static_cast<float>(x * UILayout::Fixed::TileSize), static_cast<float>(y * UILayout::Fixed::TileSize));
-
-				// 시야 계산
-				auto pos = GamePlayer->GetPosition();
-				PlayerFOV->Compute(currentMap, pos.x, pos.y, UILayout::Tunable::FOVRadius);
-
-				// 에너미 스폰
-				if (Combat.SpawnTestEnemy(currentMap, pos))
-				{
-					std::vector<std::string> discoveredMessages;
-					Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
-					for (const std::string& message : discoveredMessages)
-					{
-						Log->GetLog().AddMessage(message, LogColor::Combat);
-					}
-				}
-
-				// 미니맵 초기화
-				Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
-					&Combat.GetEnemies());
-
-				return;
-			}
-		}
-	}
+	// 메인 메뉴 상태
+	FlowState = GameFlowState::MainMenu;
 }
 
 void Game::InitUI()
@@ -122,6 +77,9 @@ void Game::InitUI()
 	Minimap = std::make_unique<MinimapPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::MinimapWidth()), bottomHeight);
 }
 
+////////////////////////////////////////////////////////////
+// 게임 메인 로직
+////////////////////////////////////////////////////////////
 void Game::Run()
 {
 	GameClock.restart();
@@ -146,6 +104,23 @@ void Game::ProcessEvents()
 
 		if (const auto* key = event->getIf<sf::Event::KeyPressed>())
 		{
+			if (FlowState == GameFlowState::MainMenu)
+			{
+				switch (key->code)
+				{
+					case sf::Keyboard::Key::Enter:
+						StartNewRun();
+						break;
+					case sf::Keyboard::Key::Escape:
+						Window.close();
+						break;
+					default:
+						break;
+				}
+
+				continue;
+			}
+
 			int dx = 0;
 			int dy = 0;
 
@@ -233,6 +208,64 @@ void Game::ProcessEvents()
 
 					GameCamera->SetTarget(static_cast<float>(pos.x * UILayout::Fixed::TileSize), static_cast<float>(pos.y * UILayout::Fixed::TileSize));
 				}
+			}
+		}
+	}
+}
+
+void Game::StartNewRun()
+{
+
+	// 던전 생성
+	Dungeon = std::make_unique<DungeonManager>(UILayout::Derived::ViewWidthTiles(), UILayout::Derived::ViewHeightTiles());
+
+	// 플레이어가 시작할 맵 로드
+	Map& currentMap = Dungeon->GetCurrentMap();
+
+	// FOV 시스템 초기화
+	PlayerFOV = std::make_unique<FOV>(currentMap.GetWidth(), currentMap.GetHeight());
+
+	// 카메라 초기화
+	GameCamera = std::make_unique<Camera>();
+
+	// 컴뱃 시스템 초기화
+	Combat.Reset();
+	Turn.Reset();
+	DamagePopups = DamagePopupSystem();
+
+	// 첫 번째 걸을 수 있는 타일을 찾아 플레이어 배치
+	for (int y = 1; y < currentMap.GetHeight() - 1; ++y)
+	{
+		for (int x = 1; x < currentMap.GetWidth() - 1; ++x)
+		{
+			if (currentMap.GetTile(x, y).Walkable)
+			{
+				GamePlayer = std::make_unique<Player>(x, y);
+
+				GameCamera->SetTarget(static_cast<float>(x * UILayout::Fixed::TileSize), static_cast<float>(y * UILayout::Fixed::TileSize));
+
+				// 시야 계산
+				auto pos = GamePlayer->GetPosition();
+				PlayerFOV->Compute(currentMap, pos.x, pos.y, UILayout::Tunable::FOVRadius);
+
+				// 에너미 스폰
+				if (Combat.SpawnTestEnemy(currentMap, pos))
+				{
+					std::vector<std::string> discoveredMessages;
+					Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
+					for (const std::string& message : discoveredMessages)
+					{
+						Log->GetLog().AddMessage(message, LogColor::Combat);
+					}
+				}
+
+				// 미니맵 초기화
+				Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
+					&Combat.GetEnemies());
+
+				// 메인 메뉴에서 게임 플레이 상태로 전환
+				FlowState = GameFlowState::InGame;
+				return;
 			}
 		}
 	}
@@ -338,18 +371,33 @@ void Game::CheckStairs()
 
 void Game::Update(float deltaTime)
 {
+	if (FlowState != GameFlowState::InGame)
+	{
+		return;
+	}
+
 	GameCamera->Update(deltaTime, GameView, static_cast<float>(UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize),
 		static_cast<float>(UILayout::Derived::ViewHeightTiles() * UILayout::Fixed::TileSize));
 	Minimap->Update(deltaTime);
 	DamagePopups.Update(deltaTime);
 }
 
+////////////////////////////////////////////////////////////
+// 화면 렌더링
+////////////////////////////////////////////////////////////
 void Game::Render()
 {
 	Window.clear(Colors::Black);
 
-	RenderGameWorld();
-	RenderBottomUI();
+	if (FlowState == GameFlowState::MainMenu)
+	{
+		RenderMainMenu();
+	}
+	else
+	{
+		RenderGameWorld();
+		RenderBottomUI();
+	}
 
 	Window.display();
 }
@@ -422,4 +470,26 @@ void Game::RenderBottomUI()
 	Info->Render(Window, GameFont);
 	Log->Render(Window, GameFont);
 	Minimap->Render(Window, GameFont);
+}
+
+void Game::RenderMainMenu()
+{
+	// 메뉴는 전체 화면 기준 렌더링
+	Window.setView(Window.getDefaultView());
+
+	sf::Text titleText(GameFont, "Title", 72);
+	titleText.setFillColor(Colors::White);
+	titleText.setPosition({ 80.f, 120.f });
+
+	sf::Text startText(GameFont, "Enter - Start", 32);
+	startText.setFillColor(Colors::White);
+	startText.setPosition({ 80.f, 260.f });
+
+	sf::Text quitText(GameFont, "Esc - Quit", 32);
+	quitText.setFillColor(Colors::White);
+	quitText.setPosition({ 80.f, 320.f });
+
+	Window.draw(titleText);
+	Window.draw(startText);
+	Window.draw(quitText);
 }
