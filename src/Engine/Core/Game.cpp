@@ -1,6 +1,6 @@
 #include "Engine/Core/Game.h"
 
-// 뷰의 크기를 설정
+// View 크기를 설정
 Game::Game()
 	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
 	, GameView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::Fixed::BaseWidth), static_cast<float>(UILayout::Derived::GameAreaHeight()) }))
@@ -22,8 +22,9 @@ Game::~Game()
 ////////////////////////////////////////////////////////////
 void Game::Init()
 {
-	// 실패하면 abort()
+	// 폰트 파일 로드
 	GAME_CHECK(GameFont.openFromFile("assets/fonts/Pretendard-Regular.ttf"));
+	GAME_DEBUG_LOG("init", "폰트 파일 로드 완료");
 
 	// 뷰 설정 (해상도 독립적)
 	Window.setView(GameView);
@@ -33,10 +34,8 @@ void Game::Init()
 
 	// 에너미 JSON 로드
 	std::string enemyDataError;
-	if (!EnemyDataCatalog.LoadFromJsonFile("assets/data/enemies.json", enemyDataError))
-	{
-		Log->GetLog().AddMessage(enemyDataError, LogColor::Warning);
-	}
+	GAME_CHECK(EnemyDataCatalog.LoadFromJsonFile("assets/data/enemies.json", enemyDataError));
+	GAME_DEBUG_LOG("init", "에너미 JSON 데이터 로드 완료");
 
 	// CombatSystem에 카탈로그 데이터 주소 공유
 	Combat.SetEnemyCatalog(&EnemyDataCatalog);
@@ -95,6 +94,7 @@ void Game::Run()
 
 void Game::ProcessEvents()
 {
+	GAME_CHECK(Dungeon != nullptr || FlowState == GameFlowState::MainMenu);
 	while (const std::optional<sf::Event> event = Window.pollEvent())
 	{
 		if (event->is<sf::Event::Closed>())
@@ -273,6 +273,8 @@ void Game::StartNewRun()
 
 void Game::CheckStairs()
 {
+	GAME_CHECK(Dungeon != nullptr && GamePlayer != nullptr && PlayerFOV != nullptr);
+
 	auto		pos = GamePlayer->GetPosition();
 	const Tile& tile = Dungeon->GetCurrentMap().GetTile(pos.x, pos.y);
 

@@ -33,4 +33,7 @@
 			return false;                                                                             \
 		}                                                                                             \
 		return true;                                                                                  \
-    })()																							  \
+    })()																							  
+
+// 디버깅용 로그
+#define GAME_DEBUG_LOG(stage, message) std::cout << "[DEBUG][" << stage << "] " << message << std::endl
