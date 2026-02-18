@@ -39,6 +39,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 {
 	GAME_CHECK_SLOW(!filePath.empty());
 	Templates.clear();
+	outError.clear();
 
 	std::ifstream input(filePath);
 	if (!input.is_open())
@@ -97,12 +98,13 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 			return false;
 		}
 
-		if (glyphString.empty())
+		if (glyphString.size() != 1)
 		{
-			outError = "glyph는 비어 있을 수 없습니다";
+			outError = "glyph는 한 글자여야 합니다";
 			Templates.clear();
 			return false;
 		}
+
 		templateData.Glyph = glyphString.front();
 
 		if (!enemyObject.contains("stats") || !enemyObject["stats"].is_object())
@@ -122,6 +124,13 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 		if (!GetRequiredInt(statsObject, "level", level, outError) || !GetRequiredInt(statsObject, "hp", hp, outError)
 			|| !GetRequiredInt(statsObject, "attack", attack, outError) || !GetRequiredInt(statsObject, "defense", defense, outError))
 		{
+			Templates.clear();
+			return false;
+		}
+
+		if (level <= 0 || hp <= 0 || attack < 0 || defense < 0)
+		{
+			outError = "스탯 값이 유효 범위를 벗어남";
 			Templates.clear();
 			return false;
 		}
