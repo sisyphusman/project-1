@@ -97,6 +97,8 @@ namespace UILayout
 		inline constexpr int BaseWidth = 1920;
 		inline constexpr int BaseHeight = 1080;
 		inline constexpr int TileSize = 24;
+
+		inline std::string TitleName = "타이틀";
 	}
 
 	namespace Tunable
@@ -141,6 +143,16 @@ namespace UILayout
 		inline float MinimapBottomPadding = 10.f;
 		inline float MinimapTileGap = 1.f;
 		inline float MinimapPlayerMarkerMargin = 1.f;
+
+		// 메인 메뉴 패널
+		inline float MainMenuBoxWidthRatio = 0.42f;
+		inline float MainMenuBoxHeightRatio = 0.42f;
+		inline float MainMenuTitleOffsetYRatio = 0.18f;
+		inline float MainMenuStartOffsetYRatio = 0.55f;
+		inline float MainMenuQuitOffsetYRatio = 0.72f;
+		inline int	 MainMenuTitleFontSize = 72;
+		inline int	 MainMenuItemFontSize = 32;
+		inline int	 MainMenuOutlineThickness = 2.f;
 	}
 
 	namespace Derived

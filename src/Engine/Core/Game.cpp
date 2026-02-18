@@ -479,18 +479,50 @@ void Game::RenderMainMenu()
 	// 메뉴는 전체 화면 기준 렌더링
 	Window.setView(Window.getDefaultView());
 
-	sf::Text titleText(GameFont, "Title", 72);
+	const sf::View	   defaultView = Window.getDefaultView();
+	const sf::Vector2f viewSize = defaultView.getSize();
+	const sf::Vector2f viewCenter = defaultView.getCenter();
+
+	// 메뉴 박스 크기/위치를 계산
+	const float		   menuBoxWidth = viewSize.x * UILayout::Tunable::MainMenuBoxWidthRatio;
+	const float		   menuBoxHeight = viewSize.x * UILayout::Tunable::MainMenuBoxWidthRatio;
+	const sf::Vector2f menuBoxPosition = { viewCenter.x - (menuBoxWidth * 0.5f), viewCenter.y - (menuBoxHeight * 0.5f) };
+
+	sf::RectangleShape menuBox({ menuBoxWidth, menuBoxHeight });
+	menuBox.setPosition(menuBoxPosition);
+	menuBox.setFillColor(Colors::Panel::LogBg);
+	menuBox.setOutlineThickness(UILayout::Tunable::MainMenuOutlineThickness);
+	menuBox.setOutlineColor(Colors::Panel::LogBorder);
+
+	const unsigned int titleFontSize = static_cast<unsigned int>(std::max(12, UILayout::Tunable::MainMenuTitleFontSize));
+	const unsigned int itemFontSize = static_cast<unsigned int>(std::max(12, UILayout::Tunable::MainMenuItemFontSize));
+
+	sf::Text titleText(GameFont, sf::String::fromUtf8(UILayout::Fixed::TitleName.begin(), UILayout::Fixed::TitleName.end()), titleFontSize);
 	titleText.setFillColor(Colors::White);
-	titleText.setPosition({ 80.f, 120.f });
+	titleText.setStyle(sf::Text::Bold);
 
-	sf::Text startText(GameFont, "Enter - Start", 32);
-	startText.setFillColor(Colors::White);
-	startText.setPosition({ 80.f, 260.f });
+	sf::Text startText(GameFont, "Enter - Start", itemFontSize);
+	startText.setFillColor(Colors::Text);
 
-	sf::Text quitText(GameFont, "Esc - Quit", 32);
-	quitText.setFillColor(Colors::White);
-	quitText.setPosition({ 80.f, 320.f });
+	sf::Text quitText(GameFont, "Esc - Quit", itemFontSize);
+	quitText.setFillColor(Colors::Text);
 
+	// x 축은 중앙 정렬, y 축은 비율 오프셋 사용, 텍스트의 내부 기준점 차이 제거
+	auto CenterTextOnX = [menuBoxPosition, menuBoxWidth, menuBoxHeight](sf::Text& text, float yRatio) {
+		// 텍스트가 차지하는 공간, 박스에서 텍스트 공간을 뺀 값의 절반을 이용하여 중앙 정렬
+		const sf::FloatRect localBounds = text.getLocalBounds();
+
+		// 박스 왼쪽 + 남는 여백의 절반 + 로컬 오프셋 보정 (글자가 바운딩 박스에서 오른쪽으로 밀려서 시작하기 때문)
+		const float x = menuBoxPosition.x + ((menuBoxWidth - localBounds.size.x) * 0.5f) - localBounds.position.x;
+		const float y = menuBoxPosition.y + (yRatio * menuBoxHeight) - localBounds.position.y;
+		text.setPosition({ x, y });
+	};
+
+	CenterTextOnX(titleText, UILayout::Tunable::MainMenuTitleOffsetYRatio);
+	CenterTextOnX(startText, UILayout::Tunable::MainMenuStartOffsetYRatio);
+	CenterTextOnX(quitText, UILayout::Tunable::MainMenuQuitOffsetYRatio);
+
+	Window.draw(menuBox);
 	Window.draw(titleText);
 	Window.draw(startText);
 	Window.draw(quitText);
