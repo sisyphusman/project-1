@@ -59,8 +59,10 @@ namespace Colors
 	{
 		inline const sf::Color VisibleFloor = sf::Color(80, 80, 100);
 		inline const sf::Color VisibleWall = sf::Color(40, 40, 50);
+		inline const sf::Color VisibleStair = sf::Color(178, 255, 255);
 		inline const sf::Color ExploredFloor = sf::Color(40, 40, 50);
 		inline const sf::Color ExploredWall = sf::Color(25, 25, 30);
+		inline const sf::Color ExploredStair = sf::Color(0, 0, 255);
 		inline const sf::Color Player = sf::Color(255, 255, 100);
 		inline const sf::Color Enemy = sf::Color(255, 0, 0);
 	}

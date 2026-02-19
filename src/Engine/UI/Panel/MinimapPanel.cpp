@@ -85,6 +85,11 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 				{
 					tile.setFillColor(Colors::Minimap::VisibleWall);
 				}
+				// 시야 + 계단
+				if (mapTile.Type == TileType::StairUp || mapTile.Type == TileType::StairDown)
+				{
+					tile.setFillColor(Colors::Minimap::VisibleStair);
+				}
 			}
 			else
 			{
@@ -97,6 +102,11 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 				else
 				{
 					tile.setFillColor(Colors::Minimap::ExploredWall);
+				}
+				// 비시야 + 계단
+				if (mapTile.Type == TileType::StairUp || mapTile.Type == TileType::StairDown)
+				{
+					tile.setFillColor(Colors::Minimap::ExploredStair);
 				}
 			}
 
