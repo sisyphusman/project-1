@@ -53,6 +53,7 @@ private:
 	void InitUI();
 
 	void ProcessEvents();
+	void ExecuteMainMenu();
 	void StartNewRun();
 	void CheckStairs();
 	void Update(float deltaTime);
@@ -95,4 +96,6 @@ private:
 
 	// 게임 시작 시 메인메뉴만 렌더링
 	GameFlowState FlowState = GameFlowState::MainMenu;
+
+	int MainMenuSelectedIndex = 0;
 };

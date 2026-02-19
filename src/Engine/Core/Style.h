@@ -99,6 +99,8 @@ namespace UILayout
 		inline constexpr int TileSize = 24;
 
 		inline std::string TitleName = "타이틀";
+		inline std::string MenuName0 = "게임시작";
+		inline std::string MenuName1 = "종료";
 	}
 
 	namespace Tunable
@@ -152,7 +154,7 @@ namespace UILayout
 		inline float MainMenuQuitOffsetYRatio = 0.72f;
 		inline int	 MainMenuTitleFontSize = 72;
 		inline int	 MainMenuItemFontSize = 32;
-		inline int	 MainMenuOutlineThickness = 2.f;
+		inline float MainMenuOutlineThickness = 2.f;
 	}
 
 	namespace Derived

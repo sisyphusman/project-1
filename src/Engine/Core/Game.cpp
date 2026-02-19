@@ -104,8 +104,14 @@ void Game::ProcessEvents()
 			{
 				switch (key->code)
 				{
+					case sf::Keyboard::Key::Up:
+						MainMenuSelectedIndex = std::max(0, MainMenuSelectedIndex - 1);
+						break;
+					case sf::Keyboard::Key::Down:
+						MainMenuSelectedIndex = std::max(0, MainMenuSelectedIndex + 1);
+						break;
 					case sf::Keyboard::Key::Enter:
-						StartNewRun();
+						ExecuteMainMenu();
 						break;
 					case sf::Keyboard::Key::Escape:
 						Window.close();
@@ -206,6 +212,23 @@ void Game::ProcessEvents()
 				}
 			}
 		}
+	}
+}
+
+void Game::ExecuteMainMenu()
+{
+	switch (MainMenuSelectedIndex)
+	{
+		case 0:
+			StartNewRun();
+			break;
+		case 1:
+			Window.close();
+			break;
+		default:
+			MainMenuSelectedIndex = 0;
+			StartNewRun();
+			break;
 	}
 }
 
@@ -481,7 +504,7 @@ void Game::RenderMainMenu()
 
 	// 메뉴 박스 크기/위치를 계산
 	const float		   menuBoxWidth = viewSize.x * UILayout::Tunable::MainMenuBoxWidthRatio;
-	const float		   menuBoxHeight = viewSize.x * UILayout::Tunable::MainMenuBoxWidthRatio;
+	const float		   menuBoxHeight = viewSize.x * UILayout::Tunable::MainMenuBoxHeightRatio;
 	const sf::Vector2f menuBoxPosition = { viewCenter.x - (menuBoxWidth * 0.5f), viewCenter.y - (menuBoxHeight * 0.5f) };
 
 	sf::RectangleShape menuBox({ menuBoxWidth, menuBoxHeight });
@@ -497,11 +520,11 @@ void Game::RenderMainMenu()
 	titleText.setFillColor(Colors::White);
 	titleText.setStyle(sf::Text::Bold);
 
-	sf::Text startText(GameFont, "Enter - Start", itemFontSize);
-	startText.setFillColor(Colors::Text);
+	sf::Text startText(GameFont, sf::String::fromUtf8(UILayout::Fixed::MenuName0.begin(), UILayout::Fixed::MenuName0.end()), itemFontSize);
+	startText.setFillColor(MainMenuSelectedIndex == 0 ? Colors::Red : Colors::Text);
 
-	sf::Text quitText(GameFont, "Esc - Quit", itemFontSize);
-	quitText.setFillColor(Colors::Text);
+	sf::Text quitText(GameFont, sf::String::fromUtf8(UILayout::Fixed::MenuName1.begin(), UILayout::Fixed::MenuName1.end()), itemFontSize);
+	quitText.setFillColor(MainMenuSelectedIndex == 1 ? Colors::Red : Colors::Text);
 
 	// x 축은 중앙 정렬, y 축은 비율 오프셋 사용, 텍스트의 내부 기준점 차이 제거
 	auto CenterTextOnX = [menuBoxPosition, menuBoxWidth, menuBoxHeight](sf::Text& text, float yRatio) {
