@@ -20,7 +20,7 @@ bool TurnSystem::ExecutePlayerTurn(CombatSystem& combat, const Map& map, const s
 	outResult.PlayerNextPosition = playerPos;
 
 	if (!combat.HandlePlayerAction(map, playerPos, dx, dy, playerStats, outResult.bPlayerMoved, outResult.PlayerNextPosition, outResult.Messages,
-			outResult.DamageEvents))
+			outResult.DamageEvents, outResult.DefeatedEnemyCount))
 	{
 		return false;
 	}

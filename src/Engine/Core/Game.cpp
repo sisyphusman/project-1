@@ -65,7 +65,6 @@ void Game::InitUI()
 
 	// 메시지 로그 패널
 	Log = std::make_unique<MessageLogPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::LogWidth()), bottomHeight);
-	Log->GetLog().AddMessage("던전에 입장하셨습니다", LogColor::White);
 	xOffset += UILayout::Derived::LogWidth();
 
 	// 미니맵 패널
@@ -100,15 +99,24 @@ void Game::ProcessEvents()
 
 		if (const auto* key = event->getIf<sf::Event::KeyPressed>())
 		{
+			// 요약 창에서 첫 입력은 무시
+			if (ShowLastRunSummary)
+			{
+				ShowLastRunSummary = false;
+				continue;
+			}
+
 			if (FlowState == GameFlowState::MainMenu)
 			{
 				switch (key->code)
 				{
+					case sf::Keyboard::Key::W:
 					case sf::Keyboard::Key::Up:
 						MainMenuSelectedIndex = std::max(0, MainMenuSelectedIndex - 1);
 						break;
+					case sf::Keyboard::Key::S:
 					case sf::Keyboard::Key::Down:
-						MainMenuSelectedIndex = std::max(0, MainMenuSelectedIndex + 1);
+						MainMenuSelectedIndex = std::min(1, MainMenuSelectedIndex + 1);
 						break;
 					case sf::Keyboard::Key::Enter:
 						ExecuteMainMenu();
@@ -145,7 +153,7 @@ void Game::ProcessEvents()
 					dx = 1;
 					break;
 				case sf::Keyboard::Key::Escape:
-					Window.close();
+					GameOver();
 					break;
 				case sf::Keyboard::Key::Space:
 					CheckStairs();
@@ -182,6 +190,14 @@ void Game::ProcessEvents()
 
 				if (Turn.ExecutePlayerTurn(Combat, Dungeon->GetCurrentMap(), currentPos, dx, dy, MyCharStats, turnResult))
 				{
+					DefeatEnemyCountInRun += turnResult.DefeatedEnemyCount;
+
+					if (MyCharStats.HP.Current <= 0)
+					{
+						GameOver();
+						continue;
+					}
+
 					if (turnResult.bPlayerMoved)
 					{
 						GamePlayer->SetPosition(turnResult.PlayerNextPosition.x, turnResult.PlayerNextPosition.y);
@@ -234,6 +250,8 @@ void Game::ExecuteMainMenu()
 
 void Game::StartNewRun()
 {
+	// 이전 턴의 정보 초기화
+	DefeatEnemyCountInRun = 0;
 
 	// 던전 생성
 	Dungeon = std::make_unique<DungeonManager>(UILayout::Derived::ViewWidthTiles(), UILayout::Derived::ViewHeightTiles());
@@ -251,6 +269,8 @@ void Game::StartNewRun()
 	Combat.Reset();
 	Turn.Reset();
 	DamagePopups = DamagePopupSystem();
+
+	Log->GetLog().AddMessage("던전에 입장하셨습니다", LogColor::White);
 
 	// 첫 번째 걸을 수 있는 타일을 찾아 플레이어 배치
 	for (int y = 1; y < currentMap.GetHeight() - 1; ++y)
@@ -284,10 +304,23 @@ void Game::StartNewRun()
 
 				// 메인 메뉴에서 게임 플레이 상태로 전환
 				FlowState = GameFlowState::InGame;
+				GAME_DEBUG_LOG("StartNewRun", "새 게임을 성공적으로 시작");
 				return;
 			}
 		}
 	}
+}
+
+void Game::GameOver()
+{
+	// 이번 게임에서 처치한 에너미 수
+	ShowLastRunSummary = true;
+
+	Log->GetLog().Clear();
+
+	MainMenuSelectedIndex = 0;
+	FlowState = GameFlowState::MainMenu;
+	GAME_DEBUG_LOG("GameOver", "게임 오버");
 }
 
 void Game::CheckStairs()
@@ -504,7 +537,7 @@ void Game::RenderMainMenu()
 
 	// 메뉴 박스 크기/위치를 계산
 	const float		   menuBoxWidth = viewSize.x * UILayout::Tunable::MainMenuBoxWidthRatio;
-	const float		   menuBoxHeight = viewSize.x * UILayout::Tunable::MainMenuBoxHeightRatio;
+	const float		   menuBoxHeight = viewSize.y * UILayout::Tunable::MainMenuBoxHeightRatio;
 	const sf::Vector2f menuBoxPosition = { viewCenter.x - (menuBoxWidth * 0.5f), viewCenter.y - (menuBoxHeight * 0.5f) };
 
 	sf::RectangleShape menuBox({ menuBoxWidth, menuBoxHeight });
@@ -541,8 +574,23 @@ void Game::RenderMainMenu()
 	CenterTextOnX(startText, UILayout::Tunable::MainMenuStartOffsetYRatio);
 	CenterTextOnX(quitText, UILayout::Tunable::MainMenuQuitOffsetYRatio);
 
-	Window.draw(menuBox);
-	Window.draw(titleText);
-	Window.draw(startText);
-	Window.draw(quitText);
+	if (ShowLastRunSummary)
+	{
+		// 게임 오버 후 요약 창
+		const unsigned int summaryFontSize = static_cast<unsigned int>(std::max(12, UILayout::Tunable::MainMenuItemFontSize));
+		std::string		   summary = "플레이어가 사망했습니다. 처치한 에너미 수: " + std::to_string(DefeatEnemyCountInRun);
+		sf::Text		   summaryText(GameFont, sf::String::fromUtf8(summary.begin(), summary.end()), summaryFontSize);
+		summaryText.setFillColor(Colors::White);
+
+		CenterTextOnX(summaryText, 0.50f);
+		Window.draw(summaryText);
+	}
+	else
+	{
+		// 메인 메뉴
+		Window.draw(menuBox);
+		Window.draw(titleText);
+		Window.draw(startText);
+		Window.draw(quitText);
+	}
 }

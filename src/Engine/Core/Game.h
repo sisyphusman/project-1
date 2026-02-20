@@ -55,6 +55,7 @@ private:
 	void ProcessEvents();
 	void ExecuteMainMenu();
 	void StartNewRun();
+	void GameOver();
 	void CheckStairs();
 	void Update(float deltaTime);
 
@@ -98,4 +99,10 @@ private:
 	GameFlowState FlowState = GameFlowState::MainMenu;
 
 	int MainMenuSelectedIndex = 0;
+
+	// 이번 게임에서 처치한 에너미 수
+	int DefeatEnemyCountInRun = 0;
+
+	// 게임 요약 표시 플래그
+	bool ShowLastRunSummary = false;
 };

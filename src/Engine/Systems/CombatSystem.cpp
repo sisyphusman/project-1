@@ -100,11 +100,12 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 }
 
 bool CombatSystem::HandlePlayerAction(const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, bool& bOutPlayerMoved,
-	sf::Vector2i& outPlayerPos, std::vector<std::string>& outMessages, std::vector<CombatDamageEvent>& outDamageEvents)
+	sf::Vector2i& outPlayerPos, std::vector<std::string>& outMessages, std::vector<CombatDamageEvent>& outDamageEvents, int& outDefeatedEnemyCount)
 {
 
 	bOutPlayerMoved = false;
 	outPlayerPos = playerPos;
+	outDefeatedEnemyCount = 0;
 
 	int targetX = playerPos.x + dx;
 	int targetY = playerPos.y + dy;
@@ -121,6 +122,7 @@ bool CombatSystem::HandlePlayerAction(const Map& map, const sf::Vector2i& player
 		if (targetEnemy.Stats.HP.Current <= 0)
 		{
 			targetEnemy.bIsAlive = false;
+			outDefeatedEnemyCount++;
 			outMessages.push_back(targetEnemy.Name + "을 처치했습니다");
 		}
 	}

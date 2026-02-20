@@ -225,7 +225,7 @@ bool DungeonGenerator::IsValidForCorridor(int x, int y, int startX, int startY, 
 {
 	for (const auto& room : Rooms)
 	{
-		// 시작/끝 방문 제외
+		// 시작/끝 방은 검사에서 제외
 		if (room.Contains(startX, startY) || room.Contains(endX, endY))
 		{
 			continue;

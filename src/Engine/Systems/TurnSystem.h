@@ -17,6 +17,7 @@ struct TurnResult
 	sf::Vector2i				   PlayerNextPosition;
 	std::vector<std::string>	   Messages;
 	std::vector<CombatDamageEvent> DamageEvents;
+	int							   DefeatedEnemyCount = 0;
 };
 
 class TurnSystem

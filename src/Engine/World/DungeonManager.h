@@ -30,7 +30,8 @@ public:
 	bool LoadExploredData(int level, std::vector<bool>& outData) const;
 
 private:
-	// 던전 각 층의 상태를 저장
+	// 
+	// 각 층의 상태를 저장
 	struct LevelCombatState
 	{
 		std::vector<CombatEnemy> Enemies;
