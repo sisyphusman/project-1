@@ -11,7 +11,7 @@ void Camera::SetTarget(float x, float y)
 
 void Camera::ToggleZoomOut()
 {
-	bIsZoomedOut = !bIsZoomedOut;
+	ZoomedOut = !ZoomedOut;
 }
 
 void Camera::Update(float deltaTime, sf::View& inOutView, float baseViewWidth, float baseViewHeight)
@@ -22,12 +22,12 @@ void Camera::Update(float deltaTime, sf::View& inOutView, float baseViewWidth, f
 	CurrentY += (TargetY - CurrentY) * t;
 
 	// 부드러운 줌 전환
-	const float targetZoom = bIsZoomedOut ? ZoomedOutZoom : NormalZoom;
+	const float targetZoom = ZoomedOut ? ZoomedOutScale : NormalScale;
 	const float zoomT = 1.0f - std::exp(-ZoomSpeed * deltaTime);
-	CurrentZoom += (targetZoom - CurrentZoom) * zoomT;
+	CurrentScale += (targetZoom - CurrentScale) * zoomT;
 
 	// 카메라 보간 결과를 즉시 뷰에 반영
-	const float safeZoom = std::max(0.001f, CurrentZoom);
+	const float safeZoom = std::max(0.001f, CurrentScale);
 	inOutView.setSize({ baseViewWidth / safeZoom, baseViewHeight / safeZoom });
 	inOutView.setCenter({ CurrentX, CurrentY });
 }

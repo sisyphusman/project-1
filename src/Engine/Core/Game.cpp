@@ -198,7 +198,7 @@ void Game::ProcessEvents()
 						continue;
 					}
 
-					if (turnResult.bPlayerMoved)
+					if (turnResult.PlayerMoved)
 					{
 						GamePlayer->SetPosition(turnResult.PlayerNextPosition.x, turnResult.PlayerNextPosition.y);
 					}
@@ -211,7 +211,7 @@ void Game::ProcessEvents()
 					for (const CombatDamageEvent& damageEvent : turnResult.DamageEvents)
 					{
 						DamagePopups.AddAtTile(damageEvent.TilePosition.x, damageEvent.TilePosition.y, damageEvent.Damage,
-							damageEvent.bFromPlayer ? Colors::Red : Colors::White);
+							damageEvent.FromPlayer ? Colors::Red : Colors::White);
 					}
 
 					auto pos = GamePlayer->GetPosition();
@@ -489,7 +489,7 @@ void Game::RenderGameWorld()
 
 	for (const CombatEnemy& enemy : Combat.GetEnemies())
 	{
-		if (!enemy.bIsAlive)
+		if (!enemy.IsAlive)
 		{
 			continue;
 		}

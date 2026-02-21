@@ -30,13 +30,12 @@ public:
 	bool LoadExploredData(int level, std::vector<bool>& outData) const;
 
 private:
-	// 
 	// 각 층의 상태를 저장
 	struct LevelCombatState
 	{
 		std::vector<CombatEnemy> Enemies;
 		int						 NextEnemyId = 1;
-		bool					 bHasData = false;
+		bool					 HasData = false;
 	};
 
 	void GenerateLevel(int level); // 새로운 던전 레벨 생성

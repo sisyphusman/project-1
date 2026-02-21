@@ -13,11 +13,11 @@ public:
 
 	[[nodiscard]] float GetX() const noexcept { return CurrentX; }
 	[[nodiscard]] float GetY() const noexcept { return CurrentY; }
-	[[nodiscard]] float GetZoom() const noexcept { return CurrentZoom; }
-	[[nodiscard]] bool	IsZoomedOut() const noexcept { return bIsZoomedOut; }
+	[[nodiscard]] float GetZoom() const noexcept { return CurrentScale; }
+	[[nodiscard]] bool	IsZoomedOut() const noexcept { return ZoomedOut; }
 
-	void SetNormalZoom(float zoom) { NormalZoom = zoom; }
-	void SetZoomedOutZoom(float zoom) { ZoomedOutZoom = zoom; }
+	void SetNormalZoom(float zoom) { NormalScale = zoom; }
+	void SetZoomedOutZoom(float zoom) { ZoomedOutScale = zoom; }
 
 private:
 	// 현재 카메라 중심 좌표
@@ -28,11 +28,11 @@ private:
 	float TargetX = 0.0f;
 	float TargetY = 0.0f;
 
-	float NormalZoom = 1.0f;	// 기본
-	float ZoomedOutZoom = 0.5f; // 줌 아웃
-	float CurrentZoom = 1.0f;	// 보간 결과
+	float NormalScale = 1.0f;	// 기본
+	float ZoomedOutScale = 0.5f; // 줌 아웃
+	float CurrentScale = 1.0f;	// 보간 결과
 
-	bool bIsZoomedOut = false;
+	bool ZoomedOut = false;
 
 	// 지수 보간 계수, 값이 크면 빠름
 	static constexpr float SmoothSpeed = 8.0f;

@@ -92,7 +92,7 @@ void DungeonManager::SaveCombatState(int level, const CombatSystem& combat)
 	}
 
 	combat.SaveState(LevelCombatData[level].Enemies, LevelCombatData[level].NextEnemyId);
-	LevelCombatData[level].bHasData = true;
+	LevelCombatData[level].HasData = true;
 }
 
 bool DungeonManager::LoadCombatState(int level, CombatSystem& combat) const
@@ -103,7 +103,7 @@ bool DungeonManager::LoadCombatState(int level, CombatSystem& combat) const
 	}
 
 	const LevelCombatState& combatState = LevelCombatData[level];
-	if (!combatState.bHasData)
+	if (!combatState.HasData)
 	{
 		return false;
 	}

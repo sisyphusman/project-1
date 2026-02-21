@@ -19,14 +19,14 @@ struct CombatEnemy
 	sf::Vector2i   Position;
 	char		   Glyph = 'g';
 	CharacterStats Stats;
-	bool		   bIsAlive = true;
+	bool		   IsAlive = true;
 };
 
 struct CombatDamageEvent
 {
 	sf::Vector2i TilePosition;
 	int			 Damage = 0;
-	bool		 bFromPlayer = false;
+	bool		 FromPlayer = false;
 };
 
 class CombatSystem

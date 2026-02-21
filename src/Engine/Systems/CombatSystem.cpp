@@ -121,7 +121,7 @@ bool CombatSystem::HandlePlayerAction(const Map& map, const sf::Vector2i& player
 
 		if (targetEnemy.Stats.HP.Current <= 0)
 		{
-			targetEnemy.bIsAlive = false;
+			targetEnemy.IsAlive = false;
 			outDefeatedEnemyCount++;
 			outMessages.push_back(targetEnemy.Name + "을 처치했습니다");
 		}
@@ -146,7 +146,7 @@ int CombatSystem::FindEnemyAt(int x, int y) const
 	for (size_t i = 0; i < Enemies.size(); ++i)
 	{
 		const CombatEnemy& enemy = Enemies[i];
-		if (enemy.bIsAlive && enemy.Position.x == x && enemy.Position.y == y)
+		if (enemy.IsAlive && enemy.Position.x == x && enemy.Position.y == y)
 		{
 			return static_cast<int>(i);
 		}
@@ -164,7 +164,7 @@ int CombatSystem::CalculatePhysicalDamage(const CharacterStats& attacker, const 
 
 void CombatSystem::RemoveDeadEnemies()
 {
-	Enemies.erase(std::remove_if(Enemies.begin(), Enemies.end(), [](const CombatEnemy& enemy) { return !enemy.bIsAlive; }), Enemies.end());
+	Enemies.erase(std::remove_if(Enemies.begin(), Enemies.end(), [](const CombatEnemy& enemy) { return !enemy.IsAlive; }), Enemies.end());
 }
 
 void CombatSystem::ProcessEnemyTurn(const sf::Vector2i& playerPos, CharacterStats& playerStats, std::vector<std::string>& outMessages,
@@ -172,7 +172,7 @@ void CombatSystem::ProcessEnemyTurn(const sf::Vector2i& playerPos, CharacterStat
 {
 	for (CombatEnemy& enemy : Enemies)
 	{
-		if (!enemy.bIsAlive)
+		if (!enemy.IsAlive)
 		{
 			continue;
 		}
@@ -193,5 +193,5 @@ void CombatSystem::ProcessEnemyTurn(const sf::Vector2i& playerPos, CharacterStat
 		}
 	}
 
-	Enemies.erase(std::remove_if(Enemies.begin(), Enemies.end(), [](const CombatEnemy& enemy) { return !enemy.bIsAlive; }), Enemies.end());
+	Enemies.erase(std::remove_if(Enemies.begin(), Enemies.end(), [](const CombatEnemy& enemy) { return !enemy.IsAlive; }), Enemies.end());
 }

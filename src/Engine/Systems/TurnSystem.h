@@ -13,7 +13,7 @@ class FOV;
 
 struct TurnResult
 {
-	bool						   bPlayerMoved = false;
+	bool						   PlayerMoved = false;
 	sf::Vector2i				   PlayerNextPosition;
 	std::vector<std::string>	   Messages;
 	std::vector<CombatDamageEvent> DamageEvents;
@@ -33,6 +33,6 @@ public:
 	void CollectNewVisibleEnemyMessages(const CombatSystem& combat, const FOV& fov, std::vector<std::string>& outMessages);
 
 private:
-	bool					bIsPlayerTurn = true; // 턴 상태 플래그
+	bool					IsPlayerTurn = true; // 턴 상태 플래그
 	std::unordered_set<int> SeenEnemyIds;		  // 한번 본 에너미 리스트
 };

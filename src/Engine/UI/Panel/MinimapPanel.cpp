@@ -123,7 +123,7 @@ void MinimapPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 
 		for (const CombatEnemy& enemy : *Enemies)
 		{
-			if (!enemy.bIsAlive)
+			if (!enemy.IsAlive)
 			{
 				continue;
 			}
