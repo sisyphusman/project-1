@@ -103,6 +103,9 @@ namespace UILayout
 		inline std::string TitleName = "타이틀";
 		inline std::string MenuName0 = "게임시작";
 		inline std::string MenuName1 = "종료";
+
+		inline std::string StairDownMsg = "아래층으로 내려갑니다";
+		inline std::string StairUpMsg = "위층으로 올라갑니다";
 	}
 
 	namespace Tunable

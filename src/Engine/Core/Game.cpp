@@ -339,13 +339,16 @@ void Game::CheckStairs()
 	sf::Vector2i newPos;
 	int			 currentLevel = Dungeon->GetCurrentLevel();
 
-	// 다음 층 이동
-	if (tile.Type == TileType::StairDown)
+	if (tile.Type == TileType::StairDown || tile.Type == TileType::StairUp)
 	{
+		const bool		  isStairDown = (tile.Type == TileType::StairDown);
+		const std::string stairMessage = isStairDown ? UILayout::Fixed::StairDownMsg : UILayout::Fixed::StairUpMsg;
+
 		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
 		Dungeon->SaveCombatState(currentLevel, Combat);
 
-		if (Dungeon->GoToNextLevel(newPos))
+		// 다음 층으로 가면 GoToNextLevel(), 이전 층으로 가면 GoToPrevLevel()
+		if (isStairDown ? Dungeon->GoToNextLevel(newPos) : Dungeon->GoToPrevLevel(newPos))
 		{
 			GamePlayer->SetPosition(newPos.x, newPos.y);
 
@@ -375,55 +378,7 @@ void Game::CheckStairs()
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
 				&Combat.GetEnemies());
-			Log->GetLog().AddMessage("아래층으로 내려갑니다", LogColor::Stairs);
-			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
-
-			// 현재 시야에 포착된 에너미 메시지 수집 후 출력
-			std::vector<std::string> discoveredMessages;
-			Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
-			for (const std::string& message : discoveredMessages)
-			{
-				Log->GetLog().AddMessage(message, LogColor::Combat);
-			}
-		}
-	}
-	// 이전 층 이동
-	else if (tile.Type == TileType::StairUp)
-	{
-		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
-		Dungeon->SaveCombatState(currentLevel, Combat);
-
-		if (Dungeon->GoToPrevLevel(newPos))
-		{
-			GamePlayer->SetPosition(newPos.x, newPos.y);
-
-			std::vector<bool> savedData;
-			if (Dungeon->LoadExploredData(Dungeon->GetCurrentLevel(), savedData))
-			{
-				PlayerFOV->SetExploredData(savedData);
-			}
-			else
-			{
-				PlayerFOV->Reset();
-			}
-
-			// 층의 데이터가 저장되어 있다면 로드
-			if (!Dungeon->LoadCombatState(Dungeon->GetCurrentLevel(), Combat))
-			{
-				// 첫 방문이면 신규 에너미 생성
-				Combat.Reset();
-				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
-			}
-
-			// 아이템은 층 이동 시마다 새로 스폰
-			ItemDrops.Reset();
-			ItemDrops.SpawnOnLevel(Dungeon->GetCurrentMap(), newPos);
-
-			Turn.Reset();
-			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
-			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
-				&Combat.GetEnemies());
-			Log->GetLog().AddMessage("위층으로 올라갑니다", LogColor::Stairs);
+			Log->GetLog().AddMessage(stairMessage, LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 
 			// 현재 시야에 포착된 에너미 메시지 수집 후 출력
