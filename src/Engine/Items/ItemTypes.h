@@ -26,7 +26,7 @@ struct ItemArchetype
 {
 	std::string			 Id;
 	std::string			 Name;
-	char				 Glyph = '!';
+	char				 Glyph = '?';
 	ItemKind			 Kind = ItemKind::Consumable;
 	ConsumableEffectType EffectType = ConsumableEffectType::None;
 	int					 EffectValue = 0;
@@ -43,8 +43,8 @@ struct GroundItemEntry
 inline std::vector<ItemArchetype> BuildDefaultItemPool()
 {
 	return {
-		{ "hp_small", "작은 치유 물약", '!', ItemKind::Consumable, ConsumableEffectType::HealHP, 20, true },
-		{ "hp_large", "큰 치유 물약", '!', ItemKind::Consumable, ConsumableEffectType::HealHP, 40, true },
+		{ "hp_small", "작은 치유 물약", '?', ItemKind::Consumable, ConsumableEffectType::HealHP, 20, true },
+		{ "hp_large", "큰 치유 물약", '?', ItemKind::Consumable, ConsumableEffectType::HealHP, 40, true },
 		{ "mp_small", "작은 마나 물약", '?', ItemKind::Consumable, ConsumableEffectType::RestoreMP, 10, true },
 	};
 }
