@@ -270,6 +270,9 @@ void Game::StartNewRun()
 	Turn.Reset();
 	DamagePopups = DamagePopupSystem();
 
+	// 아이템 시스템 초기화
+	ItemDrops.Reset();
+
 	Log->GetLog().AddMessage("던전에 입장하셨습니다", LogColor::White);
 
 	// 첫 번째 걸을 수 있는 타일을 찾아 플레이어 배치
@@ -298,6 +301,9 @@ void Game::StartNewRun()
 					}
 				}
 
+				// 아이템 스폰
+				ItemDrops.SpawnOnLevel(currentMap, pos);
+
 				// 미니맵 초기화
 				Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
 					&Combat.GetEnemies());
@@ -313,7 +319,7 @@ void Game::StartNewRun()
 
 void Game::GameOver()
 {
-	// 이번 게임에서 처치한 에너미 수
+	// 게임 요약 창 표시 설정
 	ShowLastRunSummary = true;
 
 	Log->GetLog().Clear();
@@ -361,6 +367,10 @@ void Game::CheckStairs()
 				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
 			}
 
+			// 아이템은 층 이동 시마다 새로 스폰
+			ItemDrops.Reset();
+			ItemDrops.SpawnOnLevel(Dungeon->GetCurrentMap(), newPos);
+
 			Turn.Reset();
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
 			Minimap->SetSources(&Dungeon->GetCurrentMap(), PlayerFOV.get(), &GamePlayer->GetPositionRef(), &Dungeon->GetCurrentLevelRef(),
@@ -404,6 +414,10 @@ void Game::CheckStairs()
 				Combat.Reset();
 				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
 			}
+
+			// 아이템은 층 이동 시마다 새로 스폰
+			ItemDrops.Reset();
+			ItemDrops.SpawnOnLevel(Dungeon->GetCurrentMap(), newPos);
 
 			Turn.Reset();
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);
@@ -485,6 +499,20 @@ void Game::RenderGameWorld()
 				Window.draw(tileText);
 			}
 		}
+	}
+
+	for (const GroundItemEntry& groundItem : ItemDrops.GetGroundItems())
+	{
+		if (!PlayerFOV->IsVisible(groundItem.Position.x, groundItem.Position.y))
+		{
+			continue;
+		}
+
+		tileText.setString(std::string(1, groundItem.Archetype.Glyph));
+		tileText.setPosition({ static_cast<float>(groundItem.Position.x * UILayout::Fixed::TileSize),
+			static_cast<float>(groundItem.Position.y * UILayout::Fixed::TileSize) });
+		tileText.setFillColor(Colors::Red);
+		Window.draw(tileText);
 	}
 
 	for (const CombatEnemy& enemy : Combat.GetEnemies())

@@ -52,9 +52,8 @@ void ItemDropSystem::SpawnOnLevel(const Map& map, const sf::Vector2i& playerPos,
 	static std::mt19937 rng(std::random_device{}());
 	std::shuffle(candidates.begin(), candidates.end(), rng);
 
-	// 요청 개수와 후보 개수를 비교해 실제 스폰 개수를 계산
-	int clampedSpawnCount = std::min(static_cast<int>(candidates.size()), std::max(1, spawnCount));
-	for (int i = 0; i < clampedSpawnCount; ++i)
+	// 아이템 요청 개수만큼 스폰
+	for (int i = 0; i < spawnCount; ++i)
 	{
 		GroundItemEntry item;
 		item.Position = candidates[static_cast<size_t>(i)];

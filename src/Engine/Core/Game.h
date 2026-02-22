@@ -23,6 +23,7 @@
 #include "Engine/Systems/DamagePopupSystem.h"
 #include "Engine/Systems/TurnSystem.h"
 #include "Engine/Data/EnemyCatalog.h"
+#include "Engine/Items/ItemDropSystem.h"
 
 class Map;
 class Player;
@@ -89,6 +90,7 @@ private:
 	CombatSystem	  Combat;
 	TurnSystem		  Turn;
 	DamagePopupSystem DamagePopups;
+	ItemDropSystem	  ItemDrops;
 
 	CharacterStats MyCharStats;
 

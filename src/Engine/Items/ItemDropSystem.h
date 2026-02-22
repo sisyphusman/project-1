@@ -25,5 +25,5 @@ private:
 	ItemArchetype PickRandomArchetype(std::mt19937& rng) const; // 기본 아이템 풀에서 한 개를 랜덤 선택
 
 	std::vector<GroundItemEntry> GroundItems;	   // 현재 층에 배치된 바닥 아이템 목록
-	std::vector<ItemArchetype>	 DefaultItemsPool; // 현재 가지고 있는 아이템 풀
+	std::vector<ItemArchetype>	 DefaultItemsPool; // 기본 아이템 드랍 테이블
 };
