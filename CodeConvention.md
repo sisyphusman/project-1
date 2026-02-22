@@ -18,6 +18,8 @@ Macro                             -> UPPER_SNAKE_CASE
 - 블록 단위일때 중괄호는 새로운 줄에서 시작, return에서 중괄호는 블록이 아니므로 제외
 - 소괄호는 한 칸 띄우고 사용한다 ()
 - 섹션을 만들때 /을 60개 사용한다
+- 함수의 설명은 헤더에 작성한다
+- JSON 식별자는 sname_case를 사용한다
   
 # Git Convention
 
