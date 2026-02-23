@@ -1,5 +1,5 @@
 {
-    "schemaVersion": 1,
+    "schema_version": 1,
     "enemies": 
     [
         {
@@ -15,7 +15,7 @@
             },
             "images":
             {
-                "sprite": "assets/Gumiho.png"
+                "sprite": "Assets/Gumiho.png"
             }
         },
         {
@@ -31,7 +31,7 @@
             },
             "images":
             {
-                "sprite": "assets/kirin.png"
+                "sprite": "Assets/Kirin.png"
             }
         }
     ]

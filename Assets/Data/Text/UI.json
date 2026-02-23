@@ -1,0 +1,10 @@
+{
+    "schema_version" : 1,
+    "messages": {
+        "ui_titile": "타이틀",
+        "ui_menu_start": "게임 시작",
+        "ui_menu_quit": "종료",
+        "ui_info_no_stats_source": "스탯 정보 소스가 없습니다",
+        "ui_summary_player_dead": "플레이어가 사망했습니다. 처치한 적들의 수: {count}"
+    }
+}

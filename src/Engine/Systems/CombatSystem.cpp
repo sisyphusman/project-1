@@ -4,6 +4,7 @@
 #include <random>
 
 #include "Engine/World/Map.h"
+#include "Engine/Core/Macros.h"
 
 void CombatSystem::Reset()
 {
@@ -72,28 +73,14 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 	enemy.Id = NextEnemyId++;
 	enemy.Position = spawnPos;
 
-	if (selectedTemplate != nullptr)
-	{
-		// JSON 템플릿 기반
-		enemy.TemplateId = selectedTemplate->Id;
-		enemy.Name = selectedTemplate->Name;
-		enemy.Glyph = selectedTemplate->Glyph;
-		enemy.Stats = selectedTemplate->BaseStats;
-		enemy.SpritePath = selectedTemplate->SpritePath;
-	}
-	else
-	{
-		// 카탈로그 로딩 실패 시 기본값
-		enemy.TemplateId = "fallback_ghost";
-		enemy.Name = "귀신";
-		enemy.Glyph = 'g';
-		enemy.Stats.Level = 1;
-		enemy.Stats.HP = { 24, 24 };
-		enemy.Stats.STR = 9;
-		enemy.Stats.Defense = 2;
-		enemy.Stats.Attack = 7;
-		enemy.SpritePath = "assets/Ghost.png";
-	}
+	GAME_CHECK(selectedTemplate);
+
+	// JSON 템플릿 기반
+	enemy.TemplateId = selectedTemplate->Id;
+	enemy.Name = selectedTemplate->Name;
+	enemy.Glyph = selectedTemplate->Glyph;
+	enemy.Stats = selectedTemplate->BaseStats;
+	enemy.SpritePath = selectedTemplate->SpritePath;
 
 	Enemies.push_back(enemy);
 	return true;

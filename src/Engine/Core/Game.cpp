@@ -19,7 +19,7 @@ Game::Game()
 void Game::Init()
 {
 	// 폰트 파일 로드
-	GAME_CHECK(GameFont.openFromFile("assets/fonts/Pretendard-Regular.ttf"));
+	GAME_CHECK(GameFont.openFromFile("Assets/Fonts/Pretendard-Regular.ttf"));
 	GAME_DEBUG_LOG("init", "폰트 파일 로드 완료");
 
 	// 뷰 설정 (해상도 독립적)
@@ -30,7 +30,7 @@ void Game::Init()
 
 	// 에너미 JSON 로드
 	std::string enemyDataError;
-	GAME_CHECK(EnemyDataCatalog.LoadFromJsonFile("assets/data/enemies.json", enemyDataError));
+	GAME_CHECK(EnemyDataCatalog.LoadFromJsonFile("Assets/Data/Enemies/Enemies.json", enemyDataError));
 	GAME_DEBUG_LOG("init", "에너미 JSON 데이터 로드 완료");
 
 	// CombatSystem에 카탈로그 데이터 주소 공유
@@ -47,7 +47,7 @@ void Game::InitUI()
 
 	// 초상화 패널
 	Portrait = std::make_unique<PortraitPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::PortraitWidth()), bottomHeight);
-	Portrait->LoadPortrait("assets/Portrait.png");
+	Portrait->LoadPortrait("Assets/Portrait.png");
 	xOffset += UILayout::Derived::PortraitWidth();
 
 	// 인포 패널

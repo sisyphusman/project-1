@@ -1,0 +1,10 @@
+{
+    "schema_version": 1,
+    "messages": {
+        "combat_player_attack": "플레이어가 {enemy}에게 {damage}의 물리 피해",
+        "combat_enemy_attack": "{enemy}이 플레이어에게 {damage}의 물리 피해",
+        "combat_player_fallen": "플레이어가 쓰러졌습니다",
+        "combat_enemy_defeated": "{enemy}을 처치했습니다",
+        "combat_enemy_spotted": "{enemy}이 시야에 나타났습니다"
+    }
+}
