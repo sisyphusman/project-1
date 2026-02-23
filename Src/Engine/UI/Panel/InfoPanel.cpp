@@ -1,5 +1,6 @@
 #include "Engine/UI/Panel/InfoPanel.h"
 
+#include "Engine/Core/Macros.h"
 #include "Engine/Core/Style.h"
 
 #include <algorithm>
@@ -14,16 +15,10 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 {
 	DrawBackground(window, Colors::Panel::InfoBg, Colors::Panel::InfoBorder);
 
-	if (StatsPtr == nullptr)
-	{
-		sf::Text emptyText(font, "No stats source", UILayout::Tunable::SmallFontSize);
-		emptyText.setFillColor(Colors::Text);
-		emptyText.setPosition({ Bounds.position.x + UILayout::Tunable::Padding, Bounds.position.y + UILayout::Tunable::Padding });
-		window.draw(emptyText);
-		return;
-	}
+	GAME_CHECK(OutStats != nullptr);
+	GAME_CHECK(OutMessageCatalog != nullptr);
 
-	const CharacterStats& stats = *StatsPtr;
+	const CharacterStats& stats = *OutStats;
 
 	float barWidth = Bounds.size.x - UILayout::Tunable::Padding * 2.f;
 	float xPos = Bounds.position.x + UILayout::Tunable::Padding;
@@ -73,11 +68,6 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	}
 }
 
-void InfoPanel::SetSource(const CharacterStats* stats)
-{
-	StatsPtr = stats;
-}
-
 void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font, float x, float y, float width, float height, int current, int max,
 	sf::Color barColor, sf::Color bgColor)
 {
@@ -106,19 +96,4 @@ void InfoPanel::DrawProgressBar(sf::RenderWindow& window, const sf::Font& font, 
 	sf::FloatRect textBounds = valueText.getLocalBounds();
 	valueText.setPosition({ x + (width - textBounds.size.x) / 2.f, y + (height - textBounds.size.y) / 2.f + UILayout::Tunable::BarTextOffsetY });
 	window.draw(valueText);
-}
-
-void InfoPanel::AddStatusEffect(const std::string& name, sf::Color color, int duration)
-{
-	StatusEffects.push_back({ name, color, duration });
-}
-
-void InfoPanel::RemoveStatusEffect(const std::string& name)
-{
-	std::erase_if(StatusEffects, [&](const StatusEffect& e) { return e.Name == name; });
-}
-
-void InfoPanel::ClearStatusEffects()
-{
-	StatusEffects.clear();
 }

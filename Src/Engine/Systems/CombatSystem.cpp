@@ -62,18 +62,14 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 	std::uniform_int_distribution<size_t> dist(0, candidates.size() - 1);
 	sf::Vector2i						  spawnPos = candidates[dist(rng)];
 
-	const EnemyTemplate* selectedTemplate = nullptr;
-	if (EnemyDataCatalog != nullptr)
-	{
-		// 랜덤한 에너미 카탈로그를 로드
-		selectedTemplate = EnemyDataCatalog->PickRandomTemplate(rng);
-	}
+	// 데이터가 없으면 바로 중단 (fail-fast)
+	GAME_CHECK(OutEnemyCatalog != nullptr);
+	const EnemyTemplate* selectedTemplate = OutEnemyCatalog->PickRandomTemplate(rng);
+	GAME_CHECK(selectedTemplate != nullptr);
 
 	CombatEnemy enemy;
 	enemy.Id = NextEnemyId++;
 	enemy.Position = spawnPos;
-
-	GAME_CHECK(selectedTemplate);
 
 	// JSON 템플릿 기반
 	enemy.TemplateId = selectedTemplate->Id;

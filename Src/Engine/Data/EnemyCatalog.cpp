@@ -44,7 +44,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 	std::ifstream input(filePath);
 	if (!input.is_open())
 	{
-		outError = "에너미 JSON 파일을 열 수 없습니다: " + filePath;
+		outError = "Enemy JSON 파일을 열 수 없습니다: " + filePath;
 		return false;
 	}
 
@@ -55,25 +55,25 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 	}
 	catch (const Json::exception& parseException)
 	{
-		outError = std::string("에너미 JSON 파싱 실패: ") + parseException.what();
+		outError = std::string("Enemy JSON 파싱 실패: ") + parseException.what();
 		return false;
 	}
 
 	if (!root.is_object())
 	{
-		outError = "에너미 JSON 루트는 오브젝트여야 합니다";
+		outError = "Enemy JSON 루트는 오브젝트여야 합니다";
 		return false;
 	}
 
 	if (!root.contains("schema_version") || !root["schema_version"].is_number_integer())
 	{
-		outError = "schemaVersion은 정수여야 합니다";
+		outError = "schema_version은 정수여야 합니다";
 		return false;
 	}
 
 	if (!root.contains("enemies") || !root["enemies"].is_array())
 	{
-		outError = "에너미 JSON에 enemies 배열이 없습니다";
+		outError = "Enemy JSON에 enemies 배열이 없습니다";
 		return false;
 	}
 
@@ -109,7 +109,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 
 		if (!enemyObject.contains("stats") || !enemyObject["stats"].is_object())
 		{
-			outError = "에너미 스탯 오브젝트가 누락되었습니다";
+			outError = "Enemy stats 오브젝트가 누락되었습니다";
 			Templates.clear();
 			return false;
 		}
@@ -142,7 +142,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 
 		if (!enemyObject.contains("images") || !enemyObject["images"].is_object())
 		{
-			outError = "에너미 이미지 오브젝트가 누락되었습니다";
+			outError = "Enemy images 오브젝트가 누락되었습니다";
 			Templates.clear();
 			return false;
 		}
@@ -159,7 +159,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 
 	if (Templates.empty())
 	{
-		outError = "에너미 템플릿이 비어 있습니다";
+		outError = "Enemy 템플릿이 비어 있습니다";
 		return false;
 	}
 

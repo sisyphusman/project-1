@@ -17,7 +17,7 @@ public:
 	bool GoToNextLevel(sf::Vector2i& outPlayerPos);
 	bool GoToPrevLevel(sf::Vector2i& outPlayerPos);
 
-	// 층별 전투 상태 저장/복원 (에너미 위치/체력 유지)
+	// 층별 전투 상태 저장/복원 (Enemy 위치/체력 유지)
 	void SaveCombatState(int level, const CombatSystem& combat);
 	bool LoadCombatState(int level, CombatSystem& combat) const;
 
@@ -50,5 +50,5 @@ private:
 	std::vector<std::unique_ptr<Map>>				   Levels;
 	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> StairsPositions;	  // <UpStairs, DownStairs>
 	std::vector<std::vector<bool>>					   LevelExploredData; // 층별 탐험 데이터
-	std::vector<LevelCombatState>					   LevelCombatData;	  // 층별 에너미 상태 데이터
+	std::vector<LevelCombatState>					   LevelCombatData;	  // 층별 Enemy 상태 데이터
 };

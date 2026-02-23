@@ -23,6 +23,7 @@
 #include "Engine/Systems/DamagePopupSystem.h"
 #include "Engine/Systems/TurnSystem.h"
 #include "Engine/Data/EnemyCatalog.h"
+#include "Engine/Data/MessageCatalog.h"
 #include "Engine/Items/ItemDropSystem.h"
 
 class Map;
@@ -96,13 +97,14 @@ private:
 
 	// 카탈로그
 	EnemyCatalog EnemyDataCatalog;
+	MessageCatalog MessageDataCatalog;
 
 	// 게임 시작 시 메인메뉴만 렌더링
 	GameFlowState FlowState = GameFlowState::MainMenu;
 
 	int MainMenuSelectedIndex = 0;
 
-	// 이번 게임에서 처치한 에너미 수
+	// 이번 게임에서 처치한 Enemy 수
 	int DefeatEnemyCountInRun = 0;
 
 	// 게임 요약 표시 플래그

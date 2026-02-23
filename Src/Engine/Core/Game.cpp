@@ -18,23 +18,32 @@ Game::Game()
 ////////////////////////////////////////////////////////////
 void Game::Init()
 {
-	// 폰트 파일 로드
+	// Font 파일 로드
 	GAME_CHECK(GameFont.openFromFile("Assets/Fonts/Pretendard-Regular.ttf"));
-	GAME_DEBUG_LOG("init", "폰트 파일 로드 완료");
+	GAME_DEBUG_LOG("init", "Font 파일 로드 완료");
 
-	// 뷰 설정 (해상도 독립적)
+	// View 설정 (해상도 독립적)
 	Window.setView(GameView);
 
 	// UI 초기화 (패널 생성)
 	InitUI();
 
-	// 에너미 JSON 로드
+	// Enemy JSON 로드
 	std::string enemyDataError;
 	GAME_CHECK(EnemyDataCatalog.LoadFromJsonFile("Assets/Data/Enemies/Enemies.json", enemyDataError));
-	GAME_DEBUG_LOG("init", "에너미 JSON 데이터 로드 완료");
+	GAME_DEBUG_LOG("init", "Enemy JSON 데이터 로드 완료");
 
 	// CombatSystem에 카탈로그 데이터 주소 공유
 	Combat.SetEnemyCatalog(&EnemyDataCatalog);
+
+	// 메시지 JSON 로드
+	std::string messageDataError;
+	GAME_CHECK(MessageDataCatalog.LoadFromManifestFile("Assets/Data/Text/Manifest.json", messageDataError));
+	GAME_DEBUG_LOG("init", "Message JSON 데이터 로드 완료");
+
+	Combat.SetMessageCatalog(&MessageDataCatalog);
+	Turn.SetMessageCatalog(&MessageDataCatalog);
+	Info->SetMessageCatalog(&MessageDataCatalog);
 
 	// 메인 메뉴 상태
 	FlowState = GameFlowState::MainMenu;
@@ -290,7 +299,7 @@ void Game::StartNewRun()
 				auto pos = GamePlayer->GetPosition();
 				PlayerFOV->Compute(currentMap, pos.x, pos.y, UILayout::Tunable::FOVRadius);
 
-				// 에너미 스폰
+				// Enemy 스폰
 				if (Combat.SpawnTestEnemy(currentMap, pos))
 				{
 					std::vector<std::string> discoveredMessages;
@@ -365,7 +374,7 @@ void Game::CheckStairs()
 			// 층의 데이터가 저장되어 있다면 로드
 			if (!Dungeon->LoadCombatState(Dungeon->GetCurrentLevel(), Combat))
 			{
-				// 첫 방문이면 신규 에너미 생성
+				// 첫 방문이면 신규 Enemy 생성
 				Combat.Reset();
 				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
 			}
@@ -381,7 +390,7 @@ void Game::CheckStairs()
 			Log->GetLog().AddMessage(stairMessage, LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 
-			// 현재 시야에 포착된 에너미 메시지 수집 후 출력
+			// 현재 시야에 포착된 Enemy 메시지 수집 후 출력
 			std::vector<std::string> discoveredMessages;
 			Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
 			for (const std::string& message : discoveredMessages)
@@ -561,7 +570,7 @@ void Game::RenderMainMenu()
 	{
 		// 게임 오버 후 요약 창
 		const unsigned int summaryFontSize = static_cast<unsigned int>(std::max(12, UILayout::Tunable::MainMenuItemFontSize));
-		std::string		   summary = "플레이어가 사망했습니다. 처치한 에너미 수: " + std::to_string(DefeatEnemyCountInRun);
+		std::string		   summary = "플레이어가 사망했습니다. 처치한 Enemy 수: " + std::to_string(DefeatEnemyCountInRun);
 		sf::Text		   summaryText(GameFont, sf::String::fromUtf8(summary.begin(), summary.end()), summaryFontSize);
 		summaryText.setFillColor(Colors::White);
 

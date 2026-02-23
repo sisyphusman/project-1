@@ -56,7 +56,7 @@ bool MessageCatalog::LoadFromManifestFile(const std::string& manifestPath, std::
 			return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 std::string MessageCatalog::Get(std::string_view key) const

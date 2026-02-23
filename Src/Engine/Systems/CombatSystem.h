@@ -6,6 +6,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "Engine/Data/EnemyCatalog.h"
+#include "Engine/Data/MessageCatalog.h"
 #include "Engine/Entities/CharacterStats.h"
 
 class Map;
@@ -35,14 +36,15 @@ public:
 	void Reset();
 	void SaveState(std::vector<CombatEnemy>& outEnemies, int& outNextEnemyId) const; // const는 이 객체의 멤버 변수 값은 그대로임을 보장
 	void LoadState(const std::vector<CombatEnemy>& enemies, int nextEnemyId);		 // 매개 변수 enemies만 그대로임을 보장
-	void SetEnemyCatalog(const EnemyCatalog* catalog) { EnemyDataCatalog = catalog; }
+	void SetEnemyCatalog(const EnemyCatalog* catalog) { OutEnemyCatalog = catalog; }
+	void SetMessageCatalog(const MessageCatalog* catalog) { OutMessageCatalog = catalog; }
 	bool SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos); // 무작위로 몬스터 배치
 
 	// 플레이어(이동/공격) 처리
 	bool ProcessPlayerAction(const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, bool& bOutPlayerMoved,
 		sf::Vector2i& outPlayerPos, std::vector<std::string>& outMessages, std::vector<CombatDamageEvent>& outDamageEvents, int& outDefeatedEnemyCount);
 
-	// 에너미 행동 처리
+	// Enemy 행동 처리
 	void ProcessEnemyTurn(const sf::Vector2i& playerPos, CharacterStats& playerStats, std::vector<std::string>& outMessages,
 		std::vector<CombatDamageEvent>& outDamageEvents);
 
@@ -53,8 +55,9 @@ private:
 	int	 CalculatePhysicalDamage(const CharacterStats& attacker, const CharacterStats& defender) const; // 공격력 + 힘 보정 - 방어력, 최소 1 보장
 	void RemoveDeadEnemies();
 
-	int						 NextEnemyId = 1; // 에너미 식별자
-	std::vector<CombatEnemy> Enemies;		  // 현재 층 에너미 리스트
+	int						 NextEnemyId = 1; // Enemy 식별자
+	std::vector<CombatEnemy> Enemies;		  // 현재 층 Enemy 리스트
 
-	const EnemyCatalog* EnemyDataCatalog = nullptr;
+	const EnemyCatalog*	  OutEnemyCatalog = nullptr;
+	const MessageCatalog* OutMessageCatalog = nullptr;
 };

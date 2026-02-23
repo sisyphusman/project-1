@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/UI/Panel/UIPanel.h"
+#include "Engine/Data/MessageCatalog.h"
 #include "Engine/Entities/CharacterStats.h"
 #include "Engine/Core/Style.h"
 
@@ -23,16 +24,21 @@ public:
 
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
 
-	// 데이터 소스 연결 (pull)
-	void SetSource(const CharacterStats* stats);
+	void SetSource(const CharacterStats* stats) { OutStats = stats; }; // 데이터 소스 연결 (pull)
+
+	void SetMessageCatalog(const MessageCatalog* catalog) { OutMessageCatalog = catalog; } // UI 텍스트 카탈로그 연결
 
 	// 상태효과 관리
-	void AddStatusEffect(const std::string& name, sf::Color color, int duration = -1);
-	void RemoveStatusEffect(const std::string& name);
-	void ClearStatusEffects();
+	void AddStatusEffect(const std::string& name, sf::Color color, int duration = -1) { StatusEffects.push_back({ name, color, duration }); }
+	void RemoveStatusEffect(const std::string& name)
+	{
+		std::erase_if(StatusEffects, [&](const StatusEffect& e) { return e.Name == name; });
+	}
+	void ClearStatusEffects() { StatusEffects.clear(); }
 
 private:
-	const CharacterStats* StatsPtr = nullptr; // 데이터 소스
+	const CharacterStats* OutStats = nullptr; // 데이터 소스
+	const MessageCatalog* OutMessageCatalog = nullptr;
 
 	std::vector<StatusEffect> StatusEffects; // 상태 효과
 
