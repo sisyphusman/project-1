@@ -65,7 +65,7 @@ bool EnemyCatalog::LoadFromJsonFile(const std::string& filePath, std::string& ou
 		return false;
 	}
 
-	if (!root.contains("schemaVersion") || !root["schemaVersion"].is_number_integer())
+	if (!root.contains("schema_version") || !root["schema_version"].is_number_integer())
 	{
 		outError = "schemaVersion은 정수여야 합니다";
 		return false;
