@@ -52,8 +52,15 @@ void ItemDropSystem::SpawnOnLevel(const Map& map, const sf::Vector2i& playerPos,
 	static std::mt19937 rng(std::random_device{}());
 	std::shuffle(candidates.begin(), candidates.end(), rng);
 
+	// 아이템 수가 타일 수보다 많을때 제한 처리
+	const int safeSpawnCount = std::clamp(spawnCount, 0, static_cast<int>(candidates.size()));
+	if (safeSpawnCount < spawnCount)
+	{
+		GAME_DEBUG_LOG("SpawnOnLevel", "땅에 떨어진 아이템이 타일 수보다 많아서 자동으로 축소됨");
+	}
+
 	// 아이템 요청 개수만큼 스폰
-	for (int i = 0; i < spawnCount; ++i)
+	for (int i = 0; i < safeSpawnCount; ++i)
 	{
 		GroundItemEntry item;
 		item.Position = candidates[static_cast<size_t>(i)];
