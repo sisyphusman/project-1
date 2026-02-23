@@ -99,7 +99,7 @@ bool CombatSystem::SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos)
 	return true;
 }
 
-bool CombatSystem::HandlePlayerAction(const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, bool& bOutPlayerMoved,
+bool CombatSystem::ProcessPlayerAction(const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, bool& bOutPlayerMoved,
 	sf::Vector2i& outPlayerPos, std::vector<std::string>& outMessages, std::vector<CombatDamageEvent>& outDamageEvents, int& outDefeatedEnemyCount)
 {
 

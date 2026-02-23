@@ -9,7 +9,7 @@ void TurnSystem::Reset()
 	SeenEnemyIds.clear();
 }
 
-bool TurnSystem::ExecutePlayerTurn(CombatSystem& combat, const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, TurnResult& outResult)
+bool TurnSystem::ExecuteTurn(CombatSystem& combat, const Map& map, const sf::Vector2i& playerPos, int dx, int dy, CharacterStats& playerStats, TurnResult& outResult)
 {
 	if (!IsPlayerTurn)
 	{
@@ -19,7 +19,7 @@ bool TurnSystem::ExecutePlayerTurn(CombatSystem& combat, const Map& map, const s
 	outResult = {};
 	outResult.PlayerNextPosition = playerPos;
 
-	if (!combat.HandlePlayerAction(map, playerPos, dx, dy, playerStats, outResult.PlayerMoved, outResult.PlayerNextPosition, outResult.Messages,
+	if (!combat.ProcessPlayerAction(map, playerPos, dx, dy, playerStats, outResult.PlayerMoved, outResult.PlayerNextPosition, outResult.Messages,
 			outResult.DamageEvents, outResult.DefeatedEnemyCount))
 	{
 		return false;

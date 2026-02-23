@@ -188,7 +188,7 @@ void Game::ProcessEvents()
 
 				TurnResult turnResult;
 
-				if (Turn.ExecutePlayerTurn(Combat, Dungeon->GetCurrentMap(), currentPos, dx, dy, MyCharStats, turnResult))
+				if (Turn.ExecuteTurn(Combat, Dungeon->GetCurrentMap(), currentPos, dx, dy, MyCharStats, turnResult))
 				{
 					DefeatEnemyCountInRun += turnResult.DefeatedEnemyCount;
 
