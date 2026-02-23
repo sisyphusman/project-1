@@ -3,32 +3,27 @@
 - Unreal Style(But No Prefix) + Unreal Clang Format
 
 ```
-Class / Struct / Enum / Interface -> PascalCase (with prefix U/A/F/E/I)
+Class / Struct / Enum / Interface -> PascalCase
 Function / Method                 -> PascalCase
 Member Variable                   -> PascalCase
 Local Variable / Parameter        -> camelCase
-bool Variable                     -> bPrefix + PascalCase
+bool Variable                     -> PascalCase
 Constant                          -> PascalCase
 Enum Value                        -> PascalCase
-Namespace                         -> 거의 사용 안 함
 File Name                         -> PascalCase
 Macro                             -> UPPER_SNAKE_CASE
 ```
 
 - 블록 단위일때 중괄호는 새로운 줄에서 시작, return에서 중괄호는 블록이 아니므로 제외
 - 소괄호는 한 칸 띄우고 사용한다 ()
+- source -> how it works, header -> what it does
 - 섹션을 만들때 /을 60개 사용한다
 - 함수의 설명은 헤더에 작성한다
-- JSON 식별자는 sname_case를 사용한다
-  
+
 # Git Convention
 
 - 타입: 항상 소문자
 - 콜론 뒤 한 칸 띄우기
-
-# Comment Guidelines
-
-- source -> how it works, header -> what it does
 
 # Include Order
 
@@ -43,3 +38,4 @@ Macro                             -> UPPER_SNAKE_CASE
 
 - Github Project Title -> lowercase-kebab-case
 - Window Files -> PascalCase
+- JSON 식별자 -> snake_case
