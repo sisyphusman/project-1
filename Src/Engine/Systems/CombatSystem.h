@@ -6,7 +6,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "Engine/Data/EnemyCatalog.h"
-#include "Engine/Data/MessageCatalog.h"
+#include "Engine/Data/TextCatalog.h"
 #include "Engine/Entities/CharacterStats.h"
 
 class Map;
@@ -37,7 +37,7 @@ public:
 	void SaveState(std::vector<CombatEnemy>& outEnemies, int& outNextEnemyId) const; // const는 이 객체의 멤버 변수 값은 그대로임을 보장
 	void LoadState(const std::vector<CombatEnemy>& enemies, int nextEnemyId);		 // 매개 변수 enemies만 그대로임을 보장
 	void SetEnemyCatalog(const EnemyCatalog* catalog) { OutEnemyCatalog = catalog; }
-	void SetMessageCatalog(const MessageCatalog* catalog) { OutMessageCatalog = catalog; }
+	void SetTextCatalog(const TextCatalog* catalog) { OutTextCatalog = catalog; }
 	bool SpawnTestEnemy(const Map& map, const sf::Vector2i& playerPos); // 무작위로 몬스터 배치
 
 	// 플레이어(이동/공격) 처리
@@ -59,5 +59,5 @@ private:
 	std::vector<CombatEnemy> Enemies;		  // 현재 층 Enemy 리스트
 
 	const EnemyCatalog*	  OutEnemyCatalog = nullptr;
-	const MessageCatalog* OutMessageCatalog = nullptr;
+	const TextCatalog* OutTextCatalog = nullptr;
 };

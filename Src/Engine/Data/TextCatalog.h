@@ -4,7 +4,7 @@
 #include <string_view>
 #include <unordered_map>
 
-class MessageCatalog
+class TextCatalog
 {
 public:
 	using FormatArgs = std::unordered_map<std::string, std::string>;

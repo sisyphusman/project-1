@@ -1,4 +1,4 @@
-#include "MessageCatalog.h"
+#include "Engine/Data/TextCatalog.h"
 
 #include <filesystem>
 #include <fstream>
@@ -12,7 +12,7 @@ namespace
 	using Json = nlohmann::json;
 }
 
-bool MessageCatalog::LoadFromManifestFile(const std::string& manifestPath, std::string& outError)
+bool TextCatalog::LoadFromManifestFile(const std::string& manifestPath, std::string& outError)
 {
 	MessageMap.clear();
 
@@ -59,7 +59,7 @@ bool MessageCatalog::LoadFromManifestFile(const std::string& manifestPath, std::
 	return true;
 }
 
-std::string MessageCatalog::Get(std::string_view key) const
+std::string TextCatalog::Get(std::string_view key) const
 {
 	const auto found = MessageMap.find(std::string(key));
 
@@ -68,7 +68,7 @@ std::string MessageCatalog::Get(std::string_view key) const
 	return found->second;
 }
 
-std::string MessageCatalog::Format(std::string_view key, const FormatArgs& args) const
+std::string TextCatalog::Format(std::string_view key, const FormatArgs& args) const
 {
 	std::string resolved = Get(key);
 
@@ -80,7 +80,7 @@ std::string MessageCatalog::Format(std::string_view key, const FormatArgs& args)
 	return resolved;
 }
 
-bool MessageCatalog::LoadMessageModule(const std::string& modulePath, std::string& outError)
+bool TextCatalog::LoadMessageModule(const std::string& modulePath, std::string& outError)
 {
 	std::ifstream input(modulePath);
 	if (!input.is_open())
@@ -114,7 +114,7 @@ bool MessageCatalog::LoadMessageModule(const std::string& modulePath, std::strin
 	return true;
 }
 
-void MessageCatalog::ReplaceAllInPlace(std::string& source, const std::string& from, const std::string& to)
+void TextCatalog::ReplaceAllInPlace(std::string& source, const std::string& from, const std::string& to)
 {
 	if (from.empty())
 	{

@@ -36,14 +36,14 @@ void Game::Init()
 	// CombatSystem에 카탈로그 데이터 주소 공유
 	Combat.SetEnemyCatalog(&EnemyDataCatalog);
 
-	// 메시지 JSON 로드
-	std::string messageDataError;
-	GAME_CHECK(MessageDataCatalog.LoadFromManifestFile("Assets/Data/Text/Manifest.json", messageDataError));
-	GAME_DEBUG_LOG("init", "Message JSON 데이터 로드 완료");
+	// Text JSON 로드
+	std::string textDataError;
+	GAME_CHECK(TextDataCatalog.LoadFromManifestFile("Assets/Data/Text/Manifest.json", textDataError));
+	GAME_DEBUG_LOG("init", "Text JSON 데이터 로드 완료");
 
-	Combat.SetMessageCatalog(&MessageDataCatalog);
-	Turn.SetMessageCatalog(&MessageDataCatalog);
-	Info->SetMessageCatalog(&MessageDataCatalog);
+	Combat.SetTextCatalog(&TextDataCatalog);
+	Turn.SetTextCatalog(&TextDataCatalog);
+	Info->SetTextCatalog(&TextDataCatalog);
 
 	// 메인 메뉴 상태
 	FlowState = GameFlowState::MainMenu;

@@ -35,7 +35,7 @@ bool TurnSystem::ExecuteTurn(CombatSystem& combat, const Map& map, const sf::Vec
 
 void TurnSystem::CollectNewVisibleEnemyMessages(const CombatSystem& combat, const FOV& fov, std::vector<std::string>& outMessages)
 {
-	GAME_CHECK(OutMessageCatalog != nullptr);
+	GAME_CHECK(OutTextCatalog != nullptr);
 
 	for (const CombatEnemy& enemy : combat.GetEnemies())
 	{
@@ -55,6 +55,6 @@ void TurnSystem::CollectNewVisibleEnemyMessages(const CombatSystem& combat, cons
 		}
 
 		SeenEnemyIds.insert(enemy.Id);
-		outMessages.push_back(OutMessageCatalog->Format("combat_enemy_spotted", { { "enemy", enemy.Name } }));
+		outMessages.push_back(OutTextCatalog->Format("combat_enemy_spotted", { { "enemy", enemy.Name } }));
 	}
 }

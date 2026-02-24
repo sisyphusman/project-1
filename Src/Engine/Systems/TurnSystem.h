@@ -6,7 +6,7 @@
 
 #include <SFML/System/Vector2.hpp>
 
-#include "Engine/Data/MessageCatalog.h"
+#include "Engine/Data/TextCatalog.h"
 #include "Engine/Systems/CombatSystem.h"
 
 class Map;
@@ -33,11 +33,11 @@ public:
 	// 시야에 첫 등장하는 Enemy 등장 메시지를 수집
 	void CollectNewVisibleEnemyMessages(const CombatSystem& combat, const FOV& fov, std::vector<std::string>& outMessages);
 
-	void SetMessageCatalog(const MessageCatalog* catalog) { OutMessageCatalog = catalog; }
+	void SetTextCatalog(const TextCatalog* catalog) { OutTextCatalog = catalog; }
 
 private:
 	bool					IsPlayerTurn = true; // 턴 상태 플래그
 	std::unordered_set<int> SeenEnemyIds;		 // 한번 본 Enemy 리스트
 
-	const MessageCatalog* OutMessageCatalog = nullptr;
+	const TextCatalog* OutTextCatalog = nullptr;
 };

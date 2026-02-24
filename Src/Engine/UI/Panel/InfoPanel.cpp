@@ -16,7 +16,7 @@ void InfoPanel::Render(sf::RenderWindow& window, const sf::Font& font)
 	DrawBackground(window, Colors::Panel::InfoBg, Colors::Panel::InfoBorder);
 
 	GAME_CHECK(OutStats != nullptr);
-	GAME_CHECK(OutMessageCatalog != nullptr);
+	GAME_CHECK(OutTextCatalog != nullptr);
 
 	const CharacterStats& stats = *OutStats;
 

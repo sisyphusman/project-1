@@ -23,7 +23,7 @@
 #include "Engine/Systems/DamagePopupSystem.h"
 #include "Engine/Systems/TurnSystem.h"
 #include "Engine/Data/EnemyCatalog.h"
-#include "Engine/Data/MessageCatalog.h"
+#include "Engine/Data/TextCatalog.h"
 #include "Engine/Items/ItemDropSystem.h"
 
 class Map;
@@ -97,7 +97,7 @@ private:
 
 	// 카탈로그
 	EnemyCatalog EnemyDataCatalog;
-	MessageCatalog MessageDataCatalog;
+	TextCatalog TextDataCatalog;
 
 	// 게임 시작 시 메인메뉴만 렌더링
 	GameFlowState FlowState = GameFlowState::MainMenu;
