@@ -1,5 +1,5 @@
 {
-    "schema_version" :1,
+    "schema_version": 1,
     "messages": {
         "dungeon_enter": "던전에 입장하셨습니다",
         "stairs_down": "아래층으로 내려갑니다",

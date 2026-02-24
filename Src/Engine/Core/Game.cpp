@@ -62,13 +62,7 @@ void Game::InitUI()
 	// 인포 패널
 	Info = std::make_unique<InfoPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::InfoWidth()), bottomHeight);
 
-	// 내 캐릭 임시 설정
-	MyCharStats.HP = { 85, 100 };
-	MyCharStats.MP = { 15, 20 };
-	MyCharStats.Level = 3;
-	MyCharStats.STR = 12;
-	MyCharStats.DEX = 10;
-	MyCharStats.INT = 8;
+	ResetPlayerStats();
 	Info->SetSource(&MyCharStats);
 	xOffset += UILayout::Derived::InfoWidth();
 
@@ -78,6 +72,17 @@ void Game::InitUI()
 
 	// 미니맵 패널
 	Minimap = std::make_unique<MinimapPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::MinimapWidth()), bottomHeight);
+}
+
+void Game::ResetPlayerStats()
+{
+	// 내 캐릭 임시 설정
+	MyCharStats.HP = { 85, 100 };
+	MyCharStats.MP = { 15, 20 };
+	MyCharStats.Level = 3;
+	MyCharStats.STR = 12;
+	MyCharStats.DEX = 10;
+	MyCharStats.INT = 8;
 }
 
 ////////////////////////////////////////////////////////////
@@ -351,7 +356,7 @@ void Game::CheckStairs()
 	if (tile.Type == TileType::StairDown || tile.Type == TileType::StairUp)
 	{
 		const bool		  isStairDown = (tile.Type == TileType::StairDown);
-		const std::string stairMessage = isStairDown ? UILayout::Fixed::StairDownMsg : UILayout::Fixed::StairUpMsg;
+		const std::string stairMessage = isStairDown ? TextDataCatalog.Get("stairs_down") : TextDataCatalog.Get("stairs_up");
 
 		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
 		Dungeon->SaveCombatState(currentLevel, Combat);
@@ -382,7 +387,7 @@ void Game::CheckStairs()
 				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
 			}
 
-			// 이전에 방문한 층이면 스폰된 아이템 복원, 첫 방문이면 아이템 랜덤 스폰
+			// 이전에 방문한 층이면 스폰 아이템 복원, 첫 방문이면 아이템 랜덤 스폰
 			std::vector<GroundItemEntry> saveGroundItems;
 			if (Dungeon->LoadGroundItem(Dungeon->GetCurrentLevel(), saveGroundItems))
 			{
@@ -552,14 +557,17 @@ void Game::RenderMainMenu()
 	const unsigned int titleFontSize = static_cast<unsigned int>(std::max(12, UILayout::Tunable::MainMenuTitleFontSize));
 	const unsigned int itemFontSize = static_cast<unsigned int>(std::max(12, UILayout::Tunable::MainMenuItemFontSize));
 
-	sf::Text titleText(GameFont, sf::String::fromUtf8(UILayout::Fixed::TitleName.begin(), UILayout::Fixed::TitleName.end()), titleFontSize);
+	const std::string titleMessage = TextDataCatalog.Get("ui_title");
+	sf::Text		  titleText(GameFont, sf::String::fromUtf8(titleMessage.begin(), titleMessage.end()), titleFontSize);
 	titleText.setFillColor(Colors::White);
 	titleText.setStyle(sf::Text::Bold);
 
-	sf::Text startText(GameFont, sf::String::fromUtf8(UILayout::Fixed::MenuName0.begin(), UILayout::Fixed::MenuName0.end()), itemFontSize);
+	const std::string startMenuMessage = TextDataCatalog.Get("ui_menu_start");
+	sf::Text		  startText(GameFont, sf::String::fromUtf8(startMenuMessage.begin(), startMenuMessage.end()), itemFontSize);
 	startText.setFillColor(MainMenuSelectedIndex == 0 ? Colors::Red : Colors::Text);
 
-	sf::Text quitText(GameFont, sf::String::fromUtf8(UILayout::Fixed::MenuName1.begin(), UILayout::Fixed::MenuName1.end()), itemFontSize);
+	const std::string quitMenuMessage = TextDataCatalog.Get("ui_menu_quit");
+	sf::Text		  quitText(GameFont, sf::String::fromUtf8(quitMenuMessage.begin(), quitMenuMessage.end()), itemFontSize);
 	quitText.setFillColor(MainMenuSelectedIndex == 1 ? Colors::Red : Colors::Text);
 
 	// x 축은 중앙 정렬, y 축은 비율 오프셋 사용, 텍스트의 내부 기준점 차이 제거
@@ -581,7 +589,7 @@ void Game::RenderMainMenu()
 	{
 		// 게임 오버 후 요약 창
 		const unsigned int summaryFontSize = static_cast<unsigned int>(std::max(12, UILayout::Tunable::MainMenuItemFontSize));
-		std::string		   summary = "플레이어가 사망했습니다. 처치한 Enemy 수: " + std::to_string(DefeatEnemyCountInRun);
+		std::string		   summary = TextDataCatalog.Format("ui_summary_player_dead", { { "count", std::to_string(DefeatEnemyCountInRun) } });
 		sf::Text		   summaryText(GameFont, sf::String::fromUtf8(summary.begin(), summary.end()), summaryFontSize);
 		summaryText.setFillColor(Colors::White);
 

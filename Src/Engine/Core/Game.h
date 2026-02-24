@@ -53,6 +53,7 @@ private:
 
 	void Init();
 	void InitUI();
+	void ResetPlayerStats();
 
 	void ProcessEvents();
 	void ExecuteMainMenu();
