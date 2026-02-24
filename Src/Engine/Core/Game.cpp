@@ -355,12 +355,15 @@ void Game::CheckStairs()
 
 		Dungeon->SaveExploredData(currentLevel, PlayerFOV->GetExploredData());
 		Dungeon->SaveCombatState(currentLevel, Combat);
+		Dungeon->SaveGroundItem(currentLevel, ItemDrops.GetGroundItems());
 
+		// Out 파라미터 패턴 (캡슐화, 책임 분리, 제어 흐름)
 		// 다음 층으로 가면 GoToNextLevel(), 이전 층으로 가면 GoToPrevLevel()
 		if (isStairDown ? Dungeon->GoToNextLevel(newPos) : Dungeon->GoToPrevLevel(newPos))
 		{
 			GamePlayer->SetPosition(newPos.x, newPos.y);
 
+			// 탐험 데이터가 저장되어 있다면 로드
 			std::vector<bool> savedData;
 			if (Dungeon->LoadExploredData(Dungeon->GetCurrentLevel(), savedData))
 			{
@@ -379,9 +382,17 @@ void Game::CheckStairs()
 				Combat.SpawnTestEnemy(Dungeon->GetCurrentMap(), newPos);
 			}
 
-			// 아이템은 층 이동 시마다 새로 스폰
-			ItemDrops.Reset();
-			ItemDrops.SpawnOnLevel(Dungeon->GetCurrentMap(), newPos);
+			// 이전에 방문한 층이면 스폰된 아이템 복원, 첫 방문이면 아이템 랜덤 스폰
+			std::vector<GroundItemEntry> saveGroundItems;
+			if (Dungeon->LoadGroundItem(Dungeon->GetCurrentLevel(), saveGroundItems))
+			{
+				ItemDrops.SetGroundItems(saveGroundItems);
+			}
+			else
+			{
+				ItemDrops.Reset();
+				ItemDrops.SpawnOnLevel(Dungeon->GetCurrentMap(), newPos);
+			}
 
 			Turn.Reset();
 			PlayerFOV->Compute(Dungeon->GetCurrentMap(), newPos.x, newPos.y, UILayout::Tunable::FOVRadius);

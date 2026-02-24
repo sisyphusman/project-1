@@ -92,7 +92,7 @@ void DungeonManager::SaveCombatState(int level, const CombatSystem& combat)
 	}
 
 	combat.SaveState(DungeonLevelData[level].Enemies, DungeonLevelData[level].NextEnemyId);
-	DungeonLevelData[level].HasData = true;
+	DungeonLevelData[level].HasEnemyData = true;
 }
 
 bool DungeonManager::LoadCombatState(int level, CombatSystem& combat) const
@@ -103,12 +103,46 @@ bool DungeonManager::LoadCombatState(int level, CombatSystem& combat) const
 	}
 
 	const DungeonLevelState& combatState = DungeonLevelData[level];
-	if (!combatState.HasData)
+	if (!combatState.HasEnemyData)
 	{
 		return false;
 	}
 
 	combat.LoadState(combatState.Enemies, combatState.NextEnemyId);
+	return true;
+}
+
+void DungeonManager::SaveGroundItem(int level, const std::vector<GroundItemEntry>& items)
+{
+	if (level < 0)
+	{
+		return;
+	}
+
+	// 필요 시 벡터 크기 확장
+	if (level >= static_cast<int>(DungeonLevelData.size()))
+	{
+		DungeonLevelData.resize(level + 1);
+	}
+
+	DungeonLevelData[level].GroundItems = items;
+	DungeonLevelData[level].HasItemData = true;
+}
+
+bool DungeonManager::LoadGroundItem(int level, std::vector<GroundItemEntry>& outItems) const
+{
+	if (level < 0 || level >= static_cast<int>(DungeonLevelData.size()))
+	{
+		return false;
+	}
+
+	const DungeonLevelState& levelState = DungeonLevelData[level];
+	if (!levelState.HasItemData)
+	{
+		return false;
+	}
+
+	outItems = levelState.GroundItems;
 	return true;
 }
 

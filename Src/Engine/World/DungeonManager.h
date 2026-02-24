@@ -6,6 +6,7 @@
 #include <Engine/Systems/CombatSystem.h>
 #include <SFML/System/Vector2.hpp>
 
+#include "Engine/Items/ItemTypes.h"
 #include "Engine/World/Map.h"
 
 class DungeonManager
@@ -21,6 +22,10 @@ public:
 	void SaveCombatState(int level, const CombatSystem& combat);
 	bool LoadCombatState(int level, CombatSystem& combat) const;
 
+	// 층별 바닥 아이템 저장/복원
+	void SaveGroundItem(int level, const std::vector<GroundItemEntry>& items);
+	bool LoadGroundItem(int level, std::vector<GroundItemEntry>& outItems) const;
+
 	Map&	   GetCurrentMap() { return *Levels[CurrentLevel]; } // 현재 레벨의 맵 반환
 	int		   GetCurrentLevel() const { return CurrentLevel; }
 	const int& GetCurrentLevelRef() const { return CurrentLevel; }
@@ -33,9 +38,11 @@ private:
 	// 각 층의 상태를 저장
 	struct DungeonLevelState
 	{
-		std::vector<CombatEnemy> Enemies;
-		int						 NextEnemyId = 1;
-		bool					 HasData = false;
+		std::vector<CombatEnemy>	 Enemies;
+		std::vector<GroundItemEntry> GroundItems;
+		int							 NextEnemyId = 1;
+		bool						 HasEnemyData = false;
+		bool						 HasItemData = false;
 	};
 
 	void GenerateLevel(int level); // 새로운 던전 레벨 생성
@@ -50,5 +57,5 @@ private:
 	std::vector<std::unique_ptr<Map>>				   Levels;
 	std::vector<std::pair<sf::Vector2i, sf::Vector2i>> StairsPositions;	  // <UpStairs, DownStairs>
 	std::vector<std::vector<bool>>					   LevelExploredData; // 층별 탐험 데이터
-	std::vector<DungeonLevelState>					   DungeonLevelData;  // 층별 Enemy 상태 데이터
+	std::vector<DungeonLevelState>					   DungeonLevelData;  // 층별 상태 데이터
 };

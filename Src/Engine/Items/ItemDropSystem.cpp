@@ -15,6 +15,11 @@ void ItemDropSystem::Reset()
 	GroundItems.clear();
 }
 
+void ItemDropSystem::SetGroundItems(const std::vector<GroundItemEntry>& items)
+{
+	GroundItems = items;
+}
+
 void ItemDropSystem::SpawnOnLevel(const Map& map, const sf::Vector2i& playerPos, int spawnCount)
 {
 	// 스폰 가능한 후보 타일 수집
