@@ -86,23 +86,23 @@ void DungeonManager::SaveCombatState(int level, const CombatSystem& combat)
 	}
 
 	// 필요 시 벡터 크기 확장
-	if (level >= static_cast<int>(LevelCombatData.size()))
+	if (level >= static_cast<int>(DungeonLevelData.size()))
 	{
-		LevelCombatData.resize(level + 1);
+		DungeonLevelData.resize(level + 1);
 	}
 
-	combat.SaveState(LevelCombatData[level].Enemies, LevelCombatData[level].NextEnemyId);
-	LevelCombatData[level].HasData = true;
+	combat.SaveState(DungeonLevelData[level].Enemies, DungeonLevelData[level].NextEnemyId);
+	DungeonLevelData[level].HasData = true;
 }
 
 bool DungeonManager::LoadCombatState(int level, CombatSystem& combat) const
 {
-	if (level < 0 || level >= static_cast<int>(LevelCombatData.size()))
+	if (level < 0 || level >= static_cast<int>(DungeonLevelData.size()))
 	{
 		return false;
 	}
 
-	const LevelCombatState& combatState = LevelCombatData[level];
+	const DungeonLevelState& combatState = DungeonLevelData[level];
 	if (!combatState.HasData)
 	{
 		return false;
