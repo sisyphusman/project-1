@@ -94,10 +94,24 @@ void Game::Run()
 
 	while (Window.isOpen())
 	{
-		float deltaTime = GameClock.restart().asSeconds();
+		CalculateFPS();
 		ProcessEvents();
-		Update(deltaTime);
+		Update();
 		Render();
+	}
+}
+
+void Game::CalculateFPS()
+{
+	DeltaTime = GameClock.restart().asSeconds();
+
+	FPSAccumulatedSeconds += DeltaTime;
+	FPSFrameCount++;
+	if (FPSAccumulatedSeconds >= 1.f)
+	{
+		CachedFPS = static_cast<int>(std::round(static_cast<float>(FPSFrameCount) / FPSAccumulatedSeconds));
+		FPSAccumulatedSeconds = 0.f;
+		FPSFrameCount = 0;
 	}
 }
 
@@ -417,17 +431,17 @@ void Game::CheckStairs()
 	}
 }
 
-void Game::Update(float deltaTime)
+void Game::Update()
 {
 	if (FlowState != GameFlowState::InGame)
 	{
 		return;
 	}
 
-	GameCamera->Update(deltaTime, GameView, static_cast<float>(UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize),
+	GameCamera->Update(DeltaTime, GameView, static_cast<float>(UILayout::Derived::ViewWidthTiles() * UILayout::Fixed::TileSize),
 		static_cast<float>(UILayout::Derived::ViewHeightTiles() * UILayout::Fixed::TileSize));
-	Minimap->Update(deltaTime);
-	DamagePopups.Update(deltaTime);
+	Minimap->Update(DeltaTime);
+	DamagePopups.Update(DeltaTime);
 }
 
 ////////////////////////////////////////////////////////////
@@ -522,6 +536,16 @@ void Game::RenderGameWorld()
 	tileText.setPosition({ static_cast<float>(pos.x * UILayout::Fixed::TileSize), static_cast<float>(pos.y * UILayout::Fixed::TileSize) });
 	tileText.setFillColor(Colors::White);
 	Window.draw(tileText);
+
+	// FPS 렌더링을 위한 뷰 전환
+	const sf::View previousView = Window.getView();
+	Window.setView(Window.getDefaultView());
+
+	// FPS 렌더링
+	sf::Text fpsText(GameFont, "FPS: "+ std::to_string(CachedFPS), UILayout::Fixed::FPSSize);
+	fpsText.setPosition({ 12.f, 8.f });
+	Window.draw(fpsText);
+	Window.setView(previousView);
 }
 
 void Game::RenderBottomUI()

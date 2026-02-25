@@ -99,6 +99,7 @@ namespace UILayout
 		inline constexpr int BaseWidth = 1920;
 		inline constexpr int BaseHeight = 1080;
 		inline constexpr int TileSize = 24;
+		inline constexpr int FPSSize = 20;
 	}
 
 	namespace Tunable

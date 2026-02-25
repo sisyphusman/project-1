@@ -5,6 +5,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <cmath>
 
 #include <SFML/Graphics.hpp>
 
@@ -55,12 +56,13 @@ private:
 	void InitUI();
 	void ResetPlayerStats();
 
+	void CalculateFPS();
 	void ProcessEvents();
 	void ExecuteMainMenu();
 	void StartNewRun();
 	void GameOver();
 	void CheckStairs();
-	void Update(float deltaTime);
+	void Update();
 
 	void Render();
 	void RenderGameWorld();
@@ -98,7 +100,7 @@ private:
 
 	// 카탈로그
 	EnemyCatalog EnemyDataCatalog;
-	TextCatalog TextDataCatalog;
+	TextCatalog	 TextDataCatalog;
 
 	// 게임 시작 시 메인메뉴만 렌더링
 	GameFlowState FlowState = GameFlowState::MainMenu;
@@ -110,4 +112,10 @@ private:
 
 	// 게임 요약 표시 플래그
 	bool ShowLastRunSummary = false;
+
+	// FPS
+	float DeltaTime = 0.f;
+	float FPSAccumulatedSeconds = 0.f;
+	int	  FPSFrameCount = 0;
+	int	  CachedFPS = 60;
 };
