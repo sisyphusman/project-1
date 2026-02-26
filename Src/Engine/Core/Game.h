@@ -1,11 +1,11 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 #include <memory>
 #include <optional>
 #include <string>
 #include <vector>
-#include <cmath>
 
 #include <SFML/Graphics.hpp>
 

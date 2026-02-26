@@ -30,7 +30,8 @@ bool TextCatalog::LoadFromManifestFile(const std::string& manifestPath, std::str
 	}
 	catch (const Json::parse_error& parseException)
 	{
-		outError = std::string("메시지 manifest 파싱 실패:") + parseException.what();
+		outError = std::string("메시지 manifest 파싱 실패: ") + parseException.what();
+		return false;
 	}
 
 	if (!manifest.contains("modules") || !manifest["modules"].is_array())
@@ -97,6 +98,12 @@ bool TextCatalog::LoadMessageModule(const std::string& modulePath, std::string& 
 	catch (const Json::parse_error& parseException)
 	{
 		outError = std::string("메시지 모듈 파싱 실패: ") + parseException.what();
+		return false;
+	}
+
+	if (!module.contains("messages") || !module["messages"].is_object())
+	{
+		outError = "모듈에 messages 오브젝트가 없습니다: " + modulePath;
 		return false;
 	}
 

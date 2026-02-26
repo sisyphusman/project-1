@@ -40,6 +40,13 @@ struct GroundItemEntry
 	sf::Vector2i  Position;
 };
 
+// 인벤토리 아이템 데이터
+struct ItemStack
+{
+	ItemArchetype Archetype;
+	int			  Quantity = 0;
+};
+
 inline std::vector<ItemArchetype> BuildDefaultItemPool()
 {
 	return {
