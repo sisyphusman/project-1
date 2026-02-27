@@ -159,8 +159,8 @@ void Game::ProcessEvents()
 				continue;
 			}
 
-			int dx = 0;
-			int dy = 0;
+			int	 dx = 0;
+			int	 dy = 0;
 
 			switch (key->code)
 			{
@@ -205,6 +205,43 @@ void Game::ProcessEvents()
 					dx = 1;
 					dy = 1;
 					break;
+				case sf::Keyboard::Key::G:
+				{
+					const sf::Vector2i				   pos = GamePlayer->GetPosition();
+					const std::optional<ItemArchetype> picked = ItemDrops.TryPickupAt(pos.x, pos.y);
+					if (!picked.has_value())
+					{
+						Log->GetLog().AddMessage("주울 수 있는 아이템이 없습니다", LogColor::White);
+						break;
+					}
+
+					if (!GamePlayer->GetInventory().TryAddItem(*picked))
+					{
+						ItemDrops.TryDropAt(pos.x, pos.y, *picked);
+						Log->GetLog().AddMessage("인벤토리가 가득 차서 아이템을 주울 수 없습니다", LogColor::White);
+						break;
+					}
+
+					Log->GetLog().AddMessage("획득: " + picked->Name, LogColor::White);
+					Log->GetLog().AddMessage(GamePlayer->GetInventory().BuildSummaryText(), LogColor::White);
+					break;
+				}
+				case sf::Keyboard::Key::T:
+				{
+					const sf::Vector2i				   pos = GamePlayer->GetPosition();
+					std::optional<ItemArchetype> removedItem = GamePlayer->GetInventory().TryRemoveOneAt(0);
+					if (!removedItem.has_value())
+					{
+						Log->GetLog().AddMessage("버릴 아이템이 없습니다", LogColor::White);
+						break;
+					}
+
+					ItemDrops.TryDropAt(pos.x, pos.y, *removedItem);
+
+					Log->GetLog().AddMessage("드롭: " + removedItem->Name, LogColor::White);
+					Log->GetLog().AddMessage(GamePlayer->GetInventory().BuildSummaryText(), LogColor::White);
+					break;
+				}
 				default:
 					break;
 			}
@@ -542,7 +579,7 @@ void Game::RenderGameWorld()
 	Window.setView(Window.getDefaultView());
 
 	// FPS 렌더링
-	sf::Text fpsText(GameFont, "FPS: "+ std::to_string(CachedFPS), UILayout::Fixed::FPSSize);
+	sf::Text fpsText(GameFont, "FPS: " + std::to_string(CachedFPS), UILayout::Fixed::FPSSize);
 	fpsText.setPosition({ 12.f, 8.f });
 	Window.draw(fpsText);
 	Window.setView(previousView);

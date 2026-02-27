@@ -35,7 +35,7 @@ bool InventoryComponent::TryAddItem(const ItemArchetype& item)
 	newStack.Archetype = item;
 	newStack.Quantity = 1;
 	Slots.push_back(newStack);
-	return false;
+	return true;
 }
 
 std::optional<ItemArchetype> InventoryComponent::TryRemoveOneAt(int index)

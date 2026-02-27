@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <random>
 #include <vector>
 
@@ -20,6 +21,12 @@ public:
 	void SpawnOnLevel(const Map& map, const sf::Vector2i& playerPos, int spawnCount = 4); // 층 진입 시 아이템들 흩뿌려 배치
 
 	bool HasItemAt(int x, int y) const; // 현재 타일에 아이템이 존재하는지 확인
+
+	// 타일 위 아이템을 제거하고 반환
+	std::optional<ItemArchetype> TryPickupAt(int x, int y);
+
+	// 아이템을 특정 타일에 떨어트림
+	bool TryDropAt(int x, int y, const ItemArchetype& item);
 
 	const std::vector<GroundItemEntry>& GetGroundItems() const { return GroundItems; }
 

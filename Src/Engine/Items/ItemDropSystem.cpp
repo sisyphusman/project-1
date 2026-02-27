@@ -87,6 +87,30 @@ bool ItemDropSystem::HasItemAt(int x, int y) const
 	return false;
 }
 
+std::optional<ItemArchetype> ItemDropSystem::TryPickupAt(int x, int y)
+{
+	for (auto it = GroundItems.begin(); it != GroundItems.end(); ++it)
+	{
+		if (it->Position.x == x && it->Position.y == y)
+		{
+			ItemArchetype picked = it->Archetype;
+			GroundItems.erase(it);
+			return picked;
+		}
+	}
+
+	return std::nullopt;
+}
+
+bool ItemDropSystem::TryDropAt(int x, int y, const ItemArchetype& item)
+{
+	GroundItemEntry entry;
+	entry.Archetype = item;
+	entry.Position = { x, y };
+	GroundItems.push_back(entry);
+	return true;
+}
+
 ItemArchetype ItemDropSystem::PickRandomArchetype(std::mt19937& rng) const
 {
 	if (DefaultItemsPool.empty())
