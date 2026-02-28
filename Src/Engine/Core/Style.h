@@ -13,7 +13,7 @@ namespace LogColor
 	inline constexpr uint32_t Grey = 0xAAAAAAFF;
 	inline constexpr uint32_t DarkGrey = 0x666666FF;
 
-	inline constexpr uint32_t Info = 0xCCCCCCFF;
+	inline constexpr uint32_t Info = 0x66FFAAFF;
 	inline constexpr uint32_t Warning = 0xFFFF00FF;
 	inline constexpr uint32_t Error = 0xFF4444FF;
 	inline constexpr uint32_t Success = 0x44FF44FF;

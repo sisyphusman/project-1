@@ -62,6 +62,7 @@ private:
 	void StartNewRun();
 	void GameOver();
 	void CheckStairs();
+	void LogGroundItems() const;
 	void Update();
 
 	void Render();

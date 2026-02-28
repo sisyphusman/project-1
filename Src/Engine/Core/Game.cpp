@@ -223,7 +223,7 @@ void Game::ProcessEvents()
 					}
 
 					Log->GetLog().AddMessage("획득: " + picked->Name, LogColor::White);
-					Log->GetLog().AddMessage(GamePlayer->GetInventory().BuildSummaryText(), LogColor::White);
+					Log->GetLog().AddMessage(GamePlayer->GetInventory().BuildSummaryText(), LogColor::Info);
 					break;
 				}
 				case sf::Keyboard::Key::T:
@@ -239,7 +239,7 @@ void Game::ProcessEvents()
 					ItemDrops.TryDropAt(pos.x, pos.y, *removedItem);
 
 					Log->GetLog().AddMessage("드롭: " + removedItem->Name, LogColor::White);
-					Log->GetLog().AddMessage(GamePlayer->GetInventory().BuildSummaryText(), LogColor::White);
+					Log->GetLog().AddMessage(GamePlayer->GetInventory().BuildSummaryText(), LogColor::Info);
 					break;
 				}
 				default:
@@ -266,6 +266,7 @@ void Game::ProcessEvents()
 					if (turnResult.PlayerMoved)
 					{
 						GamePlayer->SetPosition(turnResult.PlayerNextPosition.x, turnResult.PlayerNextPosition.y);
+						LogGroundItems(); // 타일 위에 있는 모든 아이템 출력
 					}
 
 					for (const std::string& message : turnResult.Messages)
@@ -457,6 +458,8 @@ void Game::CheckStairs()
 			Log->GetLog().AddMessage(stairMessage, LogColor::Stairs);
 			GameCamera->SetTarget(static_cast<float>(newPos.x * UILayout::Fixed::TileSize), static_cast<float>(newPos.y * UILayout::Fixed::TileSize));
 
+			LogGroundItems(); // 타일 위에 있는 모든 아이템 출력
+
 			// 현재 시야에 포착된 Enemy 메시지 수집 후 출력
 			std::vector<std::string> discoveredMessages;
 			Turn.CollectNewVisibleEnemyMessages(Combat, *PlayerFOV, discoveredMessages);
@@ -465,6 +468,23 @@ void Game::CheckStairs()
 				Log->GetLog().AddMessage(message, LogColor::Combat);
 			}
 		}
+	}
+}
+
+void Game::LogGroundItems() const
+{
+	GAME_CHECK(GamePlayer != nullptr && Log != nullptr);
+
+	const sf::Vector2i playerPos = GamePlayer->GetPosition();
+	const std::vector<ItemArchetype> itemsOnTile = ItemDrops.GetItemAt(playerPos.x, playerPos.y);
+	if (itemsOnTile.empty())
+	{
+		return;
+	}
+
+	for (const ItemArchetype& item : itemsOnTile)
+	{
+		Log->GetLog().AddMessage("바닥 아이템: " + item.Name, LogColor::Item);
 	}
 }
 

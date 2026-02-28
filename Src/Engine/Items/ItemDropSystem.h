@@ -22,6 +22,8 @@ public:
 
 	bool HasItemAt(int x, int y) const; // 현재 타일에 아이템이 존재하는지 확인
 
+	std::vector<ItemArchetype> GetItemAt(int x, int y) const; // 현재 타일의 모든 아이템 복사본을 반환
+
 	// 타일 위 아이템을 제거하고 반환
 	std::optional<ItemArchetype> TryPickupAt(int x, int y);
 

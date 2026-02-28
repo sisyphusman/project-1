@@ -30,7 +30,7 @@ bool InventoryComponent::TryAddItem(const ItemArchetype& item)
 		return false;
 	}
 
-	// 첫 아이템 추가 인 경우
+	// 아이템을 처음 추가한 경우
 	ItemStack newStack;
 	newStack.Archetype = item;
 	newStack.Quantity = 1;

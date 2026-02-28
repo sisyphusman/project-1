@@ -87,6 +87,21 @@ bool ItemDropSystem::HasItemAt(int x, int y) const
 	return false;
 }
 
+std::vector<ItemArchetype> ItemDropSystem::GetItemAt(int x, int y) const
+{
+	std::vector<ItemArchetype> foundItems;
+
+	for (const GroundItemEntry& item : GroundItems)
+	{
+		if (item.Position.x == x && item.Position.y == y)
+		{
+			foundItems.push_back(item.Archetype);
+		}
+	}
+
+	return foundItems;
+}
+
 std::optional<ItemArchetype> ItemDropSystem::TryPickupAt(int x, int y)
 {
 	for (auto it = GroundItems.begin(); it != GroundItems.end(); ++it)
