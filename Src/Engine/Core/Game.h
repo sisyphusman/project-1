@@ -19,6 +19,7 @@
 #include "Engine/UI/Panel/InfoPanel.h"
 #include "Engine/UI/Panel/MessageLogPanel.h"
 #include "Engine/UI/Panel/MinimapPanel.h"
+#include "Engine/UI/Panel/InventoryOverlayPanel.h"
 #include "Engine/Core/Macros.h"
 #include "Engine/Systems/CombatSystem.h"
 #include "Engine/Systems/DamagePopupSystem.h"
@@ -37,6 +38,7 @@ class PortraitPanel;
 class InfoPanel;
 class MessageLogPanel;
 class MinimapPanel;
+class InventoryOverlayPanel;
 
 class Game
 {
@@ -63,12 +65,14 @@ private:
 	void GameOver();
 	void CheckStairs();
 	void LogGroundItems() const;
+	void ToggleInventoryOverlay();
 	void Update();
 
 	void Render();
 	void RenderGameWorld();
 	void RenderBottomUI();
 	void RenderMainMenu();
+	void RenderInventoryOverlay();
 
 	// 지연 생성 필요 -> 스마트 포인터 사용
 
@@ -86,10 +90,11 @@ private:
 	std::unique_ptr<Camera>			GameCamera;
 
 	// UI 패널
-	std::unique_ptr<PortraitPanel>	 Portrait;
-	std::unique_ptr<InfoPanel>		 Info;
-	std::unique_ptr<MessageLogPanel> Log;
-	std::unique_ptr<MinimapPanel>	 Minimap;
+	std::unique_ptr<PortraitPanel>		   Portrait;
+	std::unique_ptr<InfoPanel>			   Info;
+	std::unique_ptr<MessageLogPanel>	   Log;
+	std::unique_ptr<MinimapPanel>		   Minimap;
+	std::unique_ptr<InventoryOverlayPanel> InventoryOverlay;
 
 	// 시스템
 	CombatSystem	  Combat;
@@ -113,6 +118,9 @@ private:
 
 	// 게임 요약 표시 플래그
 	bool ShowLastRunSummary = false;
+
+	// 인벤토리 오버레이 플래그
+	bool ShowInventoryOverlay = false;
 
 	// FPS
 	float DeltaTime = 0.f;

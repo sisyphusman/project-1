@@ -10,7 +10,7 @@ InventoryOverlayPanel::InventoryOverlayPanel()
 void InventoryOverlayPanel::UpdateBounds(const sf::View& defaultView)
 {
 	const sf::Vector2f viewSize = defaultView.getSize();
-	const sf::Vector2f viewCenter = defaultView.getSize();
+	const sf::Vector2f viewCenter = defaultView.getCenter();
 
 	const float overlayWidth = viewSize.x * 0.45f;
 	const float overlayHeight = viewSize.y * 0.45f;

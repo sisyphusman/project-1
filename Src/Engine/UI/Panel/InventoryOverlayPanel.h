@@ -10,7 +10,7 @@ public:
 
 	void Render(sf::RenderWindow& window, const sf::Font& font) override;
 
-	void SetSource(const InventoryComponent* inventory) {}
+	void SetSource(const InventoryComponent* inventory) { Inventory = inventory; }
 
 private:
 	void UpdateBounds(const sf::View& defaultView);

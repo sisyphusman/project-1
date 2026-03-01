@@ -72,6 +72,9 @@ void Game::InitUI()
 
 	// 미니맵 패널
 	Minimap = std::make_unique<MinimapPanel>(xOffset, 0.f, static_cast<float>(UILayout::Derived::MinimapWidth()), bottomHeight);
+
+	// 인벤토리 패널
+	InventoryOverlay = std::make_unique<InventoryOverlayPanel>();
 }
 
 void Game::ResetPlayerStats()
@@ -159,8 +162,18 @@ void Game::ProcessEvents()
 				continue;
 			}
 
-			int	 dx = 0;
-			int	 dy = 0;
+			if (ShowInventoryOverlay)
+			{
+				if (key->code == sf::Keyboard::Key::I || key->code == sf::Keyboard::Key::Escape)
+				{
+					ToggleInventoryOverlay();
+				}
+
+				continue;
+			}
+
+			int dx = 0;
+			int dy = 0;
 
 			switch (key->code)
 			{
@@ -228,7 +241,7 @@ void Game::ProcessEvents()
 				}
 				case sf::Keyboard::Key::T:
 				{
-					const sf::Vector2i				   pos = GamePlayer->GetPosition();
+					const sf::Vector2i			 pos = GamePlayer->GetPosition();
 					std::optional<ItemArchetype> removedItem = GamePlayer->GetInventory().TryRemoveOneAt(0);
 					if (!removedItem.has_value())
 					{
@@ -242,6 +255,9 @@ void Game::ProcessEvents()
 					Log->GetLog().AddMessage(GamePlayer->GetInventory().BuildSummaryText(), LogColor::Info);
 					break;
 				}
+				case sf::Keyboard::Key::I:
+					ToggleInventoryOverlay();
+					break;
 				default:
 					break;
 			}
@@ -318,6 +334,7 @@ void Game::StartNewRun()
 {
 	// 이전 턴의 정보 초기화
 	DefeatEnemyCountInRun = 0;
+	ShowInventoryOverlay = false;
 
 	// 던전 생성
 	Dungeon = std::make_unique<DungeonManager>(UILayout::Derived::ViewWidthTiles(), UILayout::Derived::ViewHeightTiles());
@@ -349,6 +366,8 @@ void Game::StartNewRun()
 			if (currentMap.GetTile(x, y).Walkable)
 			{
 				GamePlayer = std::make_unique<Player>(x, y);
+
+				InventoryOverlay->SetSource(&GamePlayer->GetInventory());
 
 				GameCamera->SetTarget(static_cast<float>(x * UILayout::Fixed::TileSize), static_cast<float>(y * UILayout::Fixed::TileSize));
 
@@ -387,6 +406,7 @@ void Game::GameOver()
 {
 	// 게임 요약 창 표시 설정
 	ShowLastRunSummary = true;
+	ShowInventoryOverlay = false;
 
 	Log->GetLog().Clear();
 
@@ -475,7 +495,7 @@ void Game::LogGroundItems() const
 {
 	GAME_CHECK(GamePlayer != nullptr && Log != nullptr);
 
-	const sf::Vector2i playerPos = GamePlayer->GetPosition();
+	const sf::Vector2i				 playerPos = GamePlayer->GetPosition();
 	const std::vector<ItemArchetype> itemsOnTile = ItemDrops.GetItemAt(playerPos.x, playerPos.y);
 	if (itemsOnTile.empty())
 	{
@@ -486,6 +506,11 @@ void Game::LogGroundItems() const
 	{
 		Log->GetLog().AddMessage("바닥 아이템: " + item.Name, LogColor::Item);
 	}
+}
+
+void Game::ToggleInventoryOverlay()
+{
+	ShowInventoryOverlay = !ShowInventoryOverlay;
 }
 
 void Game::Update()
@@ -516,6 +541,11 @@ void Game::Render()
 	{
 		RenderGameWorld();
 		RenderBottomUI();
+
+		if (ShowInventoryOverlay)
+		{
+			RenderInventoryOverlay();
+		}
 	}
 
 	Window.display();
@@ -685,4 +715,23 @@ void Game::RenderMainMenu()
 		Window.draw(startText);
 		Window.draw(quitText);
 	}
+}
+
+void Game::RenderInventoryOverlay()
+{
+	if (InventoryOverlay == nullptr)
+	{
+		return;
+	}
+
+	const sf::View	   defaultView = Window.getDefaultView();
+	const sf::Vector2f defaultSize = defaultView.getSize();
+	const sf::Vector2f defaultTopLeft = { defaultView.getCenter().x - (defaultSize.x * 0.5f), defaultView.getCenter().y - (defaultSize.y * 0.5f) };
+
+	const sf::FloatRect gameViewport = GameView.getViewport();
+	const sf::FloatRect gameAreaRect(
+		{ defaultTopLeft.x + (defaultSize.x * gameViewport.position.x), defaultTopLeft.y + (defaultSize.y * gameViewport.position.y) },
+		{ defaultSize.x * gameViewport.size.x, defaultSize.y * gameViewport.size.y });
+
+	InventoryOverlay->Render(Window, GameFont);
 }
