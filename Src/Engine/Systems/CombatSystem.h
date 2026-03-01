@@ -58,6 +58,6 @@ private:
 	int						 NextEnemyId = 1; // Enemy 식별자
 	std::vector<CombatEnemy> Enemies;		  // 현재 층 Enemy 리스트
 
-	const EnemyCatalog*	  OutEnemyCatalog = nullptr;
-	const TextCatalog* OutTextCatalog = nullptr;
+	const EnemyCatalog* OutEnemyCatalog = nullptr;
+	const TextCatalog*	OutTextCatalog = nullptr;
 };
