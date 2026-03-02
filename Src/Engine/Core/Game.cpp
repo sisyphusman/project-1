@@ -2,7 +2,7 @@
 
 // View 크기를 설정
 Game::Game()
-	: Window(sf::VideoMode::getDesktopMode(), "project-1", sf::Style::None)
+	: Window(sf::VideoMode::getDesktopMode(), "Project1", sf::Style::None)
 	, GameView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::Fixed::BaseWidth), static_cast<float>(UILayout::Derived::GameAreaHeight()) }))
 	, BottomUIView(sf::FloatRect({ 0.f, 0.f }, { static_cast<float>(UILayout::Fixed::BaseWidth), static_cast<float>(UILayout::Derived::BottomUIHeight()) }))
 {

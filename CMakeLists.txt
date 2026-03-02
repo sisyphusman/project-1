@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(project-1 LANGUAGES CXX)
+project(Project1 LANGUAGES CXX)
 
 # C++ 버전 설정
 set(CMAKE_CXX_STANDARD 20)
@@ -13,10 +13,10 @@ file(GLOB_RECURSE SOURCE_FILES
 )
 
 # 실행 파일 추가
-add_executable(project-1 ${SOURCE_FILES})
+add_executable(Project1 ${SOURCE_FILES})
 
 # src 폴더를 include 경로에 추가
-target_include_directories(project-1 PRIVATE
+target_include_directories(Project1 PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/Src"
 )
 
@@ -24,15 +24,15 @@ target_include_directories(project-1 PRIVATE
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Src" PREFIX "" FILES ${SOURCE_FILES})
 
 # 빌드 결과물 경로 지정
-set_target_properties(project-1 PROPERTIES
+set_target_properties(Project1 PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/Out
 )
 
 # Assets 폴더를 실행 파일 위치로 복사
-add_custom_command(TARGET project-1 POST_BUILD
+add_custom_command(TARGET Project1 POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/Assets
-        $<TARGET_FILE_DIR:project-1>/Assets
+        $<TARGET_FILE_DIR:Project1>/Assets
 )
 
 find_package(SFML 3 CONFIG REQUIRED COMPONENTS
@@ -41,7 +41,7 @@ find_package(SFML 3 CONFIG REQUIRED COMPONENTS
 
 find_package(nlohmann_json CONFIG REQUIRED)
 
-target_link_libraries(project-1 PRIVATE
+target_link_libraries(Project1 PRIVATE
     SFML::System
     SFML::Window
     SFML::Graphics
