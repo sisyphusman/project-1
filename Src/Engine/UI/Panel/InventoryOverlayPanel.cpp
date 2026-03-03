@@ -7,18 +7,26 @@ InventoryOverlayPanel::InventoryOverlayPanel()
 {
 }
 
-void InventoryOverlayPanel::UpdateBounds(const sf::View& defaultView)
+void InventoryOverlayPanel::UpdateBounds(const sf::View& defaultView, const sf::FloatRect& viewport)
 {
 	const sf::Vector2f viewSize = defaultView.getSize();
 	const sf::Vector2f viewCenter = defaultView.getCenter();
 
+	const float viewportCenterX = viewCenter.x + ((viewport.position.x + (viewport.size.x * 0.5f)) - 0.5f) * viewSize.x;
+	const float viewportCenterY = viewCenter.y + ((viewport.position.y + (viewport.size.y * 0.5f)) - 0.5f) * viewSize.y;
+
 	const float overlayWidth = viewSize.x * 0.45f;
 	const float overlayHeight = viewSize.y * 0.45f;
 
-	Bounds = sf::FloatRect({ viewCenter.x - (overlayWidth * 0.5f), viewCenter.y - (overlayHeight * 0.5f) }, { overlayWidth, overlayHeight });
+	Bounds = sf::FloatRect({ viewportCenterX - (overlayWidth * 0.5f), viewportCenterY - (overlayHeight * 0.5f) }, { overlayWidth, overlayHeight });
 }
 
 void InventoryOverlayPanel::Render(sf::RenderWindow& window, const sf::Font& font)
+{
+	RenderOnViewport(window, font, sf::FloatRect({ 0.f, 0.f }, { 1.f, 1.f }));
+}
+
+void InventoryOverlayPanel::RenderOnViewport(sf::RenderWindow& window, const sf::Font& font, const sf::FloatRect& viewport)
 {
 	if (Inventory == nullptr)
 	{
@@ -26,7 +34,7 @@ void InventoryOverlayPanel::Render(sf::RenderWindow& window, const sf::Font& fon
 	}
 
 	const sf::View defaultView = window.getDefaultView();
-	UpdateBounds(defaultView);
+	UpdateBounds(defaultView, viewport);
 
 	window.setView(defaultView);
 
