@@ -5,9 +5,11 @@
 InventoryComponent::InventoryComponent(int maxSlotCount)
 	: MaxSlotCount(maxSlotCount)
 {
+	// 최대 슬롯 수는 반드시 1 이상이어야 한다.
+	// (파라미터를 정규화한 뒤 멤버 변수에 반영해야 실제 제한이 올바르게 동작한다)
 	if (maxSlotCount < 1)
 	{
-		maxSlotCount = 1;
+		MaxSlotCount = 1;
 	}
 }
 
