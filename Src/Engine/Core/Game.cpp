@@ -723,15 +723,7 @@ void Game::RenderInventoryOverlay()
 	{
 		return;
 	}
-
-	const sf::View	   defaultView = Window.getDefaultView();
-	const sf::Vector2f defaultSize = defaultView.getSize();
-	const sf::Vector2f defaultTopLeft = { defaultView.getCenter().x - (defaultSize.x * 0.5f), defaultView.getCenter().y - (defaultSize.y * 0.5f) };
-
+	
 	const sf::FloatRect gameViewport = GameView.getViewport();
-	const sf::FloatRect gameAreaRect(
-		{ defaultTopLeft.x + (defaultSize.x * gameViewport.position.x), defaultTopLeft.y + (defaultSize.y * gameViewport.position.y) },
-		{ defaultSize.x * gameViewport.size.x, defaultSize.y * gameViewport.size.y });
-
-	InventoryOverlay->Render(Window, GameFont);
+	InventoryOverlay->RenderOnViewport(Window, GameFont, gameViewport);
 }

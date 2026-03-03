@@ -7,7 +7,7 @@ InventoryComponent::InventoryComponent(int maxSlotCount)
 {
 	if (maxSlotCount < 1)
 	{
-		maxSlotCount = 1;
+		MaxSlotCount = 1;
 	}
 }
 
