@@ -25,14 +25,15 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Src" PREFIX "" FILES ${SOURCE_FIL
 
 # 빌드 결과물 경로 지정
 set_target_properties(Project1 PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/Out
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Out"
+    VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:Project1>"
 )
 
 # Assets 폴더를 실행 파일 위치로 복사
 add_custom_command(TARGET Project1 POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/Assets
-        $<TARGET_FILE_DIR:Project1>/Assets
+        "${CMAKE_SOURCE_DIR}/Assets"
+        "$<TARGET_FILE_DIR:Project1>/Assets"
 )
 
 find_package(SFML 3 CONFIG REQUIRED COMPONENTS
