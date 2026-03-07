@@ -1,6 +1,8 @@
 #include "Engine/UI/Panel/InventoryOverlayPanel.h"
 
 #include "Engine/Core/Style.h"
+#include "Engine/Data/TextCatalog.h"
+#include "Engine/Core/Macros.h"
 
 InventoryOverlayPanel::InventoryOverlayPanel()
 	: UIPanel(0.f, 0.f, 0.f, 0.f)
@@ -33,6 +35,8 @@ void InventoryOverlayPanel::RenderOnViewport(sf::RenderWindow& window, const sf:
 		return;
 	}
 
+	GAME_CHECK(OutTextCatalog != nullptr);
+
 	const sf::View defaultView = window.getDefaultView();
 	UpdateBounds(defaultView, viewport);
 
@@ -43,7 +47,7 @@ void InventoryOverlayPanel::RenderOnViewport(sf::RenderWindow& window, const sf:
 	const unsigned int titleFontSize = 34;
 	const unsigned int bodyFontSize = 24;
 
-	const std::string inventoryTitle = "가방";
+	const std::string inventoryTitle = OutTextCatalog->Get("ui_inventory_title");
 	sf::Text		  titleText(font, sf::String::fromUtf8(inventoryTitle.begin(), inventoryTitle.end()), titleFontSize);
 	titleText.setFillColor(Colors::White);
 	titleText.setStyle(sf::Text::Bold);
@@ -55,7 +59,7 @@ void InventoryOverlayPanel::RenderOnViewport(sf::RenderWindow& window, const sf:
 
 	if (slots.empty())
 	{
-		const std::string emptyInventoryText = "(비어 있음)";
+		const std::string emptyInventoryText = OutTextCatalog->Get("ui_inventory_footer_empty");
 		sf::Text		  emptyText(font, sf::String::fromUtf8(emptyInventoryText.begin(), emptyInventoryText.end()), bodyFontSize);
 		emptyText.setFillColor(Colors::Grey);
 		emptyText.setPosition({ Bounds.position.x + 24.f, y });
@@ -75,7 +79,7 @@ void InventoryOverlayPanel::RenderOnViewport(sf::RenderWindow& window, const sf:
 		}
 	}
 
-	const std::string footer = "I: 닫기";
+	const std::string footer = OutTextCatalog->Get("ui_inventory_close");
 	sf::Text		  footerText(font, sf::String::fromUtf8(footer.begin(), footer.end()), 20);
 	footerText.setFillColor(Colors::LightGrey);
 	footerText.setPosition({ Bounds.position.x + 24.f, Bounds.position.y + Bounds.size.y - 38.f });

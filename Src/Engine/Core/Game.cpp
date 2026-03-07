@@ -44,6 +44,7 @@ void Game::Init()
 	Combat.SetTextCatalog(&TextDataCatalog);
 	Turn.SetTextCatalog(&TextDataCatalog);
 	Info->SetTextCatalog(&TextDataCatalog);
+	InventoryOverlay->SetTextCatalog(&TextDataCatalog);
 
 	// 메인 메뉴 상태
 	FlowState = GameFlowState::MainMenu;
@@ -158,7 +159,6 @@ void Game::ProcessEvents()
 					default:
 						break;
 				}
-
 				continue;
 			}
 
@@ -168,7 +168,6 @@ void Game::ProcessEvents()
 				{
 					ToggleInventoryOverlay();
 				}
-
 				continue;
 			}
 
@@ -723,7 +722,7 @@ void Game::RenderInventoryOverlay()
 	{
 		return;
 	}
-	
+
 	const sf::FloatRect gameViewport = GameView.getViewport();
 	InventoryOverlay->RenderOnViewport(Window, GameFont, gameViewport);
 }
