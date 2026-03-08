@@ -50,6 +50,10 @@ namespace Colors
 
 		inline const sf::Color LogBg = sf::Color(20, 20, 20);
 		inline const sf::Color LogBorder = sf::Color(60, 60, 60);
+
+		inline const sf::Color InventoryOverlayBg = sf::Color(12, 12, 18, 232);
+		inline const sf::Color InventoryOverlayBorder = sf::Color(60, 60, 60);
+
 		inline const sf::Color MinimapBg = sf::Color(15, 15, 20);
 		inline const sf::Color MinimapBorder = sf::Color(40, 40, 50);
 	}

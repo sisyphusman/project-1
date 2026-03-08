@@ -30,19 +30,17 @@ void InventoryOverlayPanel::Render(sf::RenderWindow& window, const sf::Font& fon
 
 void InventoryOverlayPanel::RenderOnViewport(sf::RenderWindow& window, const sf::Font& font, const sf::FloatRect& viewport)
 {
-	if (Inventory == nullptr)
+	if (Inventory == nullptr || OutTextCatalog == nullptr)
 	{
 		return;
 	}
-
-	GAME_CHECK(OutTextCatalog != nullptr);
 
 	const sf::View defaultView = window.getDefaultView();
 	UpdateBounds(defaultView, viewport);
 
 	window.setView(defaultView);
 
-	DrawBackground(window, sf::Color(12, 12, 18, 232), Colors::Panel::LogBorder);
+	DrawBackground(window, Colors::Panel::InventoryOverlayBg, Colors::Panel::InventoryOverlayBorder);
 
 	const unsigned int titleFontSize = 34;
 	const unsigned int bodyFontSize = 24;
