@@ -9,7 +9,7 @@ class TextCatalog
 public:
 	using FormatArgs = std::unordered_map<std::string, std::string>;
 
-	// manifast.json에서 locale에 맞는 modules 순서대로 병합 로드, 문자열 치환은 {enemy} 같은 placeholder를 사용
+	// manifest.json에서 locale에 맞는 modules 순서대로 병합 로드, 문자열 치환은 {enemy} 같은 placeholder를 사용
 	bool LoadFromManifestFile(const std::string& manifestPath, std::string& outError);
 
 	[[nodiscard]] std::string Get(std::string_view key) const; // key의 value 값 반환
