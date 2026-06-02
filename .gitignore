@@ -12,11 +12,14 @@ Desktop.ini
 # CMake / 빌드 결과물
 # ========================
 /build/
+/Build/
 /CMakeFiles/
 /CMakeCache.txt
 /cmake_install.cmake
 /install_manifest.txt
 /Makefile
+/CMakeUserPresets.json
+/vcpkg_installed/
 
 # ========================
 # Visual Studio 관련
@@ -24,7 +27,9 @@ Desktop.ini
 /src/.vs/
 .vs/
 /out/
+/Out/
 *.sln
+*.slnx
 *.vcxproj
 *.vcxproj.user
 *.vcxproj.filters
