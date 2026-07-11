@@ -15,6 +15,9 @@ file(GLOB_RECURSE SOURCE_FILES
 # 실행 파일 추가
 add_executable(Project1 ${SOURCE_FILES})
 
+# 프로젝트의 소스와 문자열 리터럴을 UTF-8로 처리
+target_compile_options(Project1 PRIVATE /utf-8)
+
 # src 폴더를 include 경로에 추가
 target_include_directories(Project1 PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/Src"
