@@ -332,6 +332,7 @@ void Game::ExecuteMainMenu()
 void Game::StartNewRun()
 {
 	// 이전 턴의 정보 초기화
+	ResetPlayerStats();
 	DefeatEnemyCountInRun = 0;
 	ShowInventoryOverlay = false;
 
