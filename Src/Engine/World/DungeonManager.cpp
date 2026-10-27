@@ -23,8 +23,8 @@ void DungeonManager::GenerateLevel(int level)
 	sf::Vector2i upStairs(-1, -1);
 	sf::Vector2i downStairs(-1, -1);
 
-	// 계단 2개를 배치하려면 최소한 2개의 방이 필요
-	if (rooms.size() >= 2)
+	// 기본 생성 설정에서는 첫 방이 항상 생성, 방 하나만 있어도 계단을 배치
+	if (!rooms.empty())
 	{
 		// 첫 번째 방 중앙에 위층 계단
 		if (level > 0)
@@ -35,6 +35,13 @@ void DungeonManager::GenerateLevel(int level)
 
 		// 마지막 방 중앙에 아래층 계단
 		downStairs = { rooms.back().CenterX(), rooms.back().CenterY() };
+
+		// 방이 한개만 생성될 경우 아래층 계단은 첫 번째 방의 0,0을 설정
+		// 타일 당 계단 종류는 하나여서 중복되면 안됨
+		if (rooms.size() == 1 && level > 0)
+		{
+			downStairs = { rooms.front().X, rooms.front().Y };
+		}
 		map->SetTile(downStairs.x, downStairs.y, Tile::StairDown());
 	}
 
