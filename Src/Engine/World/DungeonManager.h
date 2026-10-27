@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 
-#include <Engine/Systems/CombatSystem.h>
 #include <SFML/System/Vector2.hpp>
 
 #include "Engine/Items/ItemTypes.h"
+#include "Engine/Systems/CombatSystem.h"
 #include "Engine/World/Map.h"
 
 class DungeonManager
@@ -14,7 +14,7 @@ class DungeonManager
 public:
 	DungeonManager(int mapWidth, int mapHeight); // 맵 크기를 저장하고 첫 번째 레벨 생성
 
-	// 다음/이전 레벨로 이동 (성공 시 플레이어 시작 위치 반환)
+	// 도착 계단이 유효하면 다음/이전 레벨로 이동하고 시작 위치 반환. 실패 시 현재 층과 outPlayerPos 유지
 	bool GoToNextLevel(sf::Vector2i& outPlayerPos);
 	bool GoToPrevLevel(sf::Vector2i& outPlayerPos);
 

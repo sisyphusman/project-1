@@ -1,4 +1,5 @@
 #include "DungeonManager.h"
+
 #include "Engine/World/DungeonGenerator.h"
 
 DungeonManager::DungeonManager(int mapWidth, int mapHeight)
@@ -60,12 +61,19 @@ bool DungeonManager::GoToNextLevel(sf::Vector2i& outPlayerPos)
 		GenerateLevel(nextLevel);
 	}
 
+	// 도착 계단이 유효한지 검증
+	const Map&		   DestinationMap = *Levels[nextLevel];
+	const sf::Vector2i DestinationPos = StairsPositions[nextLevel].first;
+	if (!DestinationMap.IsWalkable(DestinationPos.x, DestinationPos.y)
+		|| DestinationMap.GetTile(DestinationPos.x, DestinationPos.y).Type != TileType::StairUp)
+	{
+		return false;
+	}
+
+	// 도착 계단이 유효할 때만 층과 플레이어 위치를 확정
 	CurrentLevel = nextLevel;
+	outPlayerPos = DestinationPos;
 
-	// 다음 층의 계단 위치에서 시작
-	outPlayerPos = StairsPositions[CurrentLevel].first;
-
-	// 다음 층 이동은 항상 가능
 	return true;
 }
 
@@ -77,10 +85,18 @@ bool DungeonManager::GoToPrevLevel(sf::Vector2i& outPlayerPos)
 		return false;
 	}
 
-	CurrentLevel--;
+	const int		   PrevLevel = CurrentLevel - 1;
+	const Map&		   DestinationMap = *Levels[PrevLevel];
+	const sf::Vector2i DestinationPos = StairsPositions[PrevLevel].second;
+	if (!DestinationMap.IsWalkable(DestinationPos.x, DestinationPos.y) 
+	|| DestinationMap.GetTile(DestinationPos.x, DestinationPos.y).Type != TileType::StairDown)
+	{
+		return false;
+	}
 
-	// 이전 층의 계단 위치에서 시작
-	outPlayerPos = StairsPositions[CurrentLevel].second;
+	// 도착 계단이 유효할 때만 층과 플레이어 위치를 확정
+	CurrentLevel = PrevLevel;
+	outPlayerPos = DestinationPos;
 
 	return true;
 }
